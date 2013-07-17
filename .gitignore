@@ -1,13 +1,36 @@
 # Bootstrap
-app/bootstrap*
+foxp2projects/Symfony/app/bootstrap*
 
 # Symfony directories
-vendor/*
-*/logs/*
-*/cache/*
-web/uploads/*
-web/bundles/*
+foxp2projects/symfony/LICENSE
+foxp2projects/symfony/README.md
+foxp2projects/symfony/UPGRADE-2.2.md
+foxp2projects/symfony/UPGRADE.md
+foxp2projects/symfony/app/.htaccess
+foxp2projects/symfony/app/Resources/views/base.html.twig
+foxp2projects/symfony/app/SymfonyRequirements.php
+foxp2projects/symfony/app/autoload.php
+foxp2projects/symfony/app/console
+foxp2projects/symfony/app/phpunit.xml.dist
+foxp2projects/symfony/app/check.php
+foxp2projects/symfony/src/Acme/*
+foxp2projects/symfony/vendor/*
+foxp2projects/symfony/app/logs/*
+foxp2projects/symfony/app/cache/*
+foxp2projects/symfony/web/app.php
+foxp2projects/symfony/web/app_dev.php
+foxp2projects/symfony/web/config.php
+foxp2projects/symfony/web/favicon.ico
+foxp2projects/symfony/web/robots.txt
+foxp2projects/symfony/web/uploads/*
+foxp2projects/symfony/web/bundles/acmedemo
+foxp2projects/symfony/web/bundles/framework
+foxp2projects/symfony/web/bundles/sensiodistribution
 
 # Configuration files
-app/config/parameters.ini
-app/config/parameters.yml
+foxp2projects/symfony/app/config/config_dev.yml
+foxp2projects/symfony/app/config/config_prod.yml
+foxp2projects/symfony/app/config/config_test.yml
+foxp2projects/symfony/app/config/routing_dev.yml
+foxp2projects/symfony/app/config/parameters.ini
+foxp2projects/symfony/app/config/parameters.yml
