@@ -1,21 +1,27 @@
 FoxP2 projects
 ========
 
+# Documentation for :
+
+## osCommerce 2.4 Public Admin Area *(based on osCommerce 2.4 -- branch : Master)*
+
+  * Demo : http://foxp2.fr.nf/publicadmin
+  * Repository : *soon available ...*
+  * Library :  *pending...*
+
+## Twig Dynamic Template System *(based on osCommerce 2.4 -- branch : Master)*
+
+  * Demo : http://foxp2.fr.nf/
+  * Repository : https://github.com/foxp2/oscommerce-2.4-with-twig
+  * Library :  *pending...*
+
+## Github Application *(based on osCommerce 3 Framework -- branch : Template)*
+
+  * Demo : http://foxp2.alwaysdata.net/
+  * repository : https://github.com/foxp2/github-application
+  * Library :  *pending...*
+
 > Build with Symfony 2.3.3
-
-# Documenttation for :
-
-1. osCommerce 2.4 Public Admin Area
-
-  * http://foxp2.fr.nf/publicadmin
-
-2. Twig Dynamic Template System
-
-  * http://foxp2.fr.nf/
-
-3. Github Application (based on osCommerce 3 Framework -- branch : Template)
-
-  * http://foxp2.alwaysdata.net/
 
 ## Bundles :
 
