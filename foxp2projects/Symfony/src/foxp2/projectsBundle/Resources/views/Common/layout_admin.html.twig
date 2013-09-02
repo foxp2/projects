@@ -1,0 +1,96 @@
+{# \Symfony\src\foxp2\projectsBundle\Resources\views\Common\layout_admin.html.twig #}
+{% block header %}
+<!DOCTYPE HTML>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+    
+{% block meta %}
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>{% block title %}FoxP2 Projects - BackOffice{% endblock %}</title>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700' rel='stylesheet' type='text/css'>
+{% endblock meta %}
+
+{% block stylesheet %}
+<link rel="stylesheet" href="{{ asset('bundles/bootmetro/css/bootmetro.css') }}" type="text/css" />
+<link rel="stylesheet" href="{{ asset('bundles/bootmetro/css/bootmetro-responsive.css') }}" type="text/css" />
+<link rel="stylesheet" href="{{ asset('bundles/bootmetro/css/bootmetro-icons.css') }}" type="text/css" />
+<link rel="stylesheet" href="{{ asset('bundles/bootmetro/github-icons/style.css') }}" type="text/css" />
+<!-- chargement des styles -->
+
+<link rel="stylesheet" href="{{ asset('bundles/bootmetro/css/metro-ui-light.css') }}" type="text/css" />
+
+<link href="{{ asset('bundles/bootmetro/css/geshi.css') }}" type="text/css" rel="stylesheet" />
+<link href="{{ asset('bundles/bootmetro/css/highlight.css') }}" type="text/css" rel="stylesheet" />
+<link href="{{ asset('bundles/bootmetro/css/pygment.css') }}" type="text/css" rel="stylesheet" />
+<link rel="stylesheet" href="{{ asset('bundles/bootmetro/css/foxp2.css') }}" type="text/css" />
+{% endblock stylesheet %}
+
+{% block javascript %}
+<script type="text/javascript" src="{{ asset('bundles/bootmetro/js/modernizr-2.6.2.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/bootmetro/js/jquery-1.10.0.min.js') }}"></script> 
+<script type="text/javascript" src="{{ asset('bundles/bootmetro/js/jquery.cookie.js') }}"></script> 
+<!--[if IE 7]> 
+<script type="text/javascript" src="{{ asset('bundles/bootmetro/js/bootmetro-icons-ie7.js') }}"></script>
+<![endif]-->
+<script type="text/javascript" src="{{ asset('bundles/bootmetro/js/bootstrap.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/bootmetro/js/bootmetro-panorama.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/bootmetro/js/bootmetro-pivot.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/bootmetro/js/bootmetro-charms.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/bootmetro/js/bootstrap-datepicker.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/bootmetro/js/jquery.mousewheel.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/bootmetro/js/jquery.touchSwipe.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/bootmetro/js/perfect-scrollbar.with-mousewheel.min.js') }}"></script>
+<!--[if IE]>
+<script type="text/javascript" src="{{ asset('bundles/bootmetro/js/PIE.js') }}"></script>
+<![endif]-->
+{% endblock javascript %}
+</head>
+{% endblock header %}
+
+{% block body %}
+<body>
+    <div class="container-fluid">
+
+{% block menu %}
+{#% include "foxp2projectsBundle:Common:menu.html.twig" %#}
+{% endblock menu %}
+        
+{% block apptopbar %}
+{% endblock %}
+
+<div id="application">   
+{% block application %}
+
+{% endblock application %}
+</div>
+        
+{% block appbar %}
+{% endblock %}
+
+{% block footer %}
+<div class="navbar navbar-fixed-bottom fox-bottom btn-info">
+<span class="pull-left">FoxP2 Projects &copy; 2013, {% trans %}All Right Reserved{% endtrans %}</span>
+<span class="pull-right">{% trans %}Build with{% endtrans %} : <a class="text5" href="http://symfony.com/legacy" target="_blank">Symfony 2.3.3</a></span>
+<span class="pull-right">{% trans %}Styled with{% endtrans %} : <a class="text5" href="http://aozora.github.io/bootmetro/docs/docs-index.html" target="_blank">BootMetro </a></span>
+</div>
+{% endblock footer %}
+
+
+{% block footerjavascript %}
+<script>
+$(document).ready(function() {
+  var desiredHeight = $("body").height() - $("top").height() - $("bot").height();
+  $("#application").css("min-height", desiredHeight );
+});
+$(document).ready(function(){
+    $("#alerts-container").hide(0).delay(0).fadeIn(500).delay(3000).hide(500);
+});
+</script>
+{% endblock footerjavascript %}
+</div>
+</body>
+</html>
+{% endblock body %}

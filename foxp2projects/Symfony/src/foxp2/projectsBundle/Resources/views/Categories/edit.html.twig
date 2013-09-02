@@ -1,0 +1,48 @@
+{# \Symfony\src\foxp2\projectsBundle\Resources\views\Categories\edit.html.twig #}
+{% extends "foxp2projectsBundle:Common:layout_admin.html.twig" %}
+{% form_theme edit_form  'foxp2projectsBundle:Form:fields.html.twig' %}
+{% block application -%}
+<div class="row-fluid">
+    <div id="header-container" style="margin-left: 0px;margin-top:20px;margin-bottom: 20px;">
+        <a id="backbutton" class="win-backbutton icon-fox pull-left" style="margin-right: 10px;" href="{{ path('categories_index') }}" title="Retour à la liste des catégories"></a>
+        <div class="dropdown" style="width:800px;">
+            <h1 class="header-dropdown" style="line-height:40px;">{{ 'Edition une catégorie'|trans }}</h1>
+        </div>
+    </div>
+{% set flashbag_messages = app.session.flashbag.get('message') %}
+{% if flashbag_messages is not empty %}  
+        <div class="clearfix"></div>
+<div class="alert alert-danger">
+<button type="button" class="close" data-dismiss="alert"></button>   
+    {% for message in flashbag_messages %}
+            <strong>{{ message|raw }}</strong>
+    {% endfor %}
+</div>
+{% endif %}   
+    <form id="categories_update" action="{{ path('categories_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
+        <input type="hidden" name="_method" value="PUT" />
+        {# commentaire : affichage des champs du formulaire #}
+        {{ form_widget(edit_form) }}
+    </form>
+   
+<!-- app bar -->
+<div id="app-bar" class="win-commandlayout win-ui-dark">
+    <a class="win-command orange" href="{{ path('categories_index') }}">
+        <span class="win-commandicon win-commandring icon-list icon-fox"></span>   
+        <span class="win-label orange">Liste des catégories</span>
+    </a>
+    <a title="" id="button_submit" class="win-command blue pull-right" href="#">
+        <span class="win-commandicon win-commandring icon-pen-2"></span>   
+        <span class="win-label blue">Editer</span>
+    </a>
+</div>
+<script>
+jQuery('#app-bar').animate({'bottom': '+0px'},400);
+$('#button_submit').click(function() {
+  $('#categories_update').submit();
+}); 
+</script>
+</div>
+{% endblock %}
+{% block footer %}
+{% endblock %}

@@ -1,0 +1,171 @@
+{# \Symfony\src\foxp2\projectsBundle\Resources\views\Categories\show.html.twig #}
+{% extends "foxp2projectsBundle:Common:layout_admin.html.twig" %}
+{% block application -%}
+<div class="row-fluid">
+    <div id="header-container" style="margin-left: 0px;margin-top:20px;margin-bottom: 20px;">
+        <a id="backbutton" class="win-backbutton icon-fox pull-left" style="margin-right: 10px;" href="{{ path('categories_index',{'page':1}) }}" title="Retour à la liste des catégories"></a>
+        <div class="dropdown" style="width:800px;">
+            <h1 class="header-dropdown" style="line-height:40px;">{{ 'Visualisation d\'une catégorie'|trans }}</h1>
+        </div>
+    </div>
+{% set flashbag_messages = app.session.flashbag.get('message') %}
+{% if flashbag_messages is not empty %}        
+    <div id="alerts-container">    
+    <div class="toast fade in">
+        <button type="button" class="close" data-dismiss="alert" type="button"></button>
+        <div class="pull-left">
+            <img class="toast-object" data-src="holder.js/90x90" alt="90x90" style="width: 90px; height: 90px;" 
+                 src="data:image/png;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/4QA6RXhpZgAATU0AKgAAAAgAA1EQAAEAAAABAQAAAFERAAQA
+AAABAAAAAFESAAQAAAABAAAAAAAAAAD/2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYH
+BwcGBwcICQsJCAgKCAcHCg0KCgsMDAwMBwkODw0MDgsMDAz/2wBDAQICAgMDAwYDAwYMCAcIDAwM
+DAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz/wAARCABkAGQD
+ASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUF
+BAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0
+NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKj
+pKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QA
+HwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEE
+BSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZH
+SElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0
+tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9
+91Rg3Xj0p+fYUbaz/EvijTfBWh3OqatfWmm6fZoZJ7i5lEUUSjqSx4FAGh+FYfxL+Iek/CT4ea54
+p164Wy0Xw5YT6nfznnyYIY2kdseyqeO9fHPxo/4OIf2XfgtrZsZPGGoeJJUYq76HYG5jjI4ILMyf
+pmvF/wBtb/grv8Hf+Cg37E/jr4dfDvxFqlhrPjTT/wCzVuL608n7IjMpdiqvlsqCuAw+91qZTjH4
+maRpylsjoPCv/BdDXP2mPEs1j8MfBdvZ6Xzt1LU5vOkKdnCLgLnrhga6n/hoX4uajMs1x4ol85xk
+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
+RRV2RHMzsIlWGNVVVVVGAAMACiiimI//2Q==" />
+        </div>
+    <div class="toast-body">
+        <h4 class="toast-heading">Message de l'application</h4>
+        <p>
+    {% for message in flashbag_messages %}
+            <strong>{{ message|raw }}</strong>
+    {% endfor %}
+        </p>
+    </div>
+    </div>
+    </div>
+{% endif %}
+    <table class="table table-bordered table-hover table-striped">
+        <thead>
+            <tr>
+                <th>Id catégorie</th>
+                <th style="text-align: center;">Id catégorie parente</th>
+                <th style="text-align: center;">Nom de la catégorie</th>                
+                <th style="text-align: center;">Date de création</th>
+                <th style="text-align: center;">Date de modification</th>
+            </tr>
+        </thead>
+        <tbody class="listcategories">
+            <tr id="{{ entity.id }}" data-category="{{ entity.id }}">                
+                <td>{{ entity.id }}</td>
+                <td style="text-align: center;">{{ entity.parentId }}</td>  
+                <td style="text-align: center;">{{ entity.categoriesName }}</td>                                      
+                <td style="text-align: center;">{{ entity.dateCreated|date('d-m-Y') }}</td>                      
+                <td style="text-align: center;">{{ entity.dateModified|date('d-m-Y') }}</td>               
+            </tr>
+            <tr>
+                <th style="text-align: center;">titre :</th>
+                <td colspan="2">{{ entity.categoriesTitle }}</td>
+                <th style="text-align: center;">sous titre :</th>
+                <td colspan="2">{{ entity.categoriesSubTitle }}</td>
+            </tr>
+            <tr>
+                <th style="text-align: center;vertical-align: middle;">Description :</th>
+                <td colspan="4">{{ entity.categoriesDescription|raw }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <form id="delete_categories" action="{{ path('categories_delete', { 'id': entity.id }) }}" method="post">
+    <input type="hidden" name="_method" value="DELETE" />
+    {{ form_widget(delete_form) }}   
+    </form>
+<!-- app bar -->
+<div id="app-bar" class="win-commandlayout win-ui-dark">
+    <a class="win-command orange" href="{{ path('categories_index', {'page':1}) }}">
+        <span class="win-commandicon win-commandring icon-list icon-fox"></span>   
+        <span class="win-label orange">Liste des catégories</span>
+    </a>
+    <a title="" id="button_submit" class="win-command red pull-right" href="#">
+        <span class="win-commandicon win-commandring icon-delete"></span>   
+        <span class="win-label red">Supprimer</span>
+    </a>
+    <a class="win-command white pull-right" href="{{ path('categories_edit', { 'id': entity.id }) }}">
+        <span class="win-commandicon win-commandring icon-pencil-2"></span>   
+        <span class="win-label white">Editer</span>
+    </a>
+</div>
+<script>
+jQuery('#app-bar').animate({'bottom': '+0px'},400);  
+$('#button_submit').click(function() {
+  $('#delete_categories').submit();
+}); 
+</script>
+</div>
+{% endblock %}
+{% block footer %}
+{% endblock %}
