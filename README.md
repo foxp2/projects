@@ -18,9 +18,9 @@ FoxP2 projects
   * Friendsofsymfony
   * Highlight
   * knplabs :
-    * GithubApi
-    * Markdown
-    * Snappy
+    1. GithubApi
+    2. Markdown
+    3. Snappy
   * Buzz
 
 ## Shell :
