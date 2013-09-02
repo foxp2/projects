@@ -1,7 +1,21 @@
 FoxP2 projects
 ========
 
-# Build with Symfony 2.3.3
+> Build with Symfony 2.3.3
+
+# Documenttation for :
+
+1. osCommerce 2.4 Public Admin Area
+
+  * http://foxp2.fr.nf/publicadmin
+
+2. Twig Dynamic Template System
+
+  * http://foxp2.fr.nf/
+
+3. Github Application (based on osCommerce 3 Framework -- branch : Template)
+
+  * http://foxp2.alwaysdata.net/
 
 ## Bundles :
 
@@ -18,9 +32,9 @@ FoxP2 projects
   * Friendsofsymfony
   * Highlight
   * knplabs :
-    1. GithubApi
-    2. Markdown
-    3. Snappy
+      * GithubApi
+      * Markdown
+      * Snappy
   * Buzz
 
 ## Shell :
