@@ -1,7 +1,5 @@
-FoxP2 projects
+FoxP2 projects - Documentation for :
 ========
-
-# Documentation for :
 
 ## osCommerce 2.4 Public Admin Area 
   *(based on osCommerce 2.4 -- branch : Master)*
@@ -24,7 +22,8 @@ FoxP2 projects
   * repository : https://github.com/foxp2/github-application
   * Library :  *pending...*
 
-> Build with Symfony 2.3.3
+========
+# Web App built with Symfony 2.3.3
 
 ## Bundles :
 
