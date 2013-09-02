@@ -125,7 +125,7 @@ RRV2RHMzsIlWGNVVVVVGAAMACiiimI//2Q==" />
             {% if keyword != '' %}
             <a class="btn" href="{{ path('categories_index',{'page':page}) }}" title=""><i class="icon-refresh"></i></a>
             {% endif %}
-            <input type="text" name="search" class="input-large" style="height:30px" placeholder="Rechercher une catégorie" {% if keyword != '' %}value="{{ keyword }}"{% endif %}/>
+            <input id="search" type="text" name="search" class="input-large" style="height:30px" placeholder="Rechercher une catégorie" {% if keyword != '' %}value="{{ keyword }}"{% endif %}/>
             <button class="btn" type="submit"><i class="icon-search"></i></button></div>
         </form>
 
@@ -140,7 +140,7 @@ RRV2RHMzsIlWGNVVVVVGAAMACiiimI//2Q==" />
         </thead>
         <tfoot>
             <tr>
-                <td colspan="4" style="text-align: right;" class="muted">Affichage : page {{ nb_pages }}/{{ nb_pages}} </td>
+                <td colspan="4" style="text-align: right;" class="muted">Affichage : page {{ page }}/{{ nb_pages}} </td>
             </tr>        
         </tfoot>
         <tbody class="listcategories">
@@ -212,6 +212,9 @@ jQuery('#app-bar').animate({bottom: '-92px'},0);
 jQuery('#app-bar-top').animate({top: '-96px'},0);
 // keyboard detection for actions
 $('body').keypress(function(e){    
+    if ($("#search").is(":focus")) {
+        // do not detect keyboard for search form.
+    }else{
     switch(String.fromCharCode(e.which)){        
     case 'i':
     if (String.fromCharCode(e.which) === 'i' && catid !== '' && ishowed === false) {
@@ -240,7 +243,9 @@ $('body').keypress(function(e){
             }
     break;
     }
+    }
 }); 
+
 // clean up catinfo modal
 function clearcatinfo(){ $('#catinfodet').find("li").remove(); $('#catinfoprogress').hide(); }
 // ajax call for category selected
