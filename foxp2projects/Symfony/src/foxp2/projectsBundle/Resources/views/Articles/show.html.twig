@@ -1,0 +1,66 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>Articles</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Articlename</th>
+                <td>{{ entity.articleName }}</td>
+            </tr>
+            <tr>
+                <th>Articletitle</th>
+                <td>{{ entity.articleTitle }}</td>
+            </tr>
+            <tr>
+                <th>Articlesubtitle</th>
+                <td>{{ entity.articleSubTitle }}</td>
+            </tr>
+            <tr>
+                <th>Articleshortdescription</th>
+                <td>{{ entity.articleShortDescription }}</td>
+            </tr>
+            <tr>
+                <th>Articlelongdescription</th>
+                <td>{{ entity.articleLongDescription }}</td>
+            </tr>
+            <tr>
+                <th>Articledatecreated</th>
+                <td>{{ entity.articleDateCreated|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Articledatemodified</th>
+                <td>{{ entity.articleDateModified|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Articlegistreference</th>
+                <td>{{ entity.articleGistReference }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('articles') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('articles_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>
+        <form action="{{ path('articles_delete', { 'id': entity.id }) }}" method="post">
+            <input type="hidden" name="_method" value="DELETE" />
+            {{ form_widget(delete_form) }}
+            <button type="submit">Delete</button>
+        </form>
+    </li>
+</ul>
+{% endblock %}
