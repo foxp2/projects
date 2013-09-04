@@ -38,6 +38,7 @@ class Categories
      * @ORM\ManyToOne(targetEntity="foxp2\projectsBundle\Entity\Categories", inversedBy="children")     
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id",nullable = true)    
      */
+    
     private $parentId;
     
     /**
@@ -94,43 +95,64 @@ class Categories
     private $categoriesDescription;    
     
     
-    public function __construct() 
-    {
-        
-        $this->children = new ArrayCollection();
-        $this->setDateCreated(new DateTime('now'));
-        
-         
-    }
-    /**
-     * Get Id
-     *
-     * @return $integer
-     */    
     
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->children = new ArrayCollection();        
+        $this->setDateCreated(new DateTime('now'));
+    }
+    
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
     public function getId()
     {
         return $this->id;
     }
-    
-    public function getCategoriesChildren() {
-        
-        return $this->children;
-        
-    }
-    
+
     /**
-     * Get Level
-     * 
-     * 
-     * @return text level
+     * Set level
+     *
+     * @param string $level
+     * @return Categories
      */
-    public function getLevel() 
+    public function setLevel($level)
+    {
+        $this->level = $level;
+    
+        return $this;
+    }
+
+    /**
+     * Get level
+     *
+     * @return string 
+     */
+    public function getLevel()
     {
         return $this->level;
     }
+
     /**
-     * Get name
+     * Set categoriesName
+     *
+     * @param string $categoriesName
+     * @return Categories
+     */
+    public function setCategoriesName($categoriesName)
+    {
+        $this->categoriesName = $categoriesName;
+    
+        return $this;
+    }
+
+    /**
+     * Get categoriesName
      *
      * @return string 
      */
@@ -138,49 +160,12 @@ class Categories
     {
         return $this->categoriesName;
     }
-    
-    /**
-     * Set categoryName
-     *
-     * @param string $categoryName
-     * @return categories
-     */
-    public function setCategoriesName($categoryName)
-    {
-        $this->categoriesName = $categoryName;
-    
-        return $this;
-    }
-    /**
-     * Set parentId
-     *
-     * @param $parentId
-     * @return categories
-     */
-    public function setParentId($parentId)
-    {
-
-        $this->parentId = $parentId;        
-        
-        return $this; 
-        
-    }
-
-    /**
-     * Get parentId
-     *
-     * @return integer $parentId
-     */
-    public function getParentId()
-    {
-        return $this->parentId;
-    }
 
     /**
      * Set dateCreated
      *
-     * @param datetime $dateCreated
-     * @return categories
+     * @param \DateTime $dateCreated
+     * @return Categories
      */
     public function setDateCreated($dateCreated)
     {
@@ -192,18 +177,18 @@ class Categories
     /**
      * Get dateCreated
      *
-     * @return datetime
+     * @return \DateTime 
      */
     public function getDateCreated()
     {
         return $this->dateCreated;
     }
-    
+
     /**
      * Set dateModified
      *
-     * @param datetime $dateModified
-     * @return categories
+     * @param \DateTime $dateModified
+     * @return Categories
      */
     public function setDateModified($dateModified)
     {
@@ -215,80 +200,137 @@ class Categories
     /**
      * Get dateModified
      *
-     * @return datetime
+     * @return \DateTime 
      */
     public function getDateModified()
     {
         return $this->dateModified;
     }
-    
+
     /**
-     * Set title
-     * 
-     * @param string $title
-     * return categoriesTitle
+     * Set categoriesTitle
+     *
+     * @param string $categoriesTitle
+     * @return Categories
      */
-    public function setcategoriesTitle($title)
+    public function setCategoriesTitle($categoriesTitle)
     {
-        $this->categoriesTitle = $title;
-        
+        $this->categoriesTitle = $categoriesTitle;
+    
         return $this;
     }
-    
+
     /**
-     * Get Title
-     * 
-     * @return categoriesTitle
+     * Get categoriesTitle
+     *
+     * @return string 
      */
-    public function getcategoriesTitle()
+    public function getCategoriesTitle()
     {
         return $this->categoriesTitle;
     }
-    
+
     /**
-     * Set subtitle
-     * 
-     * @param string $subtitle
-     * return categoriesSubTitle
+     * Set categoriesSubTitle
+     *
+     * @param string $categoriesSubTitle
+     * @return Categories
      */
-    public function setcategoriesSubTitle($subtitle)
+    public function setCategoriesSubTitle($categoriesSubTitle)
     {
-        $this->categoriesSubTitle = $subtitle;
-        
+        $this->categoriesSubTitle = $categoriesSubTitle;
+    
         return $this;
     }
-    
+
     /**
-     * Get subTitle
-     * 
-     * @return categoriesSubTitle
+     * Get categoriesSubTitle
+     *
+     * @return string 
      */
-    public function getcategoriesSubTitle()
+    public function getCategoriesSubTitle()
     {
         return $this->categoriesSubTitle;
     }
-    
+
     /**
-     * Set description
-     * 
-     * @param text $description
-     * @return categories
+     * Set categoriesDescription
+     *
+     * @param string $categoriesDescription
+     * @return Categories
      */
-    public function setcategoriesDescription($description)
+    public function setCategoriesDescription($categoriesDescription)
     {
-        $this->categoriesDescription = $description;
-        
+        $this->categoriesDescription = $categoriesDescription;
+    
         return $this;
     }
-    
+
     /**
-     * Get description
-     * 
-     * @return categories description
+     * Get categoriesDescription
+     *
+     * @return string 
      */
-    public function getcategoriesDescription()
+    public function getCategoriesDescription()
     {
         return $this->categoriesDescription;
+    }
+
+    /**
+     * Add children
+     *
+     * @param \foxp2\projectsBundle\Entity\Categories $children
+     * @return Categories
+     */
+    public function addChildren(\foxp2\projectsBundle\Entity\Categories $children)
+    {
+        $this->children[] = $children;
+    
+        return $this;
+    }
+
+    /**
+     * Remove children
+     *
+     * @param \foxp2\projectsBundle\Entity\Categories $children
+     */
+    public function removeChildren(\foxp2\projectsBundle\Entity\Categories $children)
+    {
+        $this->children->removeElement($children);
+    }
+
+    /**
+     * Get children
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getChildren()
+    {
+        return $this->children;
+    }
+
+
+    /**
+     * Set parentId
+     *
+     * @param \foxp2\projectsBundle\Entity\Categories $parentId
+     * @return Categories
+     */
+    public function setParentId(\foxp2\projectsBundle\Entity\Categories $parentId = null)
+    {
+        $this->parentId = $parentId;
+    
+        return $this;
+    }
+
+    /**
+     * Get parentId
+     *
+     * @return \foxp2\projectsBundle\Entity\Categories 
+     */
+    public function getParentId()
+    {
+        return $this->parentId;
     }
     
     /**

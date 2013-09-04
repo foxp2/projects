@@ -55,7 +55,9 @@ class CategoriesController extends Controller {
      * @param Request $request
      * @return type
      */
-    public function searchAction(Request $request) {
+    public function searchAction(Request $request) {          
+
+        $result_per_page = $this->container->getParameter('result_per_page');
 
         $em = $this->getDoctrine()->getManager();
 
@@ -70,13 +72,41 @@ class CategoriesController extends Controller {
 
             $entity = $em->getRepository('foxp2projectsBundle:Categories')->findCategoryByName(trim($keyword));
 
-            return $this->render('foxp2projectsBundle:Categories:index.html.twig', array(
-                        'page' => 1,
-                        'nb_pages' => null,
-                        'keyword' => $keyword,
-                        'form_search' => $form_search->createView(),
-                        'entities' => $entity,
-            ));
+            if ($entity) {
+
+                $result = sizeof($entity);
+
+                if ($result > 1) {
+
+                    $number_of_page = ceil($result / $result_per_page);
+
+                    return $this->render('foxp2projectsBundle:Categories:index.html.twig', array(
+                                'page' => 1,
+                                'counter' => $result,
+                                'nb_pages' => $number_of_page,
+                                'keyword' => $keyword,
+                                'form_search' => $form_search->createView(),
+                                'entities' => $entity,
+                    ));
+                } else { 
+                    
+                    $aloneentity = $em->getRepository('foxp2projectsBundle:Categories')->find($entity[0]->getId());
+                     
+                    $deleteForm = $this->createDeleteForm($entity[0]->getId());
+                    
+                    $this->get('session')->getFlashBag()->add('message', 'La recherche avec ' . $keyword . ' n\'a retourné que ce résultat.');
+
+                    return $this->render('foxp2projectsBundle:Categories:show.html.twig', array(                                
+                                'entity' => $aloneentity,
+                                'delete_form' => $deleteForm->createView(),
+                    ));
+                }
+            } else {
+
+                $this->get('session')->getFlashBag()->add('message', 'La recherche avec  ' . $keyword . ' n\'a retourné aucun résultat.');
+
+                return $this->redirect($this->generateUrl('categories_index'));
+            }
         }
     }
 
@@ -147,12 +177,12 @@ class CategoriesController extends Controller {
 
                     $data = array(
                         'id de la catégorie' => $key->getId(),
-                        'parent id de la catégorie' => $key->getParentId()->__tostring(),
+                        'parent id de la catégorie' => ($key->getParentId() !== null ) ? $key->getParentId()->__tostring() : null,
                         'nom de la catégorie' => $key->getCategoriesName(),
                         'titre' => $key->getcategoriesTitle(),
                         'sous titre' => $key->getcategoriesSubTitle(),
                         'date de création' => $key->getDateCreated()->format('d-m-Y'),
-                        'date de modification' => $key->getDateModified()->format('d-m-Y')
+                        'date de modification' => ($key->getDateModified() !== null) ? $key->getDateModified()->format('d-m-Y') : null
                     );
                 }
 
@@ -265,12 +295,12 @@ class CategoriesController extends Controller {
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('foxp2projectsBundle:Categories')->find($id);
+            $entity = $em->getRepository('foxp2projectsBundle:Categories')->find($id);             
 
             if (!$entity) {
                 throw $this->createNotFoundException('Cette catégories n\'existe pas.');
             }
-
+            
             $em->remove($entity);
             $em->flush();
             $this->get('session')->getFlashBag()->add('message', 'La catégorie ' . $entity->getCategoriesName() . ' a été supprimée avec succès.');
