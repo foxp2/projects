@@ -1,6 +1,9 @@
 FoxP2 projects - Documentation for :
 ========
 
+![Alt text](/img/login.png "zone sécurisée")
+
+
 ## osCommerce 2.4 Public Admin Area 
   *(based on osCommerce 2.4 -- branch : Master)*
 
