@@ -1,8 +1,7 @@
 FoxP2 projects - Documentation for :
 ========
 
-![Alt text](raw/master/img/login.png?raw=true "zone sécurisée")
-
+![ScreenShot](http://farm6.staticflickr.com/5549/9693827840_ae9a7b24a2_o.png)
 
 ## osCommerce 2.4 Public Admin Area 
   *(based on osCommerce 2.4 -- branch : Master)*
