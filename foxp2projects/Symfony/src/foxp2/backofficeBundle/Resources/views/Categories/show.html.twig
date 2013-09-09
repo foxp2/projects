@@ -1,0 +1,90 @@
+{# \Symfony\src\foxp2\backofficeBundle\Resources\views\Categories\show.html.twig #}
+{% extends "foxp2backofficeBundle:Common:layout_admin.html.twig" %}
+{% block application -%}
+<div class="row-fluid">
+    <div id="header-container" style="margin-left: 0px;margin-top:20px;margin-bottom: 20px;">
+        <a id="backbutton" class="win-backbutton icon-fox pull-left" style="margin-right: 10px;" href="{{ path('categories_index',{'page':1}) }}" title="Retour à la liste des catégories"></a>
+        <div class="dropdown" style="width:800px;">
+            <h1 class="header-dropdown" style="line-height:40px;">{{ 'Visualisation d\'une catégorie'|trans }}</h1>
+        </div>
+    </div>
+{% include "foxp2backofficeBundle:Secured:logout.html.twig" %}
+{% set flashbag_messages = app.session.flashbag.get('message') %}
+{% if flashbag_messages is not empty %}        
+    <div id="alerts-container">    
+    <div class="toast fade in">
+        <button type="button" class="close" data-dismiss="alert" type="button"></button>
+        <div class="pull-left">
+            <img class="toast-object"  style="width: 90px; height: 90px;" 
+                 src="{{ asset("bundles/foxp2projects/images/foxp2-90-90.png") }}" />
+        </div>
+    <div class="toast-body">
+        <h4 class="toast-heading">Message de l'application</h4>
+        <p>
+    {% for message in flashbag_messages %}
+            <strong>{{ message|raw }}</strong>
+    {% endfor %}
+        </p>
+    </div>
+    </div>
+    </div>
+{% endif %}
+    <table class="table table-bordered table-hover table-striped">
+        <thead>
+            <tr>
+                <th>Id catégorie</th>
+                <th style="text-align: center;">Id catégorie parente</th>
+                <th style="text-align: center;">Nom de la catégorie</th>                
+                <th style="text-align: center;">Date de création</th>
+                <th style="text-align: center;">Date de modification</th>
+            </tr>
+        </thead>
+        <tbody class="listcategories">
+            <tr id="{{ entity.id }}" data-category="{{ entity.id }}">                
+                <td>{{ entity.id }}</td>
+                <td style="text-align: center;">{{ entity.parentId }}</td>  
+                <td style="text-align: center;">{{ entity.categoriesName }}</td>                                      
+                <td style="text-align: center;">{{ entity.dateCreated|date('d-m-Y') }}</td>                      
+                <td style="text-align: center;">{{ entity.dateModified|date('d-m-Y') }}</td>               
+            </tr>
+            <tr>
+                <th style="text-align: center;">titre :</th>
+                <td colspan="2">{{ entity.categoriesTitle }}</td>
+                <th style="text-align: center;">sous titre :</th>
+                <td colspan="2">{{ entity.categoriesSubTitle }}</td>
+            </tr>
+            <tr>
+                <th style="text-align: center;vertical-align: middle;">Description :</th>
+                <td colspan="4">{{ entity.categoriesDescription|raw }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <form id="delete_categories" action="{{ path('categories_delete', { 'id': entity.id }) }}" method="post">
+    <input type="hidden" name="_method" value="DELETE" />
+    {{ form_widget(delete_form) }}   
+    </form>
+<!-- app bar -->
+<div id="app-bar" class="win-commandlayout win-ui-dark">
+    <a class="win-command orange" href="{{ path('categories_index', {'page':1}) }}">
+        <span class="win-commandicon win-commandring icon-list icon-fox"></span>   
+        <span class="win-label orange">Liste des catégories</span>
+    </a>
+    <a title="" id="button_submit" class="win-command red pull-right" href="#">
+        <span class="win-commandicon win-commandring icon-delete"></span>   
+        <span class="win-label red">Supprimer</span>
+    </a>
+    <a class="win-command white pull-right" href="{{ path('categories_edit', { 'id': entity.id }) }}">
+        <span class="win-commandicon win-commandring icon-pencil-2"></span>   
+        <span class="win-label white">Editer</span>
+    </a>
+</div>
+<script>
+jQuery('#app-bar').animate({'bottom': '+0px'},400);  
+$('#button_submit').click(function() {
+  $('#delete_categories').submit();
+}); 
+</script>
+</div>
+{% endblock %}
+{% block footer %}
+{% endblock %}

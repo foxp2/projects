@@ -1,0 +1,12 @@
+parameters:
+#    foxp2backoffice.example.class: foxp2\backofficeBundle\Example
+
+services:
+#    foxp2backoffice.example:
+#        class: %foxp2backoffice.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
+    github_api:
+        class: foxp2\projectsBundle\Service\GithubService
+        arguments:
+            # cahce_dir : fichiers dans app/cache [dev] ou [prod]
+            cache_dir:  %kernel.cache_dir%/githubapi

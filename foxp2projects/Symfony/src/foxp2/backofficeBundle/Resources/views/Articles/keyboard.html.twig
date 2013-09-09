@@ -1,0 +1,50 @@
+{# \Symfony\src\foxp2\backofficeBundle\Resources\views\Categories\keyboard.html.twig #}
+<div id="keyboard" class="modal message hide fade">    
+    <div class="modal-header">        
+    <h1 class="text-info"><strong>Gestion des actions avec le clavier</strong></h1>
+    <br />
+    <p class="well"><strong>Afin d'améliorer votre expérience sur cette interface, des raccourcis clavier, décrits ci-dessous, ont été ajoutés pour accéder aux différentes actions possibles sur cette page.</strong></p>
+    </div>
+    <div class="modal-body">
+        
+         <div class="listview-item bg-color-darken span6">
+            <div class="pull-left" href="#">
+               <img src="{{ asset("bundles/foxp2projects/images/letter_a.png") }}" style="width: 60px; height: 60px;" alt="letter-a" class="listview-item-object" data-src="holder.js/60x60">
+            </div>
+            <div class="listview-item-body">
+                <h4 class="listview-item-heading"><strong>Ajouter un article</strong></h4>
+               <p class="two-lines">Cliquer sur la lettre a de votre clavier</p>
+           </div>
+         </div>
+         <div class="listview-item bg-color-darken span6">
+            <div class="pull-left" href="#">
+               <img src="{{ asset("bundles/foxp2projects/images/letter_v.png") }}" style="width: 60px; height: 60px;" alt="letter-v" class="listview-item-object" data-src="holder.js/60x60">
+            </div>
+            <div class="listview-item-body">
+                <h4 class="listview-item-heading"><strong>Voir un article</strong></h4>
+               <p class="two-lines">Après selection dans le tableau, cliquer sur la lettre v.</p>
+           </div>
+         </div>        
+         <div class="listview-item bg-color-darken span6" style="margin-left: 0px;">
+            <div class="pull-left" href="#">
+               <img src="{{ asset("bundles/foxp2projects/images/letter_e.png") }}" style="width: 60px; height: 60px;" alt="letter-e" class="listview-item-object" data-src="holder.js/60x60">
+            </div>
+            <div class="listview-item-body">
+                <h4 class="listview-item-heading"><strong>Editer un article</strong></h4>
+               <p class="two-lines">Après selection dans le tableau, cliquer sur la lettre e.</p>
+           </div>
+         </div>
+         <div class="listview-item bg-color-darken span6">
+            <div class="pull-left" href="#">
+               <img src="{{ asset("bundles/foxp2projects/images/letter_i.png") }}" style="width: 60px; height: 60px;" alt="letter-i" class="listview-item-object" data-src="holder.js/60x60">
+            </div>
+            <div class="listview-item-body">
+                <h4 class="listview-item-heading"><strong>Détails d'un article</strong></h4>
+               <p class="two-lines">Après selection dans le tableau, cliquer sur la lettre i pour voir les détails.</p>
+           </div>
+         </div> 
+        <div class="modal-footer pull-right" style="margin-right: -15px">
+            <button type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"><i class="icon-cross"></i> Fermer</button>      
+       </div>
+    </div>
+</div>

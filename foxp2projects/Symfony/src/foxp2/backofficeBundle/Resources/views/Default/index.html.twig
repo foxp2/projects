@@ -1,0 +1,24 @@
+{# \Symfony\src\foxp2\backofficeBundle\Resources\views\Default\index.html.twig #}
+{% extends "foxp2backofficeBundle:Common:layout_admin.html.twig" %}
+{% block body %}
+<body>
+    <div class="container-fluid" style="height:100%;background-color:#fff;">        
+{% block application %}
+            <div class="row-fluid">
+                <div id="header-container" style="margin-left: 0px;margin-top:20px;margin-bottom: 20px;">
+                    <a id="backbutton" class="win-backbutton icon-fox pull-left" style="margin-right: 10px;" href="{{ path('foxp2backoffice_homepage')}}"></a>
+                    <div class="dropdown" style="width:800px;">
+                        <h1 class="header-dropdown" style="line-height:40px;width:100%;">Back Office<small> - Accueil</small></h1>
+                    </div>        
+                </div>
+{% include "foxp2backofficeBundle:Secured:logout.html.twig" %}
+{% include "foxp2backofficeBundle:Common:panorama.html.twig" %}
+    </div>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
+
+        </div>
+    </body>
+{% endblock %}

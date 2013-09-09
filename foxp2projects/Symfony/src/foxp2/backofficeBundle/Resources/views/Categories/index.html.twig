@@ -1,0 +1,240 @@
+{# \Symfony\src\foxp2\backofficeBundle\Resources\views\Categories\index.html.twig #}
+{% extends "foxp2backofficeBundle:Common:layout_admin.html.twig" %}
+{% block apptopbar %}
+<!-- app top bar -->
+<div id="app-bar-top" class="win-ui-dark">
+    <a class="win-command white pull-right" href="{{ path('categories_new') }}">
+        <span class="win-commandicon win-commandring icon-plus-5"></span>   
+        <span class="win-label white">Ajouter une catégorie</span>
+    </a>
+</div>
+{% endblock %}
+{% block application -%}
+<div class="row-fluid">
+    <div id="header-container" style="margin-left: 0px;margin-top:20px;margin-bottom: 20px;">
+        <a id="backbutton" class="win-backbutton icon-fox pull-left" style="margin-right: 10px;" href="{{ path('foxp2backoffice_homepage')}}"></a>
+        <div class="dropdown" style="width:800px;">
+            <h1 class="header-dropdown" style="line-height:40px;width:100%;">Liste des catégories{% if keyword != '' %} : <small>{{ keyword }}</small>{% endif %}</h1>
+        </div>
+    </div>
+{% include "foxp2backofficeBundle:Secured:logout.html.twig" %}
+{% set flashbag_messages = app.session.flashbag.get('message') %}
+{% if flashbag_messages is not empty %}        
+    <div id="alerts-container">    
+    <div class="toast fade in">
+        <button type="button" class="close" data-dismiss="alert" type="button"></button>
+        <div class="pull-left">
+            <img class="toast-object" alt="90x90" style="width: 90px; height: 90px;" src="{{ asset("bundles/foxp2projects/images/foxp2-90-90.png") }}" />
+        </div>
+    <div class="toast-body">
+        <h4 class="toast-heading">Message de l'application</h4>
+        <p>
+    {% for message in flashbag_messages %}
+            <strong>{{ message|raw }}</strong>
+    {% endfor %}
+        </p>
+    </div>
+    </div>
+    </div>
+{% endif %}
+        <div class="clearfix"></div>
+        <form  id="categories_search" class="form-inline pull-right" action="{{ path('categories_search') }}" method="post" {{ form_enctype(form_search) }}>
+            <div class="btn-group">
+            {% if keyword != '' %}
+            <a class="btn" href="{{ path('categories_index',{'page':page}) }}" title=""><i class="icon-refresh"></i></a>
+            {% endif %}
+            <input id="search" type="text" name="search" class="input-large" style="height:30px" placeholder="Rechercher une catégorie" {% if keyword != '' %}value="{{ keyword }}"{% endif %}/>
+            <button class="btn" type="submit"><i class="icon-search"></i></button></div>
+        </form>
+        <div class="clearfix"></div>
+{% set flashbag_erreurs = app.session.flashbag.get('error') %}
+{% if flashbag_erreurs is not empty %}        
+    <div class="alert alert-danger">
+    <button type="button" class="close" data-dismiss="alert"></button>    
+    {% for message in flashbag_erreurs %}
+            <strong>{{ message|raw }}</strong>
+    {% endfor %}       
+    </div>
+{% endif %}
+ <table class="table table-bordered table-hover table-striped">
+        <thead>
+            <tr>
+                <th>Id Catégorie</th>
+                <th style="text-align: center;">Nom de la catégorie</th>
+                <th style="text-align: center;">Date de création</th>
+                <th style="text-align: center;">Date de modification</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <td colspan="4" style="text-align: right;" class="muted">{% if nb_pages is not null %}Affichage : page {{ page }}/{{ nb_pages}}{% endif %} </td>
+            </tr>        
+        </tfoot>
+        <tbody class="listcategories">
+        {% for entity in entities %}
+            <tr id="{{ entity.id }}" data-category="{{ entity.id }}">
+                <td>{{ entity.id }}</td>
+                <td style="text-align: center;">{{ entity.categoriesName }}</td>
+                <td style="text-align: center;">{% if entity.dateCreated %}{{ entity.dateCreated|date('d-m-Y') }}{% endif %}</td>
+                <td style="text-align: center;">{% if entity.dateModified %}{{ entity.dateModified|date('d-m-Y') }}{% endif %}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+        <div class="pagination">
+        <div class="pull-left">
+            <a data-toggle="modal" href="#keyboard" class="btn btn-info"><i class="icon-keyboard" style="vertical-align: middle;font-size: 16px;"></i><strong> contrôle clavier</strong></a>
+        </div>
+
+{% include "foxp2backofficeBundle:Categories:keyboard.html.twig" %}     
+{# pagination #}
+{% if nb_pages != null and counter > 0 %}
+        <div class="pagination-right">
+            <ul>                
+                {% for p in range(1,nb_pages) %} 
+                    <li{% if p == page %} class="active"{% endif %}><a href="{{ path('categories_index', {'page':p})}}" title=""><span>{{ p }}</span></a></li>
+                {% endfor %}
+            </ul>
+        </div>
+{% endif %}
+        </div>
+{# fenêtre modale ajaxifiée #}
+        <div id="catinfo">
+            <h2 class="heading-title"><strong>Détails de la catégorie :</strong></h2>
+            <div id="catinfoprogress">
+                <h3>chargement des données</h3>
+                <progress></progress>
+            </div>
+            <ul id="catinfodet">
+            </ul>
+        </div>
+</div>
+{% endblock %}
+{% block appbar %}
+<!-- app bar -->
+<div id="app-bar" class="win-commandlayout win-ui-dark">
+    <a class="win-command orange" href="{{ path('categories_index',{'page':1}) }}">
+        <span class="win-commandicon win-commandring icon-home icon-fox"></span>   
+        <span class="win-label orange">Accueil</span>
+    </a>
+    <a class="win-command white pull-right" href="{{ path('categories_edit', { 'id': 0 }) }}">
+        <span class="win-commandicon win-commandring icon-pencil-2"></span>   
+        <span class="win-label white">Editer</span>
+    </a>
+    <a class="win-command white pull-right" href="{{ path('categories_show', { 'id': 0 }) }}">
+        <span class="win-commandicon win-commandring icon-eye-3"></span>   
+        <span class="win-label white">Voir</span>
+    </a>
+    <a id="ajax_show" class="win-command white pull-right" href="{{ path('categories_ajaxshow', { 'id': 0 }) }}">
+        <span class="win-commandicon win-commandring icon-ellipsis "></span>   
+        <span class="win-label white">+ d'infos</span>
+    </a>
+</div>
+<script>
+// globals var
+catid = '';dataloaded = false;ishowed = false;
+// init
+jQuery('#catinfo').animate({bottom: '-600px'},0);
+jQuery('#app-bar').animate({bottom: '-92px'},0);   
+jQuery('#app-bar-top').animate({top: '-96px'},0);
+// keyboard detection for actions
+$('body').keypress(function(e){    
+    if ($("#search").is(":focus")) {
+        // do not detect keyboard for search form.
+    }else{
+    switch(String.fromCharCode(e.which)){        
+    case 'i':
+    if (String.fromCharCode(e.which) === 'i' && catid !== '' && ishowed === false) {
+        getCategoryInfo();      
+        ishowed = true;
+    }else if(String.fromCharCode(e.which) === 'i' && dataloaded === true && ishowed === true){
+        jQuery('#catinfo').animate({bottom: '-600px'},400);
+        ishowed = false;    
+    }
+    break;
+    case 'a':
+        document.location.href="{{ path('categories_new') }}";
+    break;
+    case 'e':        
+        if (String.fromCharCode(e.which) === 'e' && catid !== '')
+            {
+                href = "{{ path('categories_edit', {'id':0}) }}";
+                document.location.href=href.replace(/id=+[0-9]+/,"id="+catid);;
+            }
+    break;
+    case 'v':        
+        if (String.fromCharCode(e.which) === 'v' && catid !== '')
+            {
+                href = "{{ path('categories_show', {'id':0}) }}";
+                document.location.href=href.replace(/id=+[0-9]+/,"id="+catid);;
+            }
+    break;
+    }
+    }
+}); 
+
+// clean up catinfo modal
+function clearcatinfo(){ $('#catinfodet').find("li").remove(); $('#catinfoprogress').hide(); }
+// ajax call for category selected
+function getCategoryInfo() {
+    jQuery('#catinfo').animate({bottom: '+0px'},400);
+    $('#catinfodet').find("li").remove();
+    $('#catinfoprogress').show();    
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: '{{ path('categories_ajaxshow', {'id': 0}) }}',
+        data: 'id=' + catid,
+        timeout: 5000,
+        success: function(response) {        
+            $('#dataloaded').show();dataloaded = true;clearcatinfo(); $.each(response, function(i, item) { if(item === null){data= '';}else{data=item;};$('#catinfodet').append('<li><strong class="muted">'+i+'</strong> : '+data+'</li>'); });       
+        },
+        error: function(x,t,m) {
+            if( t === 'timeout') { clearcatinfo(); $('#catinfodet').append('<li><strong>Erreur</strong> : La requête a mis trop de temps à répondre</li>');
+                } else {
+                    clearcatinfo(); $('#catinfodet').append('<li><strong>'+t+'</strong> : '+m+'</li>');
+                }                
+        }
+    });  
+}
+$('#ajax_show').click(function(e){
+    e.preventDefault();
+    getCategoryInfo()
+    });
+
+// mouse right click
+$(document).bind('contextmenu', function(e){
+    e.preventDefault();
+    jQuery('#app-bar-top').animate({'top': '+0px'},400);    
+    jQuery('#app-bar').animate({bottom: '-92px'},0); 
+    jQuery('#catinfo').animate({bottom: '-600px'},400); 
+    return false;
+});
+// mouse left click
+$('#application').mousedown(function(e) {    
+    if (e.which === 1) {
+       jQuery('#app-bar-top').animate({top: '-96px'},400);
+       jQuery('#app-bar').animate({bottom: '-92px'},400); 
+       jQuery('#catinfo').animate({bottom: '-600px'},400);
+    }
+});
+
+$('.listcategories tr').click(function(){
+    catid = $(this).data('category'); 
+    ishowed = false;
+    jQuery('#catinfo').animate({bottom: '-600px'},400); 
+    $('.listcategories tr').removeClass('info'); 
+    $(this).addClass('info text-white');    
+    jQuery('#app-bar').animate({'bottom': '+0px'},400); 
+    $(".win-ui-dark a").each(function(){
+        var href = $(this).attr("href"); 
+        href = href.replace(/id=+[0-9]+/,"id="+catid);  
+        $(this).attr("href",href);});
+    
+});
+</script>
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %}

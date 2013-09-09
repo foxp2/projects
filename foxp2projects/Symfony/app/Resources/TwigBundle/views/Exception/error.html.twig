@@ -1,0 +1,20 @@
+{% extends "foxp2projectsBundle:Common:layout.html.twig" %}
+{% block application %}
+<div id="notconnected" data-backdrop="static" class="modal message hide fade">
+<div class="modal-header">
+<h3>{{ 'Oops! An Error Occurred'|trans }}</h3>
+</div>
+<div class="modal-body">
+<h4>{{ 'The server returned a'| trans}} "{{ status_code }} {{ status_text }}"</h4>
+<p><br />Something is broken. Please e-mail us at [email] and let us know
+            what you were doing when this error occurred. We will fix it as soon
+            as possible. Sorry for any inconvenience caused.</p>
+</div>
+<div class="modal-footer">         
+         <a class="btn btn-primary" href="{{ path('homepage') }}.{{ app.request.getRequestFormat}}"><span class="icon-battery-low" aria-hidden="true"></span> return to homepage</a>
+</div>   
+</div>
+<script>
+    $("#notconnected").modal('show');    
+</script>
+{% endblock %}

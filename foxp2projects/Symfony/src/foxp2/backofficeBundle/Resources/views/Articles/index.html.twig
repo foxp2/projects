@@ -1,0 +1,211 @@
+{# \Symfony\src\foxp2\backofficeBundle\Resources\views\Articles\index.html.twig #}
+{% extends "foxp2backofficeBundle:Common:layout_admin.html.twig" %}
+{% block apptopbar %}
+<!-- app top bar -->
+<div id="app-bar-top" class="win-ui-dark">
+    <a class="win-command white pull-right" href="{{ path('articles_new') }}">
+        <span class="win-commandicon win-commandring icon-plus-5"></span>   
+        <span class="win-label white">Ajouter un article</span>
+    </a>
+</div>
+{% endblock %}
+{% block application -%}
+<div class="row-fluid">
+    <div id="header-container" style="margin-left: 0px;margin-top:20px;margin-bottom: 20px;">
+        <a id="backbutton" class="win-backbutton icon-fox pull-left" style="margin-right: 10px;" href="{{ path('foxp2backoffice_homepage')}}"></a>
+        <div class="dropdown" style="width:800px;">
+            <h1 class="header-dropdown" style="line-height:40px;width:100%;">Liste des articles{% if keyword != '' %} : <small>{{ keyword }}</small>{% endif %}</h1>
+        </div>
+    </div>
+{% include "foxp2backofficeBundle:Secured:logout.html.twig" %}
+{% set flashbag_messages = app.session.flashbag.get('message') %}
+{% if flashbag_messages is not empty %}        
+    <div id="alerts-container">    
+    <div class="toast fade in">
+        <button type="button" class="close" data-dismiss="alert" type="button"></button>
+        <div class="pull-left">
+            <img class="toast-object" alt="90x90" style="width: 90px; height: 90px;" src="{{ asset("bundles/foxp2projects/images/foxp2-90-90.png") }}" />
+        </div>
+    <div class="toast-body">
+        <h4 class="toast-heading">Message de l'application</h4>
+        <p>
+    {% for message in flashbag_messages %}
+            <strong>{{ message|raw }}</strong>
+    {% endfor %}
+        </p>
+    </div>
+    </div>
+    </div>
+{% endif %}
+        <div class="clearfix"></div>
+        <form  id="articles_search" class="form-inline pull-right" action="{{ path('articles_search') }}" method="post" {{ form_enctype(form_search) }}>
+            <div class="btn-group">
+            {% if keyword != '' %}
+            <a class="btn" href="{{ path('articles_index',{'page':page}) }}" title=""><i class="icon-refresh"></i></a>
+            {% endif %}
+            <input id="search" type="text" name="search" class="input-large" style="height:30px" placeholder="Rechercher un article" {% if keyword != '' %}value="{{ keyword }}"{% endif %}/>
+            <button class="btn" type="submit"><i class="icon-search"></i></button></div>
+        </form>
+        <div class="clearfix"></div>       
+{% set flashbag_erreurs = app.session.flashbag.get('error') %}
+{% if flashbag_erreurs is not empty %}        
+    <div class="alert alert-danger">
+    <button type="button" class="close" data-dismiss="alert"></button>    
+    {% for message in flashbag_erreurs %}
+            <strong>{{ message|raw }}</strong>
+    {% endfor %}       
+    </div>
+{% endif %}
+    <table class="table table-bordered table-hover table-striped">
+        <thead>
+            <tr>
+                <th>Id Article</th>
+                <th style="text-align: center;">Nom de l'article</th>
+                <th style="text-align: center;">Titre de l'article</th>
+                <th style="text-align: center;">Date de création</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <td colspan="4" style="text-align: right;" class="muted">{% if nb_pages is not null %}Affichage : page {{ page }}/{{ nb_pages}}{% endif %} </td>
+            </tr>        
+        </tfoot>
+        <tbody class="listarticles">
+        {% for entity in entities %}
+            <tr id="{{ entity.id }}" data-article="{{ entity.id }}">
+                <td>{{ entity.id }}</td>
+                <td style="text-align: center;">{{ entity.articleName }}</td>
+                <td style="text-align: center;">{{ entity.articleTitle }}</td>
+                <td style="text-align: center;">{% if entity.articleDateCreated %}{{ entity.articleDateCreated|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+        <div class="pagination">
+        <div class="pull-left">
+            <a data-toggle="modal" href="#keyboard" class="btn btn-info"><i class="icon-keyboard" style="vertical-align: middle;font-size: 16px;"></i><strong> contrôle clavier</strong></a>
+        </div>
+{% include "foxp2backofficeBundle:Articles:keyboard.html.twig" %} 
+{# pagination #}
+{% if nb_pages != null and counter > 0 %}
+        <div class="pagination-right">
+            <ul>                
+                {% for p in range(1,nb_pages) %} 
+                    <li{% if p == page %} class="active"{% endif %}><a href="{{ path('articles_index', {'page':p})}}" title=""><span>{{ p }}</span></a></li>
+                {% endfor %}
+            </ul>
+        </div>
+{% endif %}
+        </div>
+{# fenêtre modale ajaxifiée #}
+        <div id="gistinfo">
+            <h2 class="heading-title"><strong>Détails du gist :</strong></h2>
+            <div id="gistinfoprogress">
+                <h3>chargement des données</h3>
+                <progress></progress>
+            </div>
+            <ul id="gistinfodet">
+            </ul>
+        </div>
+</div>
+{% endblock %}
+{% block appbar %}
+<!-- app bar -->
+<div id="app-bar" class="win-commandlayout win-ui-dark">
+    <a class="win-command orange" href="{{ path('articles_index',{'page':1}) }}">
+        <span class="win-commandicon win-commandring icon-home icon-fox"></span>   
+        <span class="win-label orange">Accueil</span>
+    </a>
+    <a class="win-command white pull-right" href="{{ path('articles_edit', { 'id': 0 }) }}">
+        <span class="win-commandicon win-commandring icon-pencil-2"></span>   
+        <span class="win-label white">Editer</span>
+    </a>
+    <a class="win-command white pull-right" href="{{ path('articles_show', { 'id': 0 }) }}">
+        <span class="win-commandicon win-commandring icon-eye-3"></span>   
+        <span class="win-label white">Voir</span>
+    </a>
+    <a id="ajax_show" class="win-command white pull-right" href="">
+        <span class="win-commandicon win-commandring icon-ellipsis "></span>   
+        <span class="win-label white">+ d'infos</span>
+    </a>
+</div>
+<script>
+// globals var
+artid = '';dataloaded = false;ishowed = false;
+// init
+jQuery('#gistinfo').animate({bottom: '-600px'},0);
+jQuery('#app-bar').animate({bottom: '-92px'},0);   
+jQuery('#app-bar-top').animate({top: '-96px'},0);
+// keyboard detection for actions
+$('body').keypress(function(e){    
+    if ($("#search").is(":focus")) {
+        // do not detect keyboard for search form.
+    }else{
+    switch(String.fromCharCode(e.which)){        
+    case 'i':
+    if (String.fromCharCode(e.which) === 'i' && artid !== '' && ishowed === false) {
+        getCategoryInfo();      
+        ishowed = true;
+    }else if(String.fromCharCode(e.which) === 'i' && dataloaded === true && ishowed === true){
+        jQuery('#gistinfo').animate({bottom: '-600px'},400);
+        ishowed = false;    
+    }
+    break;
+    case 'a':
+        document.location.href="{{ path('articles_new') }}";
+    break;
+    case 'e':        
+        if (String.fromCharCode(e.which) === 'e' && artid !== '')
+            {
+                href = "{{ path('articles_edit', {'id':0}) }}";
+                document.location.href=href.replace(/id=+[0-9]+/,"id="+artid);;
+            }
+    break;
+    case 'v':        
+        if (String.fromCharCode(e.which) === 'v' && artid !== '')
+            {
+                href = "{{ path('articles_show', {'id':0}) }}";
+                document.location.href=href.replace(/id=+[0-9]+/,"id="+artid);;
+            }
+    break;
+    }
+    }
+}); 
+// clean up catinfo modal
+function clearcatinfo(){ $('#gistinfodet').find("li").remove(); $('#gistinfoprogress').hide(); }
+
+// mouse right click
+$(document).bind('contextmenu', function(e){
+    e.preventDefault();
+    jQuery('#app-bar-top').animate({'top': '+0px'},400);    
+    jQuery('#app-bar').animate({bottom: '-92px'},0); 
+    jQuery('#gistinfo').animate({bottom: '-600px'},400); 
+    return false;
+});
+// mouse left click
+$('#application').mousedown(function(e) {    
+    if (e.which === 1) {
+       jQuery('#app-bar-top').animate({top: '-96px'},400);
+       jQuery('#app-bar').animate({bottom: '-92px'},400); 
+       jQuery('#gistinfo').animate({bottom: '-600px'},400);
+    }
+});
+
+$('.listarticles tr').click(function(){
+    artid = $(this).data('article'); 
+    ishowed = false;
+    jQuery('#gistinfo').animate({bottom: '-600px'},400); 
+    $('.listarticles tr').removeClass('info'); 
+    $(this).addClass('info text-white');    
+    jQuery('#app-bar').animate({'bottom': '+0px'},400); 
+    $(".win-ui-dark a").each(function(){
+        var href = $(this).attr("href"); 
+        href = href.replace(/id=+[0-9]+/,"id="+artid);  
+        $(this).attr("href",href);});
+    
+});
+</script>
+{% endblock %}
+{% block footer %}
+
+{% endblock %}

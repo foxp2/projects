@@ -1,0 +1,37 @@
+articles_index:
+    pattern:  /{page}
+    defaults: { _controller: "foxp2backofficeBundle:Articles:index", page: 1 }
+    requirements:
+        page: \d+
+
+articles_show:
+    pattern:  /show/id={id}
+    defaults: { _controller: "foxp2backofficeBundle:Articles:show" }
+
+articles_new:
+    pattern:  /new
+    defaults: { _controller: "foxp2backofficeBundle:Articles:new" }
+
+articles_create:
+    pattern:  /create
+    defaults: { _controller: "foxp2backofficeBundle:Articles:create" }
+    requirements: { _method: post }
+
+articles_edit:
+    pattern:  /edit/id={id}
+    defaults: { _controller: "foxp2backofficeBundle:Articles:edit" }
+
+articles_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "foxp2backofficeBundle:Articles:update" }
+    requirements: { _method: post|put }
+
+articles_delete:
+    pattern:  /{id}/delete
+    defaults: { _controller: "foxp2backofficeBundle:Articles:delete" }
+    requirements: { _method: post|delete }
+
+articles_search:
+    pattern: /search
+    defaults: {_controller: "foxp2backofficeBundle:Articles:search" }
+    requirements: { _method: post|put }

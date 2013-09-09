@@ -1,0 +1,46 @@
+{# \Symfony\src\foxp2\projectsBundle\Resources\views\Articles\new.html.twig #}
+{% extends "foxp2backofficeBundle:Common:layout_admin.html.twig" %}
+{% form_theme form  'foxp2backofficeBundle:Form:fields.html.twig' %}
+{% block application -%}
+<div class="row-fluid" style="margin-bottom: 93px;">
+    <div id="header-container" style="margin-left: 0px;margin-top:20px;margin-bottom: 20px;">
+        <a id="backbutton" class="win-backbutton icon-fox pull-left" style="margin-right: 10px;" href="{{ path('articles_index') }}" title="Retour à la liste des articles"></a>
+        <div class="dropdown" style="width:800px;">
+            <h1 class="header-dropdown" style="line-height:40px;">Création d'un article</h1>
+        </div>
+    </div>   
+{% include "foxp2backofficeBundle:Secured:logout.html.twig" %}
+{% set flashbag_messages = app.session.flashbag.get('message') %}
+{% if flashbag_messages is not empty %}        
+<div class="alert alert-danger span5">
+<button type="button" class="close" data-dismiss="alert"></button>   
+    {% for message in flashbag_messages %}
+            <strong>{{ message|raw }}</strong>
+    {% endfor %}
+</div>
+{% endif %} 
+
+    <form id="article_create" action="{{ path('articles_create') }}" method="post" {{ form_enctype(form) }}>
+        {{ form_widget(form) }}
+    </form>
+</div>       
+<!-- app bar -->
+<div id="app-bar" class="win-commandlayout win-ui-dark">
+    <a class="win-command orange" href="{{ path('articles_index') }}">
+        <span class="win-commandicon win-commandring icon-list icon-fox"></span>   
+        <span class="win-label orange">Liste des articles</span>
+    </a>
+    <a title="" id="button_submit" class="win-command white pull-right" href="#">
+        <span class="win-commandicon win-commandring icon-plus"></span>   
+        <span class="win-label white">Créer</span>
+    </a>
+</div>
+<script>
+jQuery('#app-bar').animate({'bottom': '+0px'},400);
+$('#button_submit').click(function() {
+  $('#article_create').submit();
+}); 
+</script>
+{% endblock %}
+{% block footer %}
+{% endblock %}

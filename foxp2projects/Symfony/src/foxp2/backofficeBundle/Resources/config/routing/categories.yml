@@ -1,0 +1,40 @@
+categories_index:
+    pattern:  /{page}
+    defaults: { _controller: "foxp2backofficeBundle:Categories:index" , page: 1}
+    requirements:
+        page: \d+
+
+categories_show:
+    pattern:  /show/id={id}
+    defaults: { _controller: "foxp2backofficeBundle:Categories:show" }
+    
+categories_ajaxshow:
+    pattern:  /ajaxshow/id={id}
+    defaults: { _controller: "foxp2backofficeBundle:Categories:ajaxshow" }    
+    
+categories_new:
+    pattern:  /new
+    defaults: { _controller: "foxp2backofficeBundle:Categories:new" }
+
+categories_create:
+    pattern:  /create
+    defaults: { _controller: "foxp2backofficeBundle:Categories:create" }
+    requirements: { _method: post }
+
+categories_edit:
+    pattern:  /edit/id={id}
+    defaults: { _controller: "foxp2backofficeBundle:Categories:edit" }
+
+categories_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "foxp2backofficeBundle:Categories:update" }
+    requirements: { _method: post|put }
+
+categories_delete:
+    pattern:  /{id}/delete
+    defaults: { _controller: "foxp2backofficeBundle:Categories:delete" }
+    requirements: { _method: post|delete }
+categories_search:
+    pattern: /search
+    defaults: {_controller: "foxp2backofficeBundle:Categories:search" }
+    requirements: { _method: post|put }

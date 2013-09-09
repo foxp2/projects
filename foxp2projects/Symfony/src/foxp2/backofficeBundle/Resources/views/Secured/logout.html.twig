@@ -1,0 +1,6 @@
+{# \Symfony\src\foxp2\backofficeBundle\Resources\views\Secured\logout.html.twig #}
+                <div class="tile wide image collection pull-right span2">
+                    <img alt="login" class="pull-left" src="{{ asset("bundles/foxp2projects/images/login.jpg") }}" style="width: 54px; height: 54px;margin-top: 20px;margin-right:10px;">    
+                    <h4 style="margin-top: 20px;font-weight: bold;margin-bottom: 3px;">Bienvenue {{ app.user ? app.user.username : '' }}</h4>
+                    <a class="btn btn-info btn-small" href="{{ path('logout') }}"><strong><i class="icon-logout"></i> Deconnection</strong></a>            
+                </div>

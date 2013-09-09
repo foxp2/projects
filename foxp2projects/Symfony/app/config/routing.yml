@@ -1,0 +1,8 @@
+foxp2backoffice:
+    resource: "@foxp2backofficeBundle/Resources/config/routing.yml"
+    prefix:   /
+
+foxp2projects:
+    resource: "@foxp2projectsBundle/Resources/config/routing.yml"
+    prefix:   /
+
