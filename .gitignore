@@ -26,6 +26,12 @@ foxp2projects/symfony/web/uploads/*
 foxp2projects/symfony/web/bundles/acmedemo
 foxp2projects/symfony/web/bundles/framework
 foxp2projects/symfony/web/bundles/sensiodistribution
+foxp2projects/symfony/web/bundles/ivoryckeditor
+foxp2projects/symfony/web/bundles/highlight
+
+# a publier plus tard
+foxp2projects/symfony/web/bundles/bootmetro
+foxp2projects/symfony/web/bundles/foxp2projects
 
 # Configuration files
 foxp2projects/symfony/app/config/config_dev.yml
@@ -34,3 +40,7 @@ foxp2projects/symfony/app/config/config_test.yml
 foxp2projects/symfony/app/config/routing_dev.yml
 foxp2projects/symfony/app/config/parameters.ini
 foxp2projects/symfony/app/config/parameters.yml
+foxp2projects/symfony/src/foxp2/backofficeBundle/Resources/config/security.yml
+
+#private
+foxp2projects/Symfony/src/foxp2/backofficeBundle/Resources/views/Common/private.html.twig
