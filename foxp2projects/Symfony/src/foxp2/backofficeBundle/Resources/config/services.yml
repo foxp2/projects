@@ -6,7 +6,7 @@ services:
 #        class: %foxp2backoffice.example.class%
 #        arguments: [@service_id, "plain_value", %parameter%]
     github_api:
-        class: foxp2\projectsBundle\Service\GithubService
+        class: foxp2\backofficeBundle\Service\GithubService
         arguments:
             # cahce_dir : fichiers dans app/cache [dev] ou [prod]
             cache_dir:  %kernel.cache_dir%/githubapi
