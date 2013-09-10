@@ -119,7 +119,7 @@ class ArticlesController extends Controller
         if (false === $this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
 
             $this->get('session')->getFlashBag()->add('error', 'Cette action necessite des droits administrateur !');
-            return $this->redirect($this->generateUrl('articles'));
+            return $this->redirect($this->generateUrl('articles_index'));
         } else {
             $entity = new Articles();
             $form = $this->createForm(new ArticlesType(), $entity, array('gists' => $this->getListofGist()));
@@ -208,7 +208,7 @@ class ArticlesController extends Controller
         if (false === $this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
 
             $this->get('session')->getFlashBag()->add('error', 'Cette action necessite des droits administrateur !');
-            return $this->redirect($this->generateUrl('articles'));
+            return $this->redirect($this->generateUrl('articles_index'));
         } else {
             $em = $this->getDoctrine()->getManager();
 
@@ -246,7 +246,7 @@ class ArticlesController extends Controller
         if (false === $this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
 
             $this->get('session')->getFlashBag()->add('error', 'Cette action necessite des droits administrateur !');
-            return $this->redirect($this->generateUrl('articles'));
+            return $this->redirect($this->generateUrl('articles_index'));
         } else {
             $form = $this->createDeleteForm($id);
             $form->submit($request);
@@ -263,7 +263,7 @@ class ArticlesController extends Controller
                 $em->flush();
             }
 
-            return $this->redirect($this->generateUrl('articles'));
+            return $this->redirect($this->generateUrl('articles_index'));
         }
     }
 
