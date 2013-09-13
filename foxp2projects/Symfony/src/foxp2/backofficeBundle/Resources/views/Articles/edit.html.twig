@@ -25,6 +25,16 @@
         {{ form_widget(edit_form) }}
     </form>
 </div>
+{# fenêtre modale ajaxifiée #}
+        <div id="gistinfo">
+            <h2 class="heading-title"><strong>Détails du gist :</strong></h2>
+            <div id="gistinfoprogress">
+                <h3>chargement des données</h3>
+                <progress></progress>
+            </div>
+            <ul id="gistinfodet">
+            </ul>
+        </div>
 <!-- app bar -->
 <div id="app-bar" class="win-commandlayout win-ui-dark">
     <a class="win-command orange" href="{{ path('articles_index') }}">
@@ -40,7 +50,69 @@
 jQuery('#app-bar').animate({'bottom': '+0px'},400);
 $('#button_submit').click(function() {
   $('#articles_update').submit();
-}); 
+});
+gist = '';
+var selected = $('#foxp2_backofficeBundle_articlestype_articleGistReference option:selected').val();
+if($('#foxp2_backofficeBundle_articlestype_articleGistReference option:selected').val() !== ''){
+    $('#foxp2_backofficeBundle_articlestype_articleGistReference').after('<a id="'+selected+'" class="btn btn-info gistbutton"><i class="icon-plus"></i> info</a>');
+}
+jQuery('#gistinfo').animate({bottom: '-600px'},0);
+$('#foxp2_backofficeBundle_articlestype_articleGistReference').change(function(){
+    var options = $('#foxp2_backofficeBundle_articlestype_articleGistReference option:selected');
+    $('.gistbutton').remove();
+    if(options.val() !== '') {
+        $('.gistbutton').remove();
+        $('#foxp2_backofficeBundle_articlestype_articleGistReference').after('<a id="'+options.val()+'" class="btn btn-info gistbutton"><i class="icon-plus"></i> info</a>');
+        return false;
+    }
+});
+$(document).on("click", ".gistbutton", function(e) {
+    e.preventDefault();
+    jQuery('#gistinfo').animate({bottom: '+0px'},400);
+    gist = $(this).attr('id'); 
+    getGistInfo();
+})
+// clean up catinfo modal
+function cleargistinfo(){ $('#gistinfodet').find("li").remove(); $('#gistinfoprogress').hide(); $('#avatar').remove();}
+function getGistInfo() {
+    $('#gistinfodet').find("li").remove();
+    $('#avatar').remove();
+    $('#gistinfoprogress').show(); 
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: '{{ path('articles_ajaxgist', {'id': 0}) }}',
+        data: 'id=' + gist,
+        timeout: 5000,
+        success: function(response) {
+            cleargistinfo();
+            $.each(response, function(i, item) { 
+                if(item === null){
+                    data= '';
+                }else{
+                    data=item;
+                };
+                if( i === 'avatar') {
+                $('.heading-title').append('<img id="avatar" src="'+data+'" class="pull-right img-polaroid" style="top:0px;height:45px;width:45px;">');   
+                }else{
+                $('#gistinfodet').append('<li><strong class="muted">'+i+'</strong> : '+data+'</li>'); 
+                }});
+        },
+        error: function(x,t,m) {
+            cleargistinfo();
+            if( t === 'timeout') { $('#gistinfodet').append('<li><strong>Erreur</strong> : La requête a mis trop de temps à répondre</li>');
+                } else {                    
+                    $('#gistinfodet').append('<li><strong>'+t+'</strong> : '+m+x+'</li>');
+                }                
+        }
+    }); 
+}
+// mouse left click
+$('#application').mousedown(function(e) {    
+    if (e.which === 1) {
+       jQuery('#gistinfo').animate({bottom: '-600px'},400);
+    }
+});
 </script>
 
 {% endblock %}

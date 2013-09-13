@@ -3,7 +3,10 @@ articles_index:
     defaults: { _controller: "foxp2backofficeBundle:Articles:index", page: 1 }
     requirements:
         page: \d+
-
+articles_ajaxgist:
+    pattern:  /ajaxgist/id={id}
+    defaults: { _controller: "foxp2backofficeBundle:Articles:ajaxgist" }   
+    
 articles_show:
     pattern:  /show/id={id}
     defaults: { _controller: "foxp2backofficeBundle:Articles:show" }

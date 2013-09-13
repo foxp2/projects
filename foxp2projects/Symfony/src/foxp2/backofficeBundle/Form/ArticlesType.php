@@ -24,31 +24,34 @@ class ArticlesType extends AbstractType
                   'property' => 'categoriesName',
                   'query_builder' => function(CategoriesRepository $er){
                             return $er->getCategoriesList();                              
-                  },                  
+                  },
                   'required' => true,
                   'label' => '<strong>Choisir la catégorie :</strong>'                  
                  )) 
             ->add('articleGistReference','choice', 
-                    array('choices' => $options['gists'],'label' => '<strong>Lier avec un gist</strong><br /><em class="muted">Facultatif</em>', 'required' => false, 'empty_value' => 'Choisir un numéro de gist','attr' => array('class'=>'span5')))
+                    array('choices' => $options['gists'], 'label' => '<strong>Lier avec un gist</strong><br /><em class="muted">Facultatif</em>', 'required' => false, 'empty_value' => 'Choisir un numéro de gist', 'attr' => array('class'=>'span5')))
             ->add('articleTitle','text',array('label' => '<strong>Titre de l\'article</strong>'))
             ->add('articleSubTitle','text',array('label' => '<strong>Sous titre de l\'article</strong>'))
-            ->add('articleShortDescription','ckeditor',array(
-                    'config' => array(
-                        'toolbar' => array(
-                        array(
-                        'name' => 'basicstyles',
-                        'items' => array('Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat')
-                        ),                        
-                        array(
-                        'name' => 'paragraph',
-                        'items' => array('NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl')
-                        ),
-                        array(
-                        'name' => 'styles',
-                        'items' => array('Styles','Format','Font','FontSize')
-                        )
-                    )),
-                    'label' => '<br /><strong>Description courte de l\'article</strong><br /><br />'))
+            ->add('articleShortDescription','textarea',array('label' => '<br /><strong>Description courte de l\'article</strong><br /><br />',
+                  'attr' => array('class' => 'span5')))
+// Bug avec ckeditor
+//            ->add('articleShortDescription','ckeditor',array(
+//                    'config' => array(
+//                        'toolbar' => array(
+//                        array(
+//                        'name' => 'basicstyles',
+//                        'items' => array('Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat')
+//                        ),                        
+//                        array(
+//                        'name' => 'paragraph',
+//                        'items' => array('NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl')
+//                        ),
+//                        array(
+//                        'name' => 'styles',
+//                        'items' => array('Styles','Format','Font','FontSize')
+//                        )
+//                    )),
+//                    'label' => '<br /><strong>Description courte de l\'article</strong><br /><br />'))
             ->add('articleLongDescription','ckeditor',array('label' => '<br /><strong>Description longue de l\'article</strong><br /><br />'));        
     }
 
@@ -59,7 +62,8 @@ class ArticlesType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'foxp2\backofficeBundle\Entity\Articles',
-            'gists' => 'gists'
+            'gists' => 'gists',
+            'gist_selected' => 'gist_selected'
         ));
     }
 

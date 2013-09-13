@@ -56,6 +56,6 @@ class DefaultController extends Controller
     {
        $request = $this->getRequest();
        $session = $request->getSession();
-       $session->remove(SecurityContext::LAST_USERNAME);        
+       $session->remove(SecurityContext::LAST_USERNAME);       
     }
 }

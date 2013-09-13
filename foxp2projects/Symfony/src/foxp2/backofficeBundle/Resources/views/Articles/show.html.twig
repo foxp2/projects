@@ -32,7 +32,8 @@
         <thead>
             <tr>
                 <th>Id article</th>                
-                <th style="text-align: center;">Nom de l'article</th>                
+                <th style="text-align: center;">Nom de l'article</th> 
+                <th style="text-align: center;">Nom de la catégorie</th> 
                 <th style="text-align: center;">Date de création</th>
                 <th style="text-align: center;">Date de modification</th>                            
                 <th style="text-align: center;">Référence Gist</th>                
@@ -42,7 +43,8 @@
         <tbody class="listarticles">
             <tr id="{{ entity.id }}" data-article="{{ entity.id }}">                
                 <td>{{ entity.id }}</td>                 
-                <td style="text-align: center;">{{ entity.articleName }}</td>                                      
+                <td style="text-align: center;">{{ entity.articleName }}</td>  
+                <td style="text-align: center;">{{ category_name }}</td>  
                 <td style="text-align: center;">{{ entity.articleDateCreated|date('d-m-Y') }}</td>                      
                 <td style="text-align: center;">{{ entity.articleDateModified|date('d-m-Y') }}</td>  
                 <td style="text-align: center;">{{ entity.articleGistReference }}</td>
@@ -55,11 +57,11 @@
             </tr>
             <tr>
                 <th style="text-align: center;vertical-align: middle;">Description courte:</th>
-                <td colspan="5">{{ entity.articleShortDescription|raw }}</td>
+                <td colspan="6">{{ entity.articleShortDescription|raw }}</td>
             </tr>
             <tr>
                 <th style="text-align: center;vertical-align: middle;">Description longue:</th>
-                <td colspan="5">{{ entity.articleLongDescription|raw }}</td>
+                <td colspan="6">{{ entity.articleLongDescription|raw }}</td>
             </tr>
         </tbody>
     </table>

@@ -33,8 +33,7 @@ class Categories
     private $children;
 
     /**
-     * @var $parentId
-     * 
+     * @var $parentId     
      * @ORM\ManyToOne(targetEntity="foxp2\backofficeBundle\Entity\Categories", inversedBy="children")     
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id",nullable = true)    
      */
@@ -92,7 +91,13 @@ class Categories
      * 
      * @ORM\Column(name="categories_description", type="text", nullable = true)
      */    
-    private $categoriesDescription;    
+    private $categoriesDescription; 
+    
+    /**
+     *
+     * @ORM\OneToMany(targetEntity="Articles", mappedBy="category")
+     */    
+    private $articles;
     
     
     
@@ -101,7 +106,8 @@ class Categories
      */
     public function __construct()
     {
-        $this->children = new ArrayCollection();        
+        $this->children = new ArrayCollection();  
+        $this->articles = new ArrayCollection();
         $this->setDateCreated(new DateTime('now'));
     }
     
@@ -308,6 +314,11 @@ class Categories
     {
         return $this->children;
     }
+    
+    public function getArticles()
+    {
+        return $this->articles;
+    }
 
 
     /**
@@ -339,6 +350,6 @@ class Categories
      */
     public function __toString()
     {
-        return strval($this->id);
+        return strval($this->id);       
     }
 }

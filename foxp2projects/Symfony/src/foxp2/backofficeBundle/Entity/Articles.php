@@ -24,10 +24,9 @@ class Articles
     private $id;
 
 
-    /**
-     *
-     * @ORM\ManyToOne(targetEntity="foxp2\backofficeBundle\Entity\Categories")
-     * @ORM\JoinColumn(name="categories_id", referencedColumnName="id", onDelete="CASCADE")
+    /** 
+     * @ORM\ManyToOne(targetEntity="foxp2\backofficeBundle\Entity\Categories", inversedBy="articles")
+     * @ORM\JoinColumn(name="categories_id",referencedColumnName="id", onDelete="CASCADE")
      */
     private $category;
 

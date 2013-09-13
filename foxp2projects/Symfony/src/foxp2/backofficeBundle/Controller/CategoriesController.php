@@ -32,7 +32,8 @@ class CategoriesController extends Controller {
 
         if ($page < 1 or $page > $number_of_page && $counter != 0) {
 
-            throw $this->createNotFoundException('page inéxistante !');
+            $this->get('session')->getFlashBag()->add('message', 'Cette page n\'existe pas.');
+            return $this->redirect($this->generateUrl('categories_index'));
         }
 
         $entities = $em->getRepository('foxp2backofficeBundle:Categories')->getAllCategoriesList($result_per_page, $offset);
@@ -124,8 +125,10 @@ class CategoriesController extends Controller {
         $entity = new Categories();
 
         $em = $this->getDoctrine()->getManager();
+        
+        $categories = $em->getRepository('foxp2backofficeBundle:Categories')->getCategoriesIterate();   
 
-        $form = $this->createForm(new CategoriesType(), $entity);
+        $form = $this->createForm(new CategoriesType(), $entity, array('categories' => $categories));
 
         $form->submit($request);
 
@@ -150,8 +153,12 @@ class CategoriesController extends Controller {
     public function newAction() {
         
         $entity = new Categories();
+        
+        $em = $this->getDoctrine()->getManager();
+        
+        $categories = $em->getRepository('foxp2backofficeBundle:Categories')->getCategoriesIterate();   
 
-        $form = $this->createForm(new CategoriesType(), $entity);
+        $form = $this->createForm(new CategoriesType(), $entity, array('categories' => $categories));
 
         return $this->render('foxp2backofficeBundle:Categories:new.html.twig', array(
                     'entity' => $entity,
@@ -206,14 +213,16 @@ class CategoriesController extends Controller {
      * @param type $id
      * @return Categories entity
      */
-    public function showAction($id) {
+    public function showAction($id) {   
+        
 
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->getDoctrine()->getManager();    
 
-        $entity = $em->getRepository('foxp2backofficeBundle:Categories')->find($id);
-
+        $entity = $em->getRepository('foxp2backofficeBundle:Categories')->find($id);    
+        
         if (!$entity) {
             $this->get('session')->getFlashBag()->add('message', 'Cette catégories n\'existe pas.');
+            return $this->redirect($this->generateUrl('categories_index'));
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -235,7 +244,8 @@ class CategoriesController extends Controller {
         $entity = $em->getRepository('foxp2backofficeBundle:Categories')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Cette catégories n\'existe pas.');
+            $this->get('session')->getFlashBag()->add('message', 'Cette catégories n\'existe pas.');
+            return $this->redirect($this->generateUrl('categories_index'));
         }
         $editForm = $this->createForm(new CategoriesType(), $entity);
         $deleteForm = $this->createDeleteForm($id);
@@ -319,7 +329,8 @@ class CategoriesController extends Controller {
             $entity = $em->getRepository('foxp2backofficeBundle:Categories')->find($id);             
 
             if (!$entity) {
-                throw $this->createNotFoundException('Cette catégories n\'existe pas.');
+                $this->get('session')->getFlashBag()->add('message', 'Cette catégories n\'existe pas.');
+                return $this->redirect($this->generateUrl('categories_index'));
             }
             
             $em->remove($entity);

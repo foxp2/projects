@@ -4,6 +4,12 @@ foxp2backofficeBundle_categories:
 foxp2backofficeBundle_articles:
     resource: "@foxp2backofficeBundle/Resources/config/routing/articles.yml"
     prefix:   /backoffice/articles
+foxp2backofficeBundle_private:
+    resource: "@foxp2backofficeBundle/Resources/config/routing/private.yml"
+    prefix:   /backoffice/private
+foxp2backoffice:
+    pattern:  /
+    defaults: { _controller: foxp2backofficeBundle:Default:index }
 foxp2backoffice_homepage:
     pattern:  /backoffice
     defaults: { _controller: foxp2backofficeBundle:Default:index }

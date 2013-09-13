@@ -43,4 +43,9 @@ foxp2projects/symfony/app/config/parameters.yml
 foxp2projects/symfony/src/foxp2/backofficeBundle/Resources/config/security.yml
 
 #private
+foxp2projects/Symfony/src/foxp2/backofficeBundle/Resources/config/routing/private.yml
+foxp2projects/Symfony/src/foxp2/backofficeBundle/Controller/PrivateController.php
 foxp2projects/Symfony/src/foxp2/backofficeBundle/Resources/views/Common/private.html.twig
+foxp2projects/Symfony/src/foxp2/backofficeBundle/Resources/views/Private/layout_pdf.html.twig
+foxp2projects/Symfony/src/foxp2/backofficeBundle/Resources/views/Private/pdf.html.twig
+foxp2projects/Symfony/src/foxp2/backofficeBundle/Resources/views/Private/*

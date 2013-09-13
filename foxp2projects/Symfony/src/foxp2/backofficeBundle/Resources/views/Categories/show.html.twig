@@ -33,32 +33,96 @@
         <thead>
             <tr>
                 <th>Id catégorie</th>
-                <th style="text-align: center;">Id catégorie parente</th>
                 <th style="text-align: center;">Nom de la catégorie</th>                
                 <th style="text-align: center;">Date de création</th>
                 <th style="text-align: center;">Date de modification</th>
+                {% if entity.parentId %}               
+                <th style="text-align: center;">Catégorie parente</th>
+                <th style="text-align: right;">Action</th>
+                {% endif %}
             </tr>
         </thead>
         <tbody class="listcategories">
             <tr id="{{ entity.id }}" data-category="{{ entity.id }}">                
                 <td>{{ entity.id }}</td>
-                <td style="text-align: center;">{{ entity.parentId }}</td>  
                 <td style="text-align: center;">{{ entity.categoriesName }}</td>                                      
                 <td style="text-align: center;">{{ entity.dateCreated|date('d-m-Y') }}</td>                      
-                <td style="text-align: center;">{{ entity.dateModified|date('d-m-Y') }}</td>               
+                <td style="text-align: center;">{{ entity.dateModified|date('d-m-Y') }}</td>
+                {% if entity.parentId %}                
+                <td style="text-align: center;">{% if entity.parentId %}{{ entity.parentId.categoriesName }}{% endif %}</td>
+                <td style="text-align: right;">
+                {% if entity.parentId %}
+                        <div class="btn-group">
+                        <a class="btn btn-info" href="{{ path('categories_edit',{'id' : entity.parentId}) }}">éditer</a>
+                        <a class="btn btn-primary" href="{{ path('categories_show',{'id' : entity.parentId}) }}">voir</a>
+                {% endif %}
+                </td>  
+                {% endif %}
             </tr>
             <tr>
                 <th style="text-align: center;">titre :</th>
-                <td colspan="2">{{ entity.categoriesTitle }}</td>
+                <td colspan="{% if entity.parentId %}2{% else %}1{% endif %}">{{ entity.categoriesTitle }}</td>
                 <th style="text-align: center;">sous titre :</th>
-                <td colspan="2">{{ entity.categoriesSubTitle }}</td>
+                <td colspan="{% if entity.parentId %}3{% else %}1{% endif %}">{{ entity.categoriesSubTitle }}</td>
             </tr>
             <tr>
                 <th style="text-align: center;vertical-align: middle;">Description :</th>
-                <td colspan="4">{{ entity.categoriesDescription|raw }}</td>
+                <td colspan="{% if entity.parentId %}5{% else %}4{% endif %}">{{ entity.categoriesDescription|raw }}</td>
             </tr>
         </tbody>
     </table>
+    {% if entity.children|length > 0 %}
+    <h2>Liste des sous catégories : <small>{{ entity.children|length }} sous catégorie{% if entity.children|length > 1 %}s{% endif %}</small></h2><hr>
+    <table class="table table-bordered table-hover table-striped">    
+        <thead>
+            <tr>
+                <th>Id sous catégorie</th>
+                <th style="text-align: center;">Nom de la sous catégorie</th>
+                <th style="text-align: right;">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+    {% for category in entity.children %}
+            <tr>
+                <td>{{ category.id }}</td>
+                <td style="text-align: center;">{{ category.categoriesName }}</td>
+                <td style="text-align: right;">
+                    <div class="btn-group">
+                    <a class="btn btn-info" href="{{ path('categories_edit',{'id' : category.id}) }}"><strong>éditer</strong></a>
+                    <a class="btn btn-primary" href="{{ path('categories_show',{'id' : category.id}) }}"><strong>voir</strong></a>
+                    </div>
+                </td>
+            </tr>
+    {% endfor %}
+        </tbody>
+    </table> 
+    {% endif %}
+    {% if entity.articles|length > 0 %}
+    <h2>Liste des articles : <small>{{ entity.articles|length }} article{% if entity.articles|length > 1 %}s{% endif %}</small></h2><hr>
+    <table class="table table-bordered table-hover table-striped">
+        <thead>
+            <tr>
+                <th>Id de l'article</th>
+                <th style="text-align: center;">Nom de l'article</th>
+                <th style="text-align: right;">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for article in entity.articles %}
+            <tr>
+            <td>{{ article.id }}</a></td>
+            <td>{{ article.articleName }}</td>
+            <td style="text-align: right;">
+                <div class="btn-group">
+                <a class="btn btn-info" href="{{ path('articles_edit',{'id' : article.id}) }}"><strong>éditer</strong></a>
+                <a class="btn btn-primary" href="{{ path('articles_show',{'id' : article.id}) }}"><strong>voir</strong></a>
+                </div>
+            </td>
+            </tr>
+        {% endfor %}
+         </tbody>
+    </table>
+    {% endif %}
     <form id="delete_categories" action="{{ path('categories_delete', { 'id': entity.id }) }}" method="post">
     <input type="hidden" name="_method" value="DELETE" />
     {{ form_widget(delete_form) }}   

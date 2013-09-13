@@ -28,7 +28,8 @@ class CategoriesType extends AbstractType
                             return $er->getCategoriesList();                              
                   },                  
                   'required' => false,
-                  'label' => '<strong>Catégorie parente :</strong>'                  
+                  'label' => '<strong>Catégorie parente :</strong>',
+                 
                  ))        
             ->add('categoriesDescription', 'ckeditor',array('label' => '<strong>Description de la catégorie :</strong>'));
                  
@@ -42,7 +43,7 @@ class CategoriesType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(array(            
-            'data_class' => 'foxp2\backofficeBundle\Entity\Categories',            
+            'data_class' => 'foxp2\backofficeBundle\Entity\Categories',             
         ));
     }
 
