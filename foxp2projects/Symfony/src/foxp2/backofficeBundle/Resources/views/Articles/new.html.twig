@@ -64,7 +64,7 @@ $(document).on("click", ".gistbutton", function(e) {
     getGistInfo();
 })
 // clean up catinfo modal
-function cleargistinfo(){ $('#gistinfodet').find("li").remove(); $('#gistinfoprogress').hide(); }
+function cleargistinfo(){ $('#gistinfodet').find("li").remove(); $('#gistinfoprogress').hide(); $('#avatar').remove();}
 function getGistInfo() {
     $('#gistinfodet').find("li").remove();
     $('#gistinfoprogress').show(); 
@@ -76,7 +76,17 @@ function getGistInfo() {
         timeout: 5000,
         success: function(response) {
             cleargistinfo();
-            $.each(response, function(i, item) { if(item === null){data= '';}else{data=item;};$('#gistinfodet').append('<li><strong class="muted">'+i+'</strong> : '+data+'</li>'); });       
+            $.each(response, function(i, item) { 
+                if(item === null){
+                    data= '';
+                }else{
+                    data=item;
+                };
+                if( i === 'avatar') {
+                $('.heading-title').append('<img id="avatar" src="'+data+'" class="pull-right img-polaroid" style="top:0px;height:45px;width:45px;">');   
+                }else{
+                $('#gistinfodet').append('<li><strong class="muted">'+i+'</strong> : '+data+'</li>'); 
+                }});
         },
         error: function(x,t,m) {
             cleargistinfo();
