@@ -124,11 +124,9 @@ class CategoriesController extends Controller {
         
         $entity = new Categories();
 
-        $em = $this->getDoctrine()->getManager();
-        
-        $categories = $em->getRepository('foxp2backofficeBundle:Categories')->getCategoriesIterate();   
+        $em = $this->getDoctrine()->getManager();      
 
-        $form = $this->createForm(new CategoriesType(), $entity, array('categories' => $categories));
+        $form = $this->createForm(new CategoriesType(), $entity);
 
         $form->submit($request);
 
@@ -153,12 +151,8 @@ class CategoriesController extends Controller {
     public function newAction() {
         
         $entity = new Categories();
-        
-        $em = $this->getDoctrine()->getManager();
-        
-        $categories = $em->getRepository('foxp2backofficeBundle:Categories')->getCategoriesIterate();   
 
-        $form = $this->createForm(new CategoriesType(), $entity, array('categories' => $categories));
+        $form = $this->createForm(new CategoriesType(), $entity);
 
         return $this->render('foxp2backofficeBundle:Categories:new.html.twig', array(
                     'entity' => $entity,
