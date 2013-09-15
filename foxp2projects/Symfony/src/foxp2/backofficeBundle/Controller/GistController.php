@@ -1,0 +1,99 @@
+<?php
+namespace foxp2\backofficeBundle\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
+
+/**
+ * Gist controller.
+ *
+ */
+class GistController extends Controller{
+    
+
+    public function indexAction() {
+
+        return $this->render('foxp2backofficeBundle:Gist:index.html.twig', array(
+                    'Gist' => $this->getListofGist(),
+        ));
+    }
+    
+    private function getListofGist() {
+
+        $list = array();
+
+        $service = $this->container->get('github_api');
+
+        $gists = $service->getClient();
+
+        $listgist = $gists->api('users')->gists('foxp2');
+
+        foreach ($listgist as $value) {
+
+            $list[] = $value;
+        }
+
+        return $list;
+    }
+    
+    public function getGistFilesAction() {
+
+        $service = $this->container->get('github_api');
+
+        $gists = $service->getClient();
+
+        $request = $this->getRequest();
+
+        if ($request->isXmlHttpRequest()) {
+
+            $id = $request->request->get('id');
+
+            $gist = $gists->api('gist')->show($id);
+
+            $cache = $this->container->get('kernel')->getCacheDir() . '/backoffice/highlightphp/' . $gist['id'];
+
+            if (!is_dir($cache)) {
+                @mkdir($cache, 0777, true);
+            }
+
+            foreach ($gist['files'] as $data) {
+
+                if (file_exists($cache . '/' . $data['filename'])) {
+
+                    $dir_created_at = date(DATE_ISO8601, filemtime($cache));
+
+                    if ($gist['updated_at'] > $dir_created_at) {
+
+                        file_put_contents($cache . '/' . $data['filename'], $this->getCode($data['content']));
+                    }
+
+                    $file = file_get_contents($cache . '/' . $data['filename']);
+                } else {
+
+                    file_put_contents($cache . '/' . $data['filename'], $this->getCode($data['content']));
+                    $file = file_get_contents($cache . '/' . $data['filename']);
+                }
+
+                $files_data[] = array('language' => $data['language'], 'filename' => $data['filename'], 'raw_url' => $data['raw_url'], 'content' => $file);
+            }
+
+            $response = new Response(json_encode($files_data));
+
+            $response->headers->set('Content-Type', 'application/json');
+
+            return $response;
+        }
+    }
+    
+    protected static function getCode($code) {
+
+        $code = htmlspecialchars($code, ENT_QUOTES, 'UTF-8');
+
+        $encode = '<div class="pre-scrollable-fox"><pre>' . $code . '</pre></div>';
+
+        return $encode;
+    }
+
+}
+
+?>

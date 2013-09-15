@@ -4,6 +4,9 @@ foxp2backofficeBundle_categories:
 foxp2backofficeBundle_articles:
     resource: "@foxp2backofficeBundle/Resources/config/routing/articles.yml"
     prefix:   /backoffice/articles
+foxp2backofficeBundle_gist:
+    resource: "@foxp2backofficeBundle/Resources/config/routing/gist.yml"
+    prefix:   /backoffice/gist
 foxp2backofficeBundle_private:
     resource: "@foxp2backofficeBundle/Resources/config/routing/private.yml"
     prefix:   /backoffice/private

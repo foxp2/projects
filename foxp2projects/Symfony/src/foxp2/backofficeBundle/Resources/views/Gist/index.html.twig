@@ -1,0 +1,132 @@
+{# \Symfony\src\foxp2\backofficeBundle\Resources\views\Gist\index.html.twig #}
+{% extends "foxp2backofficeBundle:Common:layout_admin.html.twig" %}
+{% block apptopbar %}
+<!-- app top bar -->
+<div id="app-bar-top" class="win-ui-dark">
+    <a class="win-command white pull-right" href="">{# todo : formulaire de création de gist #}
+        <span class="win-commandicon win-commandring icon-plus-5"></span>
+        <span class="win-label white">Créer un gist</span>
+    </a>
+</div>
+{% endblock %}
+{% block application -%}
+<div class="row-fluid">
+    <div id="header-container" style="margin-left: 0px;margin-top:20px;margin-bottom: 20px;">
+        <a id="backbutton" class="win-backbutton icon-fox pull-left" style="margin-right: 10px;" href="{{ path('foxp2backoffice_homepage')}}"></a>
+        <div class="dropdown" style="width:400px;">
+            <h1 class="header-dropdown" style="line-height:40px;width:400px;">Liste des gist</h1>
+        </div>
+    </div>
+{% include "foxp2backofficeBundle:Secured:logout.html.twig" %}
+{% set flashbag_messages = app.session.flashbag.get('message') %}
+{% if flashbag_messages is not empty %}
+    <div id="alerts-container">
+    <div class="toast fade in">
+        <button type="button" class="close" data-dismiss="alert" type="button"></button>
+        <div class="pull-left">
+            <img class="toast-object" alt="90x90" style="width: 90px; height: 90px;" src="{{ asset("bundles/foxp2projects/images/foxp2-90-90.png") }}" />
+        </div>
+    <div class="toast-body">
+        <h4 class="toast-heading">Message de l'application</h4>
+        <p>
+    {% for message in flashbag_messages %}
+            <strong>{{ message|raw }}</strong>
+    {% endfor %}
+        </p>
+    </div>
+    </div>
+    </div>
+{% endif %}
+        <div class="clearfix"></div>
+
+{% set flashbag_erreurs = app.session.flashbag.get('error') %}
+{% if flashbag_erreurs is not empty %}
+    <div class="alert alert-danger">
+    <button type="button" class="close" data-dismiss="alert"></button>
+    {% for message in flashbag_erreurs %}
+            <strong>{{ message|raw }}</strong>
+    {% endfor %}
+    </div>
+{% endif %}
+        <div class="listview list-layout span3" style="max-height:600px;">
+            {% for gist in Gist %}
+                <div id="{{ gist.id }}" class="listview-item bg-color-purple">
+                    <div class="pull-left" href="#">
+                        <img class="listview-item-object" src="{{ gist.user.avatar_url}}">
+                    </div>
+                    <div class="listview-item-body">
+                        <h4 class="listview-item-heading">{{ gist.id }}</h4>
+                        <h5 class="listview-item-subheading">{{ gist.created_at|date('d m Y') }}</h5>
+                        <p class="two-lines">{{ gist.description }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div id="gistdetailprogress" class="hide text-center">
+        <h3 class="text-info text-center">chargement des données</h3>
+        <progress></progress>
+        </div>        
+        <div id="gistdetail" class="span8" style="margin-top: 7px;">
+            <div class="hero-unit">
+                <h1>Chargement des fichiers</h1>
+                <hr>
+                     <p>
+                         <strong>Veuillez selectionner un gist dans la liste ci contre pour obtenir l'ensemble des codes sources hébergés sur les serveurs Github</strong>
+                         <br /><br />
+                         <em>Nota bene : Les données sont mis en cache</em>
+                     </p>
+            </div>
+        </div>
+</div>
+<script>
+$(document).on("click", ".fullcode", function(e) {
+var id= $(this).attr('id');
+if ($('#code'+id).children().hasClass('pre-scrollable-fox'))
+    {
+        $(this).html('<i class="icon-arrow-up"></i>Replier le code');        
+        $('#code'+id).children().removeClass('pre-scrollable-fox');
+    }else{        
+        $(this).html('<i class="icon-arrow-down"></i>Deplier le code');        
+        $('#code'+id).children().addClass('pre-scrollable-fox');
+    }
+});
+$('.listview-item').click(function(){ 
+    $('.listview-item').removeClass('selected');
+    $(this).addClass('selected'); $("#gistdetail").empty();
+    $('#gistdetailprogress').removeClass('hide'); 
+    getGistInfo($(this).attr('id'));
+});
+jQuery('#app-bar-top').animate({top: '-96px'},0);
+function getGistInfo(gist) {    
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: '{{ path('gist_ajaxgist', {'id': 0}) }}',
+        data: 'id=' + gist,
+        timeout: 10000,
+        success: function(response) {        
+        $('#gistdetailprogress').addClass('hide'); 
+             for(var i=0;i<response.length;i++) {                 
+                var obj = response[i];               
+                for(var key in obj){                   
+                   if(key === 'filename') {
+                   $('#gistdetail').append('<h2><strong>'+obj["filename"]+'</strong><small class="pull-right">langage : '+obj["language"]+'</small></h2>');
+                   }
+                   if(key === 'content') {
+                   $('#gistdetail').append('<h3>Le code</h3><div id="code'+i+'">'+obj[key]+'</div><br /><button id="'+i+'" class="pull-left fullcode"><i class="icon-arrow-down"></i>Déplier le code</button><a href="'+obj["raw_url"]+'" target="_blank" class="btn btn-info pull-right"><i class="icon-github"></i> Voir sur github</a><br /><hr>');
+                   }                   
+                }
+            }        
+        },
+        error: function(x,t,m) {            
+            if( t === 'timeout') { $('#gistdetail').append('<li><strong>Erreur</strong> : La requête a mis trop de temps à répondre</li>');
+                } else {                    
+                    $('#gistdetail').append('<li><strong>'+t+'</strong> : '+m+x+'</li>');
+                }                
+        }
+    }); 
+}
+</script>
+{% endblock %}
+{% block footer %}
+{% endblock %}

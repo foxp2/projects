@@ -1,0 +1,6 @@
+gist_index:
+    pattern:  /
+    defaults: { _controller: "foxp2backofficeBundle:Gist:index" }
+gist_ajaxgist:
+    pattern:  /ajaxgist/id={id}
+    defaults: { _controller: "foxp2backofficeBundle:Gist:getGistFiles" }   
