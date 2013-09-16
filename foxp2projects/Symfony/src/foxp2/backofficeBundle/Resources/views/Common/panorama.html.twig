@@ -1,7 +1,20 @@
 {# \Symfony\src\foxp2\backofficeBundle\Resources\views\Common\panorama.html.twig #}
-<div class="metro panorama" style="margin-top:90px;">
+<div class="metro panorama" style="margin-top:90px;background: transparent;">
     <div class="panorama-sections">
-{% include "foxp2backofficeBundle:Common:private.html.twig" %}  
+        <div class="panorama-section tile-span-2">
+        <h2><strong>Mon profil</strong></h2>
+        <a class="tile wide imagetext bg-color-orange" href="">
+               <div class="image-wrapper">
+                   <span class="icon icon-github"></span>
+               </div>
+               <div class="column-text">
+                   <div class="text"><strong>Mon Profil</strong></div>
+                   <div class="text"><strong>Sur github</strong></div>
+               </div>
+               <span class="app-label">Accès public</span>
+        </a>
+        {% include "foxp2backofficeBundle:Common:private.html.twig" %}
+        </div>
         <div class="panorama-section tile-span-2">
 
             <h2><strong>Gestion des catégories</strong></h2>

@@ -2,7 +2,7 @@
 {% extends "foxp2backofficeBundle:Common:layout_admin.html.twig" %}
 {% form_theme form  'foxp2backofficeBundle:Form:fields.html.twig' %}
 {% block application -%}
-<div class="row-fluid" style="margin-bottom: 93px;">
+<div class="row-fluid" style="height:100%;background-image: url({{ asset("bundles/foxp2backoffice/images/bkg-4.png") }});margin-bottom:93px;">
     <div id="header-container" style="margin-left: 0px;margin-top:20px;margin-bottom: 20px;">
         <a id="backbutton" class="win-backbutton icon-fox pull-left" style="margin-right: 10px;" href="{{ path('articles_index') }}" title="Retour à la liste des articles"></a>
         <div class="dropdown" style="width:800px;">
@@ -20,7 +20,7 @@
 </div>
 {% endif %} 
 
-    <form id="article_create" action="{{ path('articles_create') }}" method="post" {{ form_enctype(form) }}>
+    <form style="margin-bottom:93px;" id="article_create" action="{{ path('articles_create') }}" method="post" {{ form_enctype(form) }}>
         {{ form_widget(form) }}
     </form>
 </div>

@@ -2,7 +2,7 @@
 {% extends "foxp2backofficeBundle:Common:layout_admin.html.twig" %}
 {% form_theme new_form  'foxp2backofficeBundle:Form:fields.html.twig' %}
 {% block application -%}
-<div class="row-fluid">
+<div class="row-fluid" style="height:100%;background-image: url({{ asset("bundles/foxp2backoffice/images/bkg-4.png") }});">
     <div id="header-container" style="margin-left: 0px;margin-top:20px;margin-bottom: 20px;">
         <a id="backbutton" class="win-backbutton icon-fox pull-left" style="margin-right: 10px;" href="{{ path('categories_index') }}" title="Retour à la liste des catégories"></a>
         <div class="dropdown" style="width:800px;">
@@ -19,7 +19,7 @@
     {% endfor %}
 </div>
 {% endif %}       
-    <form id="categories_create" action="{{ path('categories_create') }}" method="post" {{ form_enctype(new_form) }}>
+    <form style="margin-bottom:93px;" id="categories_create" action="{{ path('categories_create') }}" method="post" {{ form_enctype(new_form) }}>
         {# commentaire : affichage des champs du formulaire #}     
      {{ form_widget(new_form)}}           
     </form>

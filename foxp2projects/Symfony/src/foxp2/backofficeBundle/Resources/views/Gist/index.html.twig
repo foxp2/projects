@@ -10,7 +10,7 @@
 </div>
 {% endblock %}
 {% block application -%}
-<div class="row-fluid">
+<div class="row-fluid" style="height:100%;background-image: url({{ asset("bundles/foxp2backoffice/images/bkg-4.png") }});">
     <div id="header-container" style="margin-left: 0px;margin-top:20px;margin-bottom: 20px;">
         <a id="backbutton" class="win-backbutton icon-fox pull-left" style="margin-right: 10px;" href="{{ path('foxp2backoffice_homepage')}}"></a>
         <div class="dropdown" style="width:400px;">
@@ -87,12 +87,14 @@ if ($('#code'+id).children().hasClass('pre-scrollable-fox'))
         $('#code'+id).children().removeClass('pre-scrollable-fox');
     }else{        
         $(this).html('<i class="icon-arrow-down"></i>Deplier le code');        
-        $('#code'+id).children().addClass('pre-scrollable-fox');
+        $('#code'+id).children().addClass('pre-scrollable-fox').css('overflow-x','hidden');
     }
 });
 $('.listview-item').click(function(){ 
-    $('.listview-item').removeClass('selected');
-    $(this).addClass('selected'); $("#gistdetail").empty();
+    $('.listview-item').removeClass('bg-color-yellow selected').addClass('bg-color-purple').css('color','#fff');
+    $(this).removeClass('bg-color-purple').addClass('bg-color-yellow selected').css('color','#000');
+    
+    $("#gistdetail").empty();
     $('#gistdetailprogress').removeClass('hide'); 
     getGistInfo($(this).attr('id'));
 });
@@ -113,7 +115,7 @@ function getGistInfo(gist) {
                    $('#gistdetail').append('<h2 id="file'+i+'"><strong>'+obj["filename"]+'</strong><small class="pull-right">langage : '+obj["language"]+'</small></h2>');
                    }
                    if(key === 'content') {
-                   $('#gistdetail').append('<h3>Le code</h3><div id="code'+i+'">'+obj[key]+'</div><br /><a href="#file'+i+'" id="'+i+'" class="btn pull-left fullcode"><i class="icon-arrow-down"></i>Déplier le code</a><a href="'+obj["raw_url"]+'" target="_blank" class="btn btn-info pull-right"><i class="icon-github"></i> Voir sur github</a><br /><hr>');
+                   $('#gistdetail').append('<h3>Le code</h3><div id="code'+i+'">'+obj[key]+'</div><br /><a href="#file'+i+'" id="'+i+'" class="btn btn-inverse pull-left fullcode"><i class="icon-arrow-down"></i>Déplier le code</a><a href="'+obj["raw_url"]+'" target="_blank" class="btn btn-info pull-right"><i class="icon-github"></i> Voir sur github</a><br /><hr>');
                    }                   
                 }
             }        

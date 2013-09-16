@@ -1,7 +1,7 @@
 {# \Symfony\src\foxp2\backofficeBundle\Resources\views\Categories\show.html.twig #}
 {% extends "foxp2backofficeBundle:Common:layout_admin.html.twig" %}
 {% block application -%}
-<div class="row-fluid">
+<div class="row-fluid" style="height:100%;background-image: url({{ asset("bundles/foxp2backoffice/images/bkg-4.png") }});">
     <div id="header-container" style="margin-left: 0px;margin-top:20px;margin-bottom: 20px;">
         <a id="backbutton" class="win-backbutton icon-fox pull-left" style="margin-right: 10px;" href="{{ path('categories_index',{'page':1}) }}" title="Retour à la liste des catégories"></a>
         <div class="dropdown" style="width:800px;">

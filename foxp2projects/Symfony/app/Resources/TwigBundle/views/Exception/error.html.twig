@@ -1,20 +1,28 @@
-{% extends "foxp2projectsBundle:Common:layout.html.twig" %}
-{% block application %}
-<div id="notconnected" data-backdrop="static" class="modal message hide fade">
-<div class="modal-header">
-<h3>{{ 'Oops! An Error Occurred'|trans }}</h3>
-</div>
-<div class="modal-body">
-<h4>{{ 'The server returned a'| trans}} "{{ status_code }} {{ status_text }}"</h4>
-<p><br />Something is broken. Please e-mail us at [email] and let us know
-            what you were doing when this error occurred. We will fix it as soon
-            as possible. Sorry for any inconvenience caused.</p>
-</div>
-<div class="modal-footer">         
-         <a class="btn btn-primary" href="{{ path('homepage') }}.{{ app.request.getRequestFormat}}"><span class="icon-battery-low" aria-hidden="true"></span> return to homepage</a>
-</div>   
-</div>
-<script>
-    $("#notconnected").modal('show');    
-</script>
-{% endblock %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Une erreur est survenue: {{ status_text }}</title>
+        <link rel="stylesheet" href="{{ asset('bundles/bootmetro/css/error.css') }}" type="text/css" />
+        <link rel="stylesheet" href="{{ asset('bundles/bootmetro/css/bootmetro-icons.css') }}" type="text/css" />
+    </head>
+    <body class="metro">
+        <div class="page">
+            <div class="page-region">
+                <div class="page-region-content">
+        <div class="window shadow">
+            <div class="caption">
+                <div class="super-title">Oops! Une erreur est survenue</div>
+                <i class="icon-warning-3"></i>
+                <a href="/" class="close"><i class="icon-close"></i></a>
+            </div>
+            <div class="content">
+                <p style="vertical-align: middle">The server returned a "{{ status_code }} {{ status_text }}"
+                <br />Click on close button to return to homepage</p>
+            </div>
+        </div>
+                    </div>
+                </div>
+            </div>
+    </body>
+</html>
