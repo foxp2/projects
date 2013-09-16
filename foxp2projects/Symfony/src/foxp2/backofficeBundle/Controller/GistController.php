@@ -50,7 +50,7 @@ class GistController extends Controller{
 
             $gist = $gists->api('gist')->show($id);
 
-            $cache = $this->container->get('kernel')->getCacheDir() . '/backoffice/highlightphp/' . $gist['id'];
+            $cache = $this->container->get('kernel')->getCacheDir() . '/backoffice/gistcode/' . $gist['id'];
 
             if (!is_dir($cache)) {
                 @mkdir($cache, 0777, true);
@@ -58,20 +58,21 @@ class GistController extends Controller{
 
             foreach ($gist['files'] as $data) {
 
-                if (file_exists($cache . '/' . $data['filename'])) {
+                if (file_exists($cache . '/' . $data['filename'] . '.cache')) {
 
                     $dir_created_at = date(DATE_ISO8601, filemtime($cache));
 
                     if ($gist['updated_at'] > $dir_created_at) {
-
-                        file_put_contents($cache . '/' . $data['filename'], $this->getCode($data['content']));
+                        @rmdir($cache);
+                        @mkdir($cache, 0777, true);
+                        file_put_contents($cache . '/' . $data['filename'] . '.cache', $this->getCode($data['content']));
                     }
 
-                    $file = file_get_contents($cache . '/' . $data['filename']);
+                    $file = file_get_contents($cache . '/' . $data['filename'] . '.cache');
                 } else {
 
-                    file_put_contents($cache . '/' . $data['filename'], $this->getCode($data['content']));
-                    $file = file_get_contents($cache . '/' . $data['filename']);
+                    file_put_contents($cache . '/' . $data['filename'] . '.cache', $this->getCode($data['content']));
+                    $file = file_get_contents($cache . '/' . $data['filename'] . '.cache');
                 }
 
                 $files_data[] = array('language' => $data['language'], 'filename' => $data['filename'], 'raw_url' => $data['raw_url'], 'content' => $file);
