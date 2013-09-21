@@ -51,12 +51,8 @@
 {% endblock header %}
 
 {% block body %}
-<body>
-    <div class="container-fluid" style="height:100%;background-color:#EEEEEE;">
-
-{% block menu %}
-{#% include "foxp2projectsBundle:Common:menu.html.twig" %#}
-{% endblock menu %}
+<body style="background-image: url({{ asset("bundles/foxp2backoffice/images/bkg-4.png") }}">
+    <div class="container-fluid">
         
 {% block apptopbar %}
 {% endblock %}
