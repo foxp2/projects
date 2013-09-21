@@ -61,7 +61,7 @@
             </tr>
             <tr>
                 <th style="text-align: center;vertical-align: middle;">Description longue:</th>
-                <td colspan="6">{{ entity.articleLongDescription|raw }}</td>
+                <td colspan="6">{{ entity.articleLongDescription|replace({'[img]':'<div class="text-center"><img alt="illustration" src="', '[/img]':'" width="100" />','[url]':'<br /><a class="btn btn-info" href="', '[/url]':'" target="_blank"><strong><i class="icon-picture"></i> Voir sur flickr</strong></a></div>'})|raw }}</td>
             </tr>
         </tbody>
     </table>
