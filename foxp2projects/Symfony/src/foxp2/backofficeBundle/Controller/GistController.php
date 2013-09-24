@@ -20,20 +20,26 @@ class GistController extends Controller{
     
     private function getListofGist() {
 
-        $list = array();
+        $data = array();
 
-        $service = $this->container->get('github_api');
+        $service = $this->container->get('github_api');        
+        
+        $client = $service->getClient();
+        
+        $userApi = $client->api('user');        
+        
+        $paginator  = new Github\ResultPager($client);
+        
+        $parameters = $this->container->getParameter('user_github_api');
+        
+        $gists = $paginator->fetchAll($userApi, 'gists', array($parameters));  
 
-        $gists = $service->getClient();
+        foreach (gists as $value) {
 
-        $listgist = $gists->api('users')->gists('foxp2');
-
-        foreach ($listgist as $value) {
-
-            $list[] = $value;
+            $data[] = $value;
         }
 
-        return $list;
+        return $data;
     }
     
     public function getGistFilesAction() {
@@ -94,7 +100,5 @@ class GistController extends Controller{
 
         return $encode;
     }
-
 }
-
 ?>
