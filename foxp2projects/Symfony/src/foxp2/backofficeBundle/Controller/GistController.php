@@ -3,6 +3,7 @@ namespace foxp2\backofficeBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Github;
 
 /**
  * Gist controller.
@@ -34,7 +35,7 @@ class GistController extends Controller{
         
         $gists = $paginator->fetchAll($userApi, 'gists', array($parameters));  
 
-        foreach (gists as $value) {
+        foreach ($gists as $value) {
 
             $data[] = $value;
         }
