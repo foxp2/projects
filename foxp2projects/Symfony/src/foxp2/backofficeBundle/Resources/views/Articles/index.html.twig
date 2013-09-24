@@ -97,16 +97,6 @@
         </div>
 {% endif %}
         </div>
-{# fenêtre modale ajaxifiée #}
-        <div id="gistinfo">
-            <h2 class="heading-title"><strong>Détails du gist :</strong></h2>
-            <div id="gistinfoprogress">
-                <h3>chargement des données</h3>
-                <progress></progress>
-            </div>
-            <ul id="gistinfodet">
-            </ul>
-        </div>
 </div>
 {% endblock %}
 {% block appbar %}
@@ -124,10 +114,6 @@
         <span class="win-commandicon win-commandring icon-eye-3"></span>   
         <span class="win-label white">Voir</span>
     </a>
-    <a id="ajax_show" class="win-command white pull-right" href="">
-        <span class="win-commandicon win-commandring icon-ellipsis "></span>   
-        <span class="win-label white">+ d'infos</span>
-    </a>
 </div>
 <script>
 // globals var
@@ -142,15 +128,6 @@ $('body').keypress(function(e){
         // do not detect keyboard for search form.
     }else{
     switch(String.fromCharCode(e.which)){        
-    case 'i':
-    if (String.fromCharCode(e.which) === 'i' && artid !== '' && ishowed === false) {
-        getCategoryInfo();      
-        ishowed = true;
-    }else if(String.fromCharCode(e.which) === 'i' && dataloaded === true && ishowed === true){
-        jQuery('#gistinfo').animate({bottom: '-600px'},400);
-        ishowed = false;    
-    }
-    break;
     case 'a':
         document.location.href="{{ path('articles_new') }}";
     break;
