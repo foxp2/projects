@@ -2,4 +2,4 @@
 parameters :
     article_per_page : 10
     category_per_page : 5
-    private_display : 0
+    user_github_api : foxp2

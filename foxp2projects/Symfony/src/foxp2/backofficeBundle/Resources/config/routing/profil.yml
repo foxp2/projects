@@ -1,0 +1,33 @@
+profil_index:
+    pattern:  /
+    defaults: { _controller: "foxp2backofficeBundle:Profil:index" }
+profil_limit:
+    pattern:  /limit
+    defaults: { _controller: "foxp2backofficeBundle:Profil:getlimit" }
+profil_ajax:
+    pattern:  /profil/id={id}
+    defaults: { _controller: "foxp2backofficeBundle:Profil:getajaxprofil" }
+activities_ajax:
+    pattern:  /activities
+    defaults: { _controller: "foxp2backofficeBundle:Profil:getajaxactivities" }
+activity_ajax:
+    pattern:  /activity/{id}
+    defaults: { _controller: "foxp2backofficeBundle:Profil:getajaxactivity"}
+repositories_ajax:
+    pattern:  /repositories
+    defaults: { _controller: "foxp2backofficeBundle:Profil:getajaxrepositories" }
+watched_ajax:
+    pattern:  /watched
+    defaults: { _controller: "foxp2backofficeBundle:Profil:getajaxwatched" }
+following_ajax:
+    pattern:  /following
+    defaults: { _controller: "foxp2backofficeBundle:Profil:getajaxfollowing" }
+followers_ajax:
+    pattern:  /followers
+    defaults: { _controller: "foxp2backofficeBundle:Profil:getajaxfollowers" }
+gists_ajax:
+    pattern:  /gists
+    defaults: { _controller: "foxp2backofficeBundle:Profil:getgistsajax" }
+gist_ajax:
+    pattern:  /gist/id={id}
+    defaults: { _controller: "foxp2backofficeBundle:Profil:getgistajax" }  

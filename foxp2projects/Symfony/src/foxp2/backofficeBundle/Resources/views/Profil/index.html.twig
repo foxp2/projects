@@ -1,0 +1,610 @@
+{# \Symfony\src\foxp2\backofficeBundle\Resources\views\Profil\index.html.twig #}
+{% extends "foxp2backofficeBundle:Common:layout_admin.html.twig" %}
+{% block application -%}
+<div class="row-fluid">
+    <div id="header-container" style="margin-left: 0px;margin-top:20px;margin-bottom: 20px;">
+        <a id="backbutton" class="win-backbutton" style="margin-right: 10px;" href="{{ path('foxp2backoffice_homepage')}}"></a>
+        <div class="dropdown pull-right">
+            <h1 class="header-dropdown" style="line-height:40px;">Le profil de FoxP2</h1>
+        </div>
+    </div>    
+{% include "foxp2backofficeBundle:Secured:logout.html.twig" %}
+        <div class="alert toast fade bg-color-blueLight alerts-container">
+            <button type="button" class="close" data-dismiss="alert" type="button"></button>
+            <div class="pull-left">
+                <img class="toast-object" alt="90x90" style="width: 90px; height: 90px;" src="{{ asset("bundles/foxp2projects/images/foxp2-90-90.png") }}" />
+            </div>
+            <div class="toast-body">
+                <h4 class="toast-heading">Message de l'application</h4>
+                <p>
+                    <strong>Chargement des données</strong>
+                </p>
+            </div>
+        </div>        
+        <div class="alert alert-block alert-danger hide">
+            <button type="button" class="close" data-dismiss="alert" type="button"></button>
+            <h4>Erreur !</h4>
+            <p id="error"></p>
+        </div>
+        <div id="pivot" class="pivot slide text-center">
+            <div class="pivot-headers">
+                <a href="#pivot" data-pivot-index="0" class="active"><i class="github-untitled-9"></i> Profil</a>
+                <a href="#pivot" data-pivot-index="1"><i class="github-untitled-52"></i> Activités</a>
+                <a href="#pivot" data-pivot-index="2"><i class="github-untitled-160"></i> Dépôts publics</a>
+                <a href="#pivot" data-pivot-index="3"><i class="github-untitled-14"></i> Gists publics</a>    
+            </div>
+
+        <div class="pivot-items" style="margin-bottom:93px;">
+        <!-- profil -->
+        <div id="pivot-item-1" class="pivot-item active">
+            <h2 class="text-left" style="color:#377C89"><strong>Profil public</strong></h2><hr>
+            <div class="row-fluid">
+                <div class="span9" id="leftprofil">                    
+                        <ul id="profiltab" class="nav nav-tabs">
+                            <li class="active"><a href="#starred" data-toggle="tab"><h3 style="color:#377C89"><i class="github-untitled-42"></i>Dépôts que je suis</h3></a></li>
+                            <li><a href="#following" data-toggle="tab"><h3 style="color:#377C89"><i class="github-untitled-28"></i> Codeurs que je suis</h3></a></li>
+                            <li><a href="#followers" data-toggle="tab"><h3 style="color:#377C89"><i class="github-untitled-24"></i> Codeurs qui me suivent</h3></a></li>
+                        </ul>
+                        <div id="myTabContent" class="tab-content">
+                            <div class="tab-pane fade active in" id="starred" style="overflow-x:hidden;overflow-y:hidden">
+                                <div class="listview grid-layout text-left" id="starred-list" style="max-height:650px;"></div>
+                            </div>
+                            <div class="tab-pane fade" id="following" style="overflow-x:hidden;overflow-y:hidden">
+                                <div class="listview grid-layout text-left" id="following-list" style="max-height:650px;"></div>
+                            </div>
+                            <div class="tab-pane fade" id="followers" style="overflow-x:hidden;overflow-y:hidden">
+                                <div class="listview grid-layout text-left" id="followers-list" style="max-height:650px;"></div>
+                            </div>
+                        </div>                    
+                </div>
+            <div class="span3 text-left" id="rightprofil">
+                        <h3 class="text-center">Détails sur le dépôt</h3>
+                        <hr>
+                        <div class="well well-kaki text-center" style="min-height:600px;margin-top:30px;margin-left: -20px;">
+                            <div id="rightprofildata"></div>
+                            <div id="rightprofilinfo">
+                                 <h3>Cliquer sur un dépôt dans la liste ci-contre pour obtenir plus d'informations.</h3>
+                            <h1 class="text-center" style="color:#377C89;margin-top:200px;"><i class=" icon-arrow-left-5"></i></h1>  
+                            </div>
+                        </div>
+            </div>
+            </div>
+        </div>
+        <!-- activités -->
+        <div id="pivot-item-2" class="pivot-item">
+            <h2 class="text-left" style="color:#F09609"><strong>Les dernières activités récentes :</strong></h2><hr>
+            <div class="row-fluid">
+                <div class="span9">
+                    <div id="data-activities" class="listview grid-layout text-left" style="max-height: 600px;"></div>
+                </div>
+                <div class="span3 pull-right">
+                    <div class="well well-orange" style="min-height:600px;margin-right:20px;margin-left: -20px;margin-top:16px;">
+                        <div id="data-activity">                            
+                            <h3>Cliquer sur une activité dans la liste ci-contre pour obtenir plus d'informations.</h3>
+                            <h1 class="text-center" style="color:#F09609;margin-top:200px;"><i class="icon-arrow-left-5"></i></h1>                          
+                        </div>
+                    </div>
+                </div>                      
+            </div>
+        </div>
+        <!-- dépôts -->        
+        <div id="pivot-item-3" class="pivot-item">
+            <h2 class="text-left" style="color:#2C83EF;"><strong>Dépôts publics</strong></h2><hr>
+            <div class="row-fluid">
+                <div class="span9">
+                <div id="data-repositories" class="listview grid-layout" style="max-height: 600px;"></div>
+                </div>
+                <div class="span3 pull-right">                                 
+                    <div class="well well-blue" style="min-height:600px;margin-right:20px;margin-left: -20px;margin-top:16px;">
+                        <div id="data-repository">
+                            <h3>Cliquer sur un dépôt dans la liste ci-contre pour obtenir plus d'informations.</h3>
+                            <h1 class="text-center" style="color:#2C83EF;margin-top:200px;"><i class="icon-arrow-left-5"></i></h1> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- gists -->       
+        <div id="pivot-item-4" class="pivot-item">
+            <h2 class="text-left" style="color:#7B4F9D"><strong>Gists publics</strong></h2><hr>
+            <div class="row-fluid">
+                <div class="span3">
+                <div class="listview list-layout text-left" id="gists-list" style="max-height:600px;"></div>
+                </div>
+                <div class="span9 pull-right text-left">
+                <div id="gistdetail" style="margin-top: 7px; margin-right:20px;">
+                    <div class="hero-unit" style="background-color:transparent;text-align:left;">
+                        <h1>Chargement des fichiers</h1>
+                        <hr>
+                             <p>
+                                 <strong>Veuillez selectionner un gist dans la liste ci contre pour obtenir l'ensemble des codes sources hébergés sur les serveurs Github</strong>
+                                 <br /><br />
+                                 <em>Nota bene : Les données sont mis en cache</em>
+                             </p>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>                
+        </div><!-- end pivot-items -->
+        </div><!-- end pivot --> 
+</div>
+
+<div id="profil-footer" class="well well-profil-stat" style="margin-left: -20px;"></div>
+
+<script>
+activitystatus = false;
+repositorystatus = false;
+followingstatus = false;
+followersstatus = false;
+gistliststatus = false;
+getwatched();
+$('#profiltab li a').click(function(){    
+    $('.watched').removeClass('selected');$('.following').removeClass('selected'); $('.followers').removeClass('selected');  
+    switch($(this).attr('href')) {
+        case "#starred" :
+            $('#starred-list').hide().fadeIn(1000);$('#rightprofildata').empty();;$('#rightprofilinfo').show(); $('#rightprofil h3:first').text('Détails sur le dépôt'); $('#rightprofil h3:last').text('Cliquer sur un dépôt dans la liste ci-contre pour obtenir plus d\'informations.');break;
+        case "#following": 
+            (followingstatus === true) ? $('#following-list').hide().fadeIn(1000) : getfollowing();$('#rightprofildata').empty(); $('#rightprofilinfo').show();$('#rightprofil h3:first').text('Je les suis ...'); $('#rightprofil h3:last').text('Cliquer sur un développeur dans la liste ci-contre pour obtenir plus d\'informations.');break;
+        case "#followers": 
+            (followersstatus === true) ? $('#followers-list').hide().fadeIn(1000) : getfollowers();$('#rightprofildata').empty(); $('#rightprofilinfo').show();$('#rightprofil h3:first').text('Ils me suivent ...');$('#rightprofil h3:last').text('Cliquer sur un développeur dans la liste ci-contre pour obtenir plus d\'informations.');break;
+    }
+});
+$('.pivot-headers a').click(function(){   
+    switch($(this).attr('data-pivot-index')){
+        case "0": $('#starred-list').hide().fadeIn(1000);$('#rightprofil').hide().fadeIn(1000);break;
+        case "1": (activitystatus === true) ? $('#data-activities').hide().fadeIn(1000) : getactivities(); break;
+        case "2": (repositorystatus === true) ? $('#data-repositories').hide().fadeIn(1000) : getrepositories();break;       
+        case "3": (gistliststatus === true) ? $('#gists-list').hide().fadeIn(1000) : getgists();break;       
+    }
+});
+function getlimit() {
+    $.ajax({
+        type: 'POST',
+        datatype: 'json',
+        url: '{{ path('profil_limit')}}',
+        success: function(response) {
+        $('#profil-footer').empty();
+        $('#profil-footer').append('<p class="text-center">\n\
+                                    <strong>Statistiques Requêtes sur le serveur Github : </strong> \n\
+                                    - Nombre de requêtes : <strong><em>'+response['rate']['limit']+'</em></strong> \n\
+                                    - Nombre de requêtes restantes: <strong><em>'+response['rate']['remaining']+'</em></strong></p>');
+        },
+        complete: function() {
+        $('#profil-footer').removeClass('hide');
+        },
+        error: function(x,t,m) {
+        $('#profil-footer-data').append('<p class="text-center">'+x+t+m+'</p>');
+        $('#profil-footer').removeClass('hide');
+        }        
+    });
+}
+function getdevprofil(name) {    
+    $('.toast').show();
+    $.ajax({
+        type: 'POST',
+        datatype: 'json',
+        url: '{{ path('profil_ajax',{'id':0}) }}',
+        timeout: 10000,
+        data: 'id=' + name,
+        success: function(response) {      
+          $('#rightprofildata').append('<h2 class="pull-left"><strong>'+response['login']+'</h2><img style="height:90px;width:90px;" class="pull-right img-polaroid" src="'+response['avatar_url']+'" alt="avatar">\n\
+                                        <div class="clearfix"></div>'+response['name']+response['bio']+'<hr><h3 class="media-heading text-left"><i class="icon-clipboard"></i> Détails :</h3>\n\
+                                        <ul class="nav nav-list text-left">\n\
+                                        <li><i class="icon-user-3"></i> Compte créé le : '+response['created_at']+'</li>'+response['company']+response['location']+response['email']+response['blog']+'\n\
+                                        </ul>\n\
+                                        <hr><h3 class="media-heading text-left"><i class="icon-share-2"></i> Social :</h3>\n\
+                                        <ul class="nav nav-list text-left"><li><i class="github-untitled-24"></i> followers : '+response['followers']+'</li>\n\
+                                        <li><i class="github-untitled-28"></i> following : '+response['following']+'</li></ul>\n\
+                                        <hr><h3 class="text-left"><i class="icon-stats-2"></i> Statistiques</h3>\n\
+                                        <ul class="nav nav-list text-left">\n\
+                                        <li><i class="github-untitled-160"></i> Dépôts : '+response['public_repos']+'</li>\n\
+                                        <li><i class="icon-code"></i> Gists : '+response['public_gists']+'</li>\n\
+                                        </ul><hr><a class="btn" href="'+response['html_url']+'" target="_blank"><i class="icon-github-5"></i> Voir sur github</a>').hide().slideDown('slow');       
+        },
+        complete: function() {        
+        $('.toast').hide();
+        getlimit();
+        },
+        error: function(x,t,m) {
+            if ( t === 'timeout') {
+                $('#error').empty();
+                $('#error').append('<strong>Erreur</strong> : La requête a mis trop de temps à répondre');
+                $('.alert').removeClass('hide');                
+                $('.toast').hide();
+            } else {
+               $('#error').empty();
+               $('#error').append('<strong>'+t+'</strong> : '+m+x+'');
+               $('.alert').removeClass('hide');               
+               $('.toast').hide();
+            }
+        }        
+    });
+}
+function getactivities() {
+    $('.toast').show();
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: '{{ path('activities_ajax') }}',        
+        timeout: 20000,
+        success: function(response) {
+            for(var i=0;i<response.length;i++) {  
+                var obj = response[i]; 
+                $('#data-activities').append('<div class="listview-item bg-color-orange activity" data-id="'+obj['id']+'">\n\
+                                              <div class="pull-left" href="#"><h1 class="pull-left"><i class="github-untitled-52"></i></h1></div>\n\
+                                              <div class="listview-item-body">\n\
+                                              <h4 class="listview-item-heading"><strong>Action :</strong> '+obj['type']+'</h4>\n\
+                                              <p class="two-lines"><strong>Dépôt : </strong>'+obj['repo']+'<br />\n\
+                                              </p></div></div>').hide().fadeIn(1000);              
+            }            
+        },
+        complete: function() {
+        activitystatus = true; 
+        $('.toast').hide();
+        getlimit();
+        },
+        error: function(t,m) {
+            if ( t === 'timeout') { 
+                $('#error').empty();
+                $('#error').append('<strong>Erreur</strong> : La requête a mis trop de temps à répondre');
+                $('.alert').removeClass('hide');                
+                $('.toast').hide();
+            } else {
+               $('#error').append('<strong>'+t+'</strong> : '+m+'</div></div>');
+               $('.alert').removeClass('hide');               
+               $('.toast').hide();
+            }
+        }
+    });
+}
+function getrepositories() {
+    $('.toast').show();
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: '{{ path('repositories_ajax') }}',        
+        timeout: 10000,
+        success: function(response) {      
+            for(i=0;i<response.length; i++) {                
+                var obj = response[i]; 
+                $('#data-repositories').append('<div class="listview-item bg-color-blue repositories" data-id="'+obj['id']+'" data-name="'+obj['name']+'" data-fullname="'+obj['full_name']+'" data-masterbranch="'+obj['master_branch']+'" data-defaultbranch="'+obj['default_branch']+'" data-owner="'+obj['owner']+'" data-avatar="'+obj['avatar']+'" data-homepage="'+obj['homepage']+'" data-language="'+obj['language']+'" data-pushedat="'+obj['pushed_at']+'" data-createdat="'+obj['created_at']+'" data-updatedat="'+obj['updated_at']+'" data-watcherscount="'+obj['watchers_count']+'" data-forkscount="'+obj['forks_count']+'" data-openissuescount="'+obj['open_issues_count']+'">\n\
+                                                <div class="pull-left" href="#"><h1 class="pull-left"><i class="github-untitled-160"></i></h1></div>\n\
+                                                <div class="listview-item-body"><h4 class="text-left">'+obj['name']+'</h4></div></div>').hide().fadeIn(1000);             
+            }            
+        },
+        complete: function() {
+        repositorystatus = true;
+        $('.toast').hide();
+        getlimit();
+        },
+        error: function(x,t,m) {
+            if ( t === 'timeout') { 
+                $('#error').empty();
+                $('#error').append('<strong>Erreur</strong> : La requête a mis trop de temps à répondre');
+                $('.alert').removeClass('hide');
+                $('.toast').hide();
+            } else {
+               $('#error').append('<strong>'+t+'</strong> : '+m+x+'');
+               $('.alert').removeClass('hide');
+               $('.toast').hide();
+            }
+        }
+    });
+}
+function getwatched() {
+    $('.toast').addClass('in');
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: '{{ path('watched_ajax') }}',        
+        timeout: 5000,
+        success: function(response) {      
+            for( i=0;i<response.length;i++) {  
+                var obj = response[i];                 
+                $('#starred-list').append('<div class="listview-item watched" data-name="'+obj['name']+'" data-fullname="'+obj['fullname']+'" data-owner="'+obj['owner']+'" data-createdat="'+obj['created_at']+'" data-updatedat="'+obj['updated_at']+'" data-pushedat="'+obj['pushed_at']+'" data-avatar='+obj['avatar']+' data-description="'+obj['description'] +'" data-langage="'+obj['language']+'" data-fork="'+obj['forks']+'" data-watchers="'+obj['watchers']+'" data-link="'+obj['html_url']+'" style="background-color:#377C89;">\n\
+                                           <div class="pull-left" href="#">\n\
+                                           <img class="listview-item-object" src="'+obj['avatar']+'" style="height:90px;width:90px;">\n\
+                                           </div>\n\
+                                           <div class="listview-item-body">\n\
+                                           <h4 class="listview-item-heading">'+obj['name']+'</h4></div></div>').hide().fadeIn(1000);           
+            }            
+        },
+        complete: function() {
+        watchedstatus = true;
+        $('.toast').hide();
+        getlimit();
+        },
+        error: function(x,t,m) {
+            if ( t === 'timeout') { 
+                $('#error').empty();
+                $('#error').append('<strong>Erreur</strong> : La requête a mis trop de temps à répondre');
+                $('.alert').removeClass('hide');                
+                $('.toast').hide();
+            } else {
+               $('#error').append('<strong>'+t+'</strong> : '+m+x+'');
+               $('.alert').removeClass('hide');               
+               $('.toast').hide();
+            }
+        }
+    });
+}
+function getfollowing() {
+    $('.toast').show();
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: '{{ path('following_ajax') }}',        
+        timeout: 5000,
+        success: function(response) {      
+            for(var i=0;i<response.length;i++) {  
+                var obj = response[i]; 
+                $('#following-list').append('<div class="listview-item following" data-login="'+obj['login']+'" style="background-color:#377C89;">\n\
+                                           <div class="pull-left" href="#">\n\
+                                           <img class="listview-item-object" src="'+obj['avatar']+'" style="height:90px;width:90px;">\n\
+                                           </div>\n\
+                                           <div class="listview-item-body">\n\
+                                           <h4 class="listview-item-heading">'+obj['login']+'</h4></div></div>').hide().fadeIn(1000);;               
+            }            
+        },
+        complete: function() {
+        followingstatus = true; 
+        $('.toast').hide();
+        getlimit();
+        },
+        error: function(x,t,m) {
+            if ( t === 'timeout') { 
+                $('#error').empty();
+                $('#error').append('<strong>Erreur</strong> : La requête a mis trop de temps à répondre');
+                $('.alert').removeClass('hide');                
+                $('.toast').hide();
+            } else {
+               $('#error').append('<strong>'+t+'</strong> : '+m+x+'');
+               $('.alert').removeClass('hide');               
+               $('.toast').hide();
+            }
+        }
+    });
+}
+function getfollowers() {
+    $('.toast').show();
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: '{{ path('followers_ajax') }}',        
+        timeout: 5000,
+        success: function(response) {        
+            for(var i=0;i<response.length;i++) {  
+                var obj = response[i]; 
+                $('#followers-list').append('<div class="listview-item followers" data-login="'+obj['login']+'" style="background-color:#377C89;">\n\
+                                           <div class="pull-left" href="#">\n\
+                                           <img class="listview-item-object" src="'+obj['avatar']+'" style="height:90px;width:90px;">\n\
+                                           </div>\n\
+                                           <div class="listview-item-body">\n\
+                                           <h4 class="listview-item-heading">'+obj['login']+'</h4></div></div>').css('background-color','transparent').hide().fadeIn(1000);               
+            }            
+        },
+        complete: function() {
+        followersstatus = true;
+        $('.toast').hide();
+        getlimit();
+        },
+        error: function(t,m) {
+            if ( t === 'timeout') { 
+                $('#error').empty();
+                $('#error').append('<strong>Erreur</strong> : La requête a mis trop de temps à répondre');
+                $('.alert').removeClass('hide');                
+                $('.toast').hide();
+            } else {
+               $('#error').append('<strong>'+t+'</strong> : '+m+'');
+               $('.alert').removeClass('hide');               
+               $('.toast').hide();
+            }
+        }
+    });
+}
+function getgists() {    
+    $('.toast').show();
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: '{{ path('gists_ajax') }}',        
+        timeout: 10000,
+        success: function(response) {        
+            for(var i=0;i<response.length;i++) {  
+                var obj = response[i]; 
+                $('#gists-list').append('<div id="'+obj['id']+'" class="listview-item gistcolor bg-color-purple">\n\
+                                           <div class="pull-left" href="#">\n\
+                                           <img class="listview-item-object" src="'+obj['avatar']+'">\n\
+                                           </div>\n\
+                                           <div class="listview-item-body">\n\
+                                           <h4 class="listview-item-heading">'+obj['id']+'</h4>\n\
+                                           <h5 class="listview-item-subheading">'+obj['created_at']+'</h5>\n\
+                                           </div></div>').css('background-color','transparent').hide().fadeIn(1000);               
+            }            
+        },
+        complete: function() {
+        gistliststatus = true;   
+        $('.toast').hide();
+        getlimit();
+        },
+        error: function(t,m) {
+            if ( t === 'timeout') { 
+                $('#error').empty();
+                $('#error').append('<strong>Erreur</strong> : La requête a mis trop de temps à répondre');
+                $('.alert').removeClass('hide');                
+                $('.toast').hide();
+            } else {
+               $('#error').append('<strong>'+t+'</strong> : '+m+'');
+               $('.alert').removeClass('hide');               
+               $('.toast').hide();
+            }
+        }
+    });
+}
+function getGistInfo(gist) {
+    $('.toast').show();
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: '{{ path('gist_ajax', {'id': 0}) }}',
+        data: 'id=' + gist,
+        timeout: 10000,
+        success: function(response) {       
+             for(var i=0;i<response.length;i++) {                 
+                var obj = response[i];               
+                for(var key in obj){                   
+                   if(key === 'filename') {
+                   $('#gistdetail').append('<h2 id="file'+i+'"><strong>'+obj["filename"]+'</strong><small class="pull-right">langage : '+obj["language"]+'</small></h2>');
+                   }
+                   if(key === 'content') {
+                   $('#gistdetail').append('<h3>Le code</h3><div id="code'+i+'">'+obj[key]+'</div><br /><a href="#file'+i+'" id="'+i+'" class="btn btn-inverse pull-left fullcode"><i class="icon-arrow-down"></i>Déplier le code</a><a href="'+obj["raw_url"]+'" target="_blank" class="btn btn-info pull-right"><i class="icon-github"></i> Voir sur github</a><br /><hr>');
+                   }                   
+                }
+            }        
+        },
+        complete: function() {        
+        $('.toast').hide();
+        getlimit();
+        },
+        error: function(t,m) {
+            if ( t === 'timeout') { 
+                $('#error').empty();
+                $('#error').append('<strong>Erreur</strong> : La requête a mis trop de temps à répondre');
+                $('.alert').removeClass('hide');
+                $('.toast').hide();
+            } else {
+               $('#error').append('<strong>'+t+'</strong> : '+m+'');
+               $('.alert').removeClass('hide');
+               $('.toast').hide();
+            }
+        }
+    }); 
+}
+function getActivity(id) {
+    $('.toast').show();    
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: '{{ path('activity_ajax', {'id':0}) }}',
+        data: 'id' +id,
+        timeout: 10000,
+        success: function(response) {        
+            $('#data-activity').append('<strong>'+id+'<br />'+response.lenght+'</strong>');
+            for(var i=0; i<response.lenght;i++) {
+                var obj = response[i];
+                $('#data-activity').append('<h1>Auteur :'+obj['author']+'</h1>\n\
+                                           <ul class="nav nav-list text-left">\n\
+                                           <li></li>\n\
+                                           <li></li>\n\
+                                           <li></li></ul>');
+            }
+        },
+        complete: function() {
+        $('.toast').hide();
+        getlimit();
+        },
+        error: function(xhr, status) {
+            if ( xhr.statusText === 'timeout') { 
+                $('#error').empty();
+                $('#error').append('La requête a mis trop de temps à répondre');
+                $('.alert').removeClass('hide');
+                $('.toast').hide();
+            } else {
+               $('#error').empty();
+               $('#error').append('<strong>'+xhr.status+'</strong> : '+xhr.statusText+'');
+               $('.alert').show();
+               $('.toast').hide();
+            }
+        } 
+    });
+}
+$(document).on("click", ".activity", function() {    
+    $('.activity').removeClass('selected');
+    $(this).addClass('selected');
+    $('#data-activity').empty();
+    getActivity($(this).data('id'));
+});
+$(document).on("click", ".repositories", function() {
+    $('.repositories').removeClass('selected');
+    $(this).addClass('selected');
+    $('#data-repository').empty();
+    $('#data-repository').append('<h2 class="pull-left"><strong>'+$(this).data('owner')+'</h2><img style="height:90px;width:90px;" class="pull-right img-polaroid" src="'+$(this).data('avatar')+'" alt="avatar">\n\
+                                  <div class="clearfix"></div><hr><h2>'+$(this).data('name')+'<br /><small>'+$(this).data('fullname')+'</small></h2><hr>\n\
+                                  <h3 class="media-heading text-left"><i class="icon-clipboard"></i> Détails :</h3>\n\
+                                  <ul class="nav nav-list text-left">\n\
+                                  <li><i class="icon-flow-branch"></i> Master branch : '+$(this).data('masterbranch')+'</li>\n\
+                                  <li><i class="icon-flow-cascade"></i> Default branch : '+$(this).data('defaultbranch')+'</li>\n\
+                                  <li><i class="icon-code"></i> Langage : '+$(this).data('language')+'</li>\n\
+                                  <li><i class="icon-home"></i> Homepage : <a href="'+$(this).data('homepage')+'" target="_blank" >'+$(this).data('homepage')+'</a></li>\n\
+                                  </ul><hr>\n\
+                                  <h3 class="text-left"><i class="icon-stats-2"></i> Statistiques</h3>\n\
+                                  <ul class="nav nav-list text-left">\n\
+                                  <li><i class="github-untitled-5"></i> Créé le : '+$(this).data('createdat')+'</li>\n\
+                                  <li><i class="icon-spin-alt"></i> Mise à jour le : '+$(this).data('updatedat')+'</li>\n\
+                                  <li><i class="icon-upload-6"></i> Dernier push : '+$(this).data('pushedat')+'</li><li class="divider"></li>\n\
+                                  <li><i class="icon-star"></i> Starred : '+$(this).data('watcherscount')+'</li>\n\
+                                  <li><i class="icon-flow-branch"></i> Forks : '+$(this).data('forkscount')+'</li>\n\
+                                  <li><i class="icon-notification"></i> Issues : '+$(this).data('openissuescount')+'</li></ul>').hide().slideDown('slow');
+    
+        
+});
+$(document).on("click", ".watched", function() {    
+    $('.watched').removeClass('selected');
+    $('#rightprofilinfo').hide();
+    $('#rightprofildata').empty();  
+    $(this).addClass('selected');
+    $('#rightprofildata').append('<h2 class="pull-left"><strong>'+$(this).data('owner')+'</h2><img style="height:90px;width:90px;" class="pull-right img-polaroid" src="'+$(this).data('avatar')+'" alt="avatar">\n\
+                                  <div class="clearfix"></div><hr><h2>'+$(this).data('name')+'<br /><small>'+$(this).data('fullname')+'</small></h2><hr>');
+                                  if($(this).data('description') !== '') {
+                                  $('#rightprofildata').append('<h3 class="media-heading text-left"><i class="icon-info-6"></i> Description</h3>\n\
+                                  <br /><blockquote class="text-left">'+$(this).data('description')+'</blockquote><hr>');
+                                  }
+                                  $('#rightprofildata').append('<h3 class="media-heading text-left"><i class="icon-calendar-5"></i> Dates :</h3>\n\
+                                  <ul class="nav nav-list text-left">\n\
+                                  <li><i class="github-untitled-5"></i> créé le : '+$(this).data('createdat')+'</li>\n\
+                                  <li><i class="icon-spin-alt"></i> Mise à jour le : '+$(this).data('updatedat')+'</li>\n\
+                                  <li><i class="icon-upload-6"></i> dernier push : '+$(this).data('pushedat')+'</li></ul><hr>\n\
+                                  <h3 class="text-left"><i class="icon-stats-2"></i> Statistiques</h3>\n\
+                                  <ul class="nav nav-list text-left">\n\
+                                  <li><i class="icon-fork"></i> Forks : ' +$(this).data('fork')+'</li>\n\
+                                  <li><i class="icon-star"></i> Starred : '+$(this).data('watchers')+'</li>\n\
+                                  <li><i class="icon-code"></i> Langage : '+$(this).data('langage')+'</li>\n\
+                                  </ul><hr><a class="btn" href="'+$(this).data('link')+'" target="_blank"><i class="icon-github-5"></i> Voir sur github</a>').hide().slideDown('slow');
+});
+$(document).on("click", ".following", function() {    
+    $('.following').removeClass('selected');
+    $('#rightprofilinfo').hide();
+    $('#rightprofildata').empty();  
+    $(this).addClass('selected');
+    getdevprofil($(this).data('login'));    
+});
+$(document).on("click", ".followers", function() {    
+    $('.followers').removeClass('selected');
+    $('#rightprofilinfo').hide();
+    $('#rightprofildata').empty();  
+    $(this).addClass('selected');
+    getdevprofil($(this).data('login'));    
+});
+$(document).on("click", ".gistcolor", function(e) {
+    $('.gistcolor').removeClass('bg-color-yellow selected').addClass('bg-color-purple').css('color','#fff');
+    $(this).removeClass('bg-color-purple').addClass('bg-color-yellow selected').css('color','#000');    
+    $("#gistdetail").empty();    
+    getGistInfo($(this).attr('id'));
+});
+$(document).on("click", ".fullcode", function(e) {
+var id= $(this).attr('id');
+if ($('#code'+id).children().hasClass('pre-scrollable-fox'))
+    {
+        $(this).html('<i class="icon-arrow-up"></i>Replier le code');        
+        $('#code'+id).children().removeClass('pre-scrollable-fox');
+    }else{        
+        $(this).html('<i class="icon-arrow-down"></i>Deplier le code');        
+        $('#code'+id).children().addClass('pre-scrollable-fox').css('overflow-x','hidden');
+    }
+});
+</script>
+{% endblock %}
+{% block footer %}
+
+{% endblock %}

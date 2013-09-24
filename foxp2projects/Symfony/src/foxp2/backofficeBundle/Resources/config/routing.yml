@@ -7,6 +7,9 @@ foxp2backofficeBundle_articles:
 foxp2backofficeBundle_gist:
     resource: "@foxp2backofficeBundle/Resources/config/routing/gist.yml"
     prefix:   /backoffice/gist
+foxp2backofficeBundle_profil:
+    resource: "@foxp2backofficeBundle/Resources/config/routing/profil.yml"
+    prefix:   /backoffice/profil
 foxp2backofficeBundle_private:
     resource: "@foxp2backofficeBundle/Resources/config/routing/private.yml"
     prefix:   /backoffice/private
