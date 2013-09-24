@@ -170,9 +170,7 @@ class CategoriesController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        if ($request->isXmlHttpRequest()) {
-
-            sleep(2); /* temps d'attente pour démo */
+        if ($request->isXmlHttpRequest()) {            
 
             $id = $request->request->get('id');
 
