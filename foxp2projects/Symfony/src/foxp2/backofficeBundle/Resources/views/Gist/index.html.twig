@@ -77,6 +77,8 @@
                      </p>
             </div>
         </div>
+        <div class="clearfix"></div>
+<div id="profil-footer" class="well well-profil-stat hide" style="margin-left:-20px"></div>
 </div>
 <script>
 $(document).on("click", ".fullcode", function(e) {
@@ -99,6 +101,27 @@ $('.listview-item').click(function(){
     getGistInfo($(this).attr('id'));
 });
 jQuery('#app-bar-top').animate({top: '-96px'},0);
+function getlimit() {
+    $.ajax({
+        type: 'POST',
+        datatype: 'json',
+        url: '{{ path('profil_limit')}}',
+        success: function(response) {
+        $('#profil-footer').empty();
+        $('#profil-footer').append('<p class="text-center">\n\
+                                    <strong>Statistiques Requêtes sur le serveur Github : </strong> \n\
+                                    - Nombre de requêtes : <strong><em>'+response['rate']['limit']+'</em></strong> \n\
+                                    - Nombre de requêtes restantes: <strong><em>'+response['rate']['remaining']+'</em></strong></p>');
+        },
+        complete: function() {
+        $('#profil-footer').removeClass('hide');
+        },
+        error: function(x,t,m) {
+        $('#profil-footer-data').append('<p class="text-center">'+x+t+m+'</p>');
+        $('#profil-footer').removeClass('hide');
+        }        
+    });
+}
 function getGistInfo(gist) {    
     $.ajax({
         type: 'POST',
@@ -119,6 +142,9 @@ function getGistInfo(gist) {
                    }                   
                 }
             }        
+        },
+        complete: function() {
+        getlimit();
         },
         error: function(x,t,m) {            
             if( t === 'timeout') { $('#gistdetail').append('<li><strong>Erreur</strong> : La requête a mis trop de temps à répondre</li>');
