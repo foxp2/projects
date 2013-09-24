@@ -103,10 +103,9 @@ class ProfilController extends Controller{
                     'type' => $value['type'],
                     'login' => $value['actor']['login'],
                     'avatar' => $value['actor']['avatar_url'],
-                    'filescount' => $value['payload']['size'],
+                    'filescount' => array_key_exists('size', $value['payload']) ? $value['payload']['size'] : '',
                     'created_at' => date('d m Y', strtotime($value['created_at'], 0)),
-                    'repo' => $value['repo']['name'],
-                    
+                    'repo' => $value['repo']['name']                    
                 );
             }
             
@@ -115,10 +114,7 @@ class ProfilController extends Controller{
             $response = new Response(json_encode($data));
 
             $response->headers->set('Content-Type', 'application/json');
-            
-        }else{
-            
-            $response = $activities;
+
         }
 
         return $response;
