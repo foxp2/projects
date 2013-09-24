@@ -12,9 +12,9 @@
 {% block application -%}
 <div class="row-fluid" style="height:100%;background-image: url({{ asset("bundles/foxp2backoffice/images/bkg-4.png") }});">
     <div id="header-container" style="margin-left: 0px;margin-top:20px;margin-bottom: 20px;">
-        <a id="backbutton" class="win-backbutton icon-fox pull-left" style="margin-right: 10px;" href="{{ path('foxp2backoffice_homepage')}}"></a>
-        <div class="dropdown" style="width:800px;">
-            <h1 class="header-dropdown" style="line-height:40px;width:100%;">Liste des catégories{% if keyword != '' %} : <small>{{ keyword }}</small>{% endif %}</h1>
+        <a id="backbutton" class="win-backbutton" style="margin-right: 10px;" href="{{ path('foxp2backoffice_homepage')}}"></a>
+        <div class="dropdown pull-right">
+            <h1 class="header-dropdown" style="line-height:40px;">Liste des catégories{% if keyword != '' %} : <small>{{ keyword }}</small>{% endif %}</h1>
         </div>
     </div>
 {% include "foxp2backofficeBundle:Secured:logout.html.twig" %}
