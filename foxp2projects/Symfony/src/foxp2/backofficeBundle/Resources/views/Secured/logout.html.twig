@@ -1,6 +1,6 @@
 {# \Symfony\src\foxp2\backofficeBundle\Resources\views\Secured\logout.html.twig #}
 <div class="tile wide image collection span3 pull-right text-right">
-    <img alt="login" class="pull-right" src="{{ asset("bundles/foxp2projects/images/login.jpg") }}" style="width: 54px; height: 54px;margin-top: 20px;margin-right:10px;">    
+    <img alt="login" class="pull-right" src="{{ asset("bundles/foxp2projects/images/login.jpg") }}" style="width: 54px; height: 54px;margin-top: 20px;margin-right:10px;">
     <h4 style="margin-top: 20px;font-weight: bold;margin-bottom: 3px;">Bienvenue {{ app.user ? app.user.username : '' }}&nbsp;</h4>
     <div class="btn-group text-left">
         <button class="btn">Accès rapide</button>
@@ -8,6 +8,7 @@
             <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
+            <li {% if app.request.getRequestUri == path('foxp2backoffice_homepage') %}class="bg-color-yellow"{% endif %}><a href="{{ path('foxp2backoffice_homepage') }}"><strong><i class="icon-home-6"></i> Accueil</strong></a></li>
             <li {% if app.request.getRequestUri == path('profil_index') %}class="bg-color-yellow"{% endif %}><a href="{{ path('profil_index') }}"><strong><i class="icon-github"></i> Profil</strong></a></li>
             <li {% if app.request.getRequestUri == path('categories_index') %}class="bg-color-yellow"{% endif %}><a href="{{ path('categories_index') }}"><strong><i class="icon-list"></i> Catégories</strong></a></li>
             <li {% if app.request.getRequestUri == path('articles_index') %}class="bg-color-yellow"{% endif %}><a href="{{ path('articles_index') }}"><strong><i class="icon-list"></i> Articles</strong></a></li>
@@ -15,5 +16,5 @@
             <li class="divider"></li>
             <li class="bg-color-red"><a style="color:#fff;" href="{{ path('logout') }}"><strong><i class="icon-logout"></i> Quitter</strong></a></li>
         </ul>
-    </div>    
+    </div>
 </div>
