@@ -3,7 +3,7 @@
 {% block application -%}
 <div class="row-fluid">
     <div id="header-container" style="margin-left: 0px;margin-top:20px;margin-bottom: 20px;">
-        <a id="backbutton" class="win-backbutton" style="margin-right: 10px;" href="{{ path('foxp2backoffice_homepage')}}"></a>
+        <a id="backbutton" class="win-backbutton" style="margin-right: 10px;text-decoration: none;" href="{{ path('foxp2backoffice_homepage')}}"></a>
         <div class="dropdown pull-right">
             <h1 class="header-dropdown" style="line-height:40px;">Le profil de FoxP2</h1>
         </div>
@@ -79,7 +79,7 @@
                 </div>
                 <div class="span3 pull-right">
                     <div class="well well-orange" style="min-height:600px;margin-right:20px;margin-left: -20px;margin-top:16px;">
-                        <div id="data-activity">                            
+                        <div id="data-activityid">                            
                             <h3>Cliquer sur une activité dans la liste ci-contre pour obtenir plus d'informations.</h3>
                             <h1 class="text-center" style="color:#F09609;margin-top:200px;"><i class="icon-arrow-left-5"></i></h1>                          
                         </div>
@@ -231,7 +231,7 @@ function getactivities() {
         success: function(response) {
             for(var i=0;i<response.length;i++) {  
                 var obj = response[i]; 
-                $('#data-activities').append('<div class="listview-item bg-color-orange activity" data-id="'+obj['id']+'">\n\
+                $('#data-activities').append('<div class="listview-item bg-color-orange activity" data-actid="'+obj['actid']+'" data-createdat="'+obj['created_at']+'" data-login="'+obj['login']+'" data-avatar="'+obj['avatar']+'" data-filescount="'+obj['filescount']+'">\n\
                                               <div class="pull-left" href="#"><h1 class="pull-left"><i class="github-untitled-52"></i></h1></div>\n\
                                               <div class="listview-item-body">\n\
                                               <h4 class="listview-item-heading"><strong>Action :</strong> '+obj['type']+'</h4>\n\
@@ -481,19 +481,20 @@ function getGistInfo(gist) {
         }
     }); 
 }
-function getActivity(id) {
-    $('.toast').show();    
+function getActivity(actid) {
+
+    $('.toast').show();     
     $.ajax({
         type: 'POST',
         dataType: 'json',
         url: '{{ path('activity_ajax', {'id':0}) }}',
-        data: 'id' +id,
+        data: 'id' + actid,
         timeout: 10000,
-        success: function(response) {        
-            $('#data-activity').append('<strong>'+id+'<br />'+response.lenght+'</strong>');
+        success: function(response) {
+        $('#data-activityid').append('<hr><strong>Réponse ajax : '+response.lenght+'</strong>');
             for(var i=0; i<response.lenght;i++) {
                 var obj = response[i];
-                $('#data-activity').append('<h1>Auteur :'+obj['author']+'</h1>\n\
+                $('#data-activityid').append('<h2 class="pull-left"><strong>'+obj['owner']+'</h2>\n\
                                            <ul class="nav nav-list text-left">\n\
                                            <li></li>\n\
                                            <li></li>\n\
@@ -522,8 +523,17 @@ function getActivity(id) {
 $(document).on("click", ".activity", function() {    
     $('.activity').removeClass('selected');
     $(this).addClass('selected');
-    $('#data-activity').empty();
-    getActivity($(this).data('id'));
+    $('#data-activityid').empty();
+    $('#data-activityid').append('<h2 class="text-left"><i class="icon-history"></i> Détails :</h2><hr>\n\
+                                  <h2 class="pull-left"><i class="icon-user"></i>'+$(this).data('login')+'<br /><small class="muted">'+$(this).data('actid')+'</small></h2>\n\
+                                  <img class="pull-right" src="'+$(this).data('avatar')+'" alt="avatar" style="height:60px;width:60px;"><div class="clearfix"></div><hr>\n\
+                                  <h2 class="text-left"><i class="icon-chart-3"></i> Statistiques :</h2>\n\
+                                  <ul class="nav nav-list text-left">\n\
+                                  <li><i class="icon-calendar-alt-stroke"></i> Créé le : '+$(this).data('createdat')+'</li>\n\
+                                  <li><i class="icon-file"></i> Nombre de fichiers : '+$(this).data('filescount')+'</li>\n\
+                                  </ul>').hide().slideDown('slow');
+    var actid = $(this).data('actid');    
+    getActivity(actid);
 });
 $(document).on("click", ".repositories", function() {
     $('.repositories').removeClass('selected');

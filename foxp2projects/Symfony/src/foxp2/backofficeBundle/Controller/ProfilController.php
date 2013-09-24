@@ -99,10 +99,14 @@ class ProfilController extends Controller{
         
             foreach ($activities as $value) {
                 $data[] = array(
+                    'actid' => $value['id'],
                     'type' => $value['type'],
+                    'login' => $value['actor']['login'],
+                    'avatar' => $value['actor']['avatar_url'],
+                    'filescount' => $value['payload']['size'],
                     'created_at' => date('d m Y', strtotime($value['created_at'], 0)),
                     'repo' => $value['repo']['name'],
-                    'id' => $value['id']
+                    
                 );
             }
             
