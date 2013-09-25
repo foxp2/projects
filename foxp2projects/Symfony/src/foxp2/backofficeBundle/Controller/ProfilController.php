@@ -66,7 +66,8 @@ class ProfilController extends Controller{
                     'followers' => $profil['followers'],
                     'following' => $profil['following'],
                     'html_url' => $profil['html_url'],
-                    'created_at' => date('d m Y',strtotime($profil['created_at'],0))
+                    'created_at' => date('d m Y',strtotime($profil['created_at'],0)),
+                    'size' => '14'
                 );
 
             $response = new Response(json_encode($data));
@@ -162,7 +163,7 @@ class ProfilController extends Controller{
                             break;
                         case 'WatchEvent':
                             foreach ($value['payload'] as $payload) {
-                            
+
                                 $data[] = array(
                                     'action' => $payload,
                                     'type' => 'WatchEvent'

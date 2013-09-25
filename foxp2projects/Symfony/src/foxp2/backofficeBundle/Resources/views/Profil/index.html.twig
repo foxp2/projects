@@ -1,26 +1,20 @@
 {# \Symfony\src\foxp2\backofficeBundle\Resources\views\Profil\index.html.twig #}
 {% extends "foxp2backofficeBundle:Common:layout_admin.html.twig" %}
 {% block application -%}
+        <div class="win-ui-dark progress hide" id="progressouter"> 
+            <h3 class="text-info text-center"><strong>Chargement des données ...</strong></h3><br />
+            <div class="bar" id="progress"></div>
+        </div>
 <div class="row-fluid">
+
     <div id="header-container" style="margin-left: 0px;margin-top:20px;margin-bottom: 20px;">
-        <a id="backbutton" class="win-backbutton" style="margin-right: 10px;text-decoration: none;" href="{{ path('foxp2backoffice_homepage')}}"></a>
+        <a id="backbutton" class="win-backbutton" style="margin-right: 10px;" href="{{ path('foxp2backoffice_homepage')}}"></a>
         <div class="dropdown pull-right">
             <h1 class="header-dropdown" style="line-height:40px;">Le profil de FoxP2</h1>
         </div>
     </div>
 {% include "foxp2backofficeBundle:Secured:logout.html.twig" %}
-        <div class="alert toast fade bg-color-blueLight alerts-container">
-            <button type="button" class="close" data-dismiss="alert" type="button"></button>
-            <div class="pull-left">
-                <img class="toast-object" alt="90x90" style="width: 90px; height: 90px;" src="{{ asset("bundles/foxp2projects/images/foxp2-90-90.png") }}" />
-            </div>
-            <div class="toast-body">
-                <h4 class="toast-heading">Message de l'application</h4>
-                <p>
-                    <strong>Chargement des données</strong>
-                </p>
-            </div>
-        </div>
+
         <div class="alert alert-block alert-danger">
             <button type="button" class="close" data-dismiss="alert" type="button"></button>
             <h4>Erreur !</h4>
@@ -34,7 +28,7 @@
                 <a href="#pivot" data-pivot-index="3"><i class="github-untitled-14"></i> Gists publics</a>
             </div>
 
-        <div class="pivot-items" style="margin-bottom:93px;">
+        <div class="pivot-items">
         <!-- profil -->
         <div id="pivot-item-1" class="pivot-item active">
             <h2 class="text-left" style="color:#377C89"><strong>Profil public</strong></h2><hr>
@@ -146,9 +140,9 @@ $('#profiltab li a').click(function(){
         case "#starred" :
             $('#starred-list').hide().fadeIn(1000);$('#rightprofildata').empty();;$('#rightprofilinfo').show(); $('#rightprofil h3:first').text('Détails sur le dépôt'); $('#rightprofil h3:last').text('Cliquer sur un dépôt dans la liste ci-contre pour obtenir plus d\'informations.');break;
         case "#following":
-            (followingstatus === true) ? $('#following-list').hide().fadeIn(1000) : getfollowing();$('#rightprofildata').empty(); $('#rightprofilinfo').show();$('#rightprofil h3:first').text('Je les suis ...'); $('#rightprofil h3:last').text('Cliquer sur un développeur dans la liste ci-contre pour obtenir plus d\'informations.');break;
+            (followingstatus === true) ? $('#following-list').hide().fadeIn(1000) : getfollowing();;$('#rightprofildata').empty(); $('#rightprofilinfo').show();$('#rightprofil h3:first').text('Je les suis ...'); $('#rightprofil h3:last').text('Cliquer sur un développeur dans la liste ci-contre pour obtenir plus d\'informations.');break;
         case "#followers":
-            (followersstatus === true) ? $('#followers-list').hide().fadeIn(1000) : getfollowers();$('#rightprofildata').empty(); $('#rightprofilinfo').show();$('#rightprofil h3:first').text('Ils me suivent ...');$('#rightprofil h3:last').text('Cliquer sur un développeur dans la liste ci-contre pour obtenir plus d\'informations.');break;
+            (followersstatus === true) ? $('#followers-list').hide().fadeIn(1000) : getfollowers();;$('#rightprofildata').empty(); $('#rightprofilinfo').show();$('#rightprofil h3:first').text('Ils me suivent ...');$('#rightprofil h3:last').text('Cliquer sur un développeur dans la liste ci-contre pour obtenir plus d\'informations.');break;
     }
 });
 $('.pivot-headers a').click(function(){
@@ -165,6 +159,8 @@ function getlimit() {
         datatype: 'json',
         url: '{{ path('profil_limit')}}',
         success: function(response) {
+        $("#progressouter").addClass("hide");
+        $("#progress").css('width','0%');
         $('#profil-footer').empty();
         $('#profil-footer').append('<p class="text-center">\n\
                                     <strong>Statistiques Requêtes sur le serveur Github : </strong> \n\
@@ -180,18 +176,17 @@ function getlimit() {
         }
     });
 }
-function getActivity(id) {
-    $('.toast').show();    
+function getActivity(id) {    
     $.ajax({
         type: 'POST',
         dataType: 'json',
         url: '{{path('activity_ajax',{'id':0})}}',
         timeout: 10000,
         data: 'id=' + parseInt(id),        
-        success: function(data) {
+        success: function(response) {
         $('#data-activityid').append('<hr><h2 class="text-left"><i class="icon-feed"></i> Actions :<strong></h2>');
-            for(var i=0; i<data.length;i++) {
-                var obj = data[i];
+            for(var i=0; i<response.length;i++) {           
+                var obj = response[i];
                 if ( obj['type'] === 'PushEvent') {
                 $('#data-activityid').append('<ul class="nav nav-list text-left">\n\
                                               <li><i class="icon-user"></i> Auteur : '+obj['author']+'</li>\n\
@@ -205,8 +200,7 @@ function getActivity(id) {
                 }
             }
         },
-        complete: function() {
-        $('.toast').hide();
+        complete: function() {        
         getlimit();
         },
         error: function(xhr, status) {
@@ -214,26 +208,29 @@ function getActivity(id) {
                 $('#error').empty();
                 $('#error').append('La requête a mis trop de temps à répondre');
                 $('.alert').show();
-                $('.toast').hide();
+                getlimit();
             } else {
                $('#error').empty();
                $('#error').append('<strong>'+xhr.status+'</strong> : '+xhr.statusText+'');
                $('.alert').show();
-               $('.toast').hide();
+               getlimit();
             }
         }
     });
 }
 function getdevprofil(name) {
-    $('.toast').show();
+    $("#progressouter").removeClass("hide");
     $.ajax({
         type: 'POST',
         dataType: 'json',
         url: '{{ path('profil_ajax',{'id':0}) }}',
         timeout: 10000,
         data: 'id=' + name,
-        success: function(response) {
-          $('#rightprofildata').append('<h2 class="pull-left"><strong>'+response['login']+'</h2><img style="height:90px;width:90px;" class="pull-right img-polaroid" src="'+response['avatar_url']+'" alt="avatar">\n\
+        success: function(response) {     
+        for(var i=0;i<response['size'];i++) {
+          $("#progress").css('width',(i*100/i)+'%');             
+        }
+          $('#rightprofildata').append('<h2 class="pull-left"><strong>'+response['size']+response['login']+'</h2><img style="height:90px;width:90px;" class="pull-right img-polaroid" src="'+response['avatar_url']+'" alt="avatar">\n\
                                         <div class="clearfix"></div>'+response['name']+response['bio']+'<hr><h3 class="media-heading text-left"><i class="icon-clipboard"></i> Détails :</h3>\n\
                                         <ul class="nav nav-list text-left">\n\
                                         <li><i class="icon-user-3"></i> Compte créé le : '+response['created_at']+'</li>'+response['company']+response['location']+response['email']+response['blog']+'\n\
@@ -247,8 +244,7 @@ function getdevprofil(name) {
                                         <li><i class="icon-code"></i> Gists : '+response['public_gists']+'</li>\n\
                                         </ul><hr><a class="btn" href="'+response['html_url']+'" target="_blank"><i class="icon-github-5"></i> Voir sur github</a>').hide().slideDown('slow');
         },
-        complete: function() {
-        $('.toast').hide();
+        complete: function() {        
         getlimit();
         },
         error: function(x,t,m) {
@@ -256,18 +252,18 @@ function getdevprofil(name) {
                 $('#error').empty();
                 $('#error').append('<strong>Erreur</strong> : La requête a mis trop de temps à répondre');
                 $('.alert').removeClass('hide');
-                $('.toast').hide();
+                getlimit();
             } else {
                $('#error').empty();
                $('#error').append('<strong>'+t+'</strong> : '+m+x+'');
                $('.alert').removeClass('hide');
-               $('.toast').hide();
+               getlimit();
             }
         }
     });
 }
 function getactivities() {
-    $('.toast').show();
+    $("#progressouter").removeClass("hide");
     $.ajax({
         type: 'POST',
         dataType: 'json',
@@ -275,6 +271,7 @@ function getactivities() {
         timeout: 20000,
         success: function(response) {
             for(var i=0;i<response.length;i++) {
+                $("#progress").css('width',(i*100/i)+'%');                
                 var obj = response[i];
                 $('#data-activities').append('<div class="listview-item bg-color-orange activity" data-actid="'+obj['actid']+'" data-createdat="'+obj['created_at']+'" data-login="'+obj['login']+'" data-avatar="'+obj['avatar']+'" data-filescount="'+obj['filescount']+'">\n\
                                               <div class="pull-left" href="#"><h1 class="pull-left"><i class="github-untitled-52"></i></h1></div>\n\
@@ -285,8 +282,7 @@ function getactivities() {
             }
         },
         complete: function() {
-        activitystatus = true;
-        $('.toast').hide();
+        activitystatus = true;        
         getlimit();
         },
         error: function(t,m) {
@@ -294,24 +290,25 @@ function getactivities() {
                 $('#error').empty();
                 $('#error').append('<strong>Erreur</strong> : La requête a mis trop de temps à répondre');
                 $('.alert').removeClass('hide');
-                $('.toast').hide();
+                getlimit();
             } else {
                $('#error').append('<strong>'+t+'</strong> : '+m+'</div></div>');
                $('.alert').removeClass('hide');
-               $('.toast').hide();
+               getlimit();
             }
         }
     });
 }
 function getrepositories() {
-    $('.toast').show();
+    $("#progressouter").removeClass("hide");
     $.ajax({
         type: 'POST',
         dataType: 'json',
         url: '{{ path('repositories_ajax') }}',
         timeout: 10000,
         success: function(response) {
-            for(i=0;i<response.length; i++) {
+            for(var i=0;i<response.length; i++) {
+                $("#progress").css('width',(i*100/i)+'%');                
                 var obj = response[i];
                 $('#data-repositories').append('<div class="listview-item bg-color-blue repositories" data-id="'+obj['id']+'" data-name="'+obj['name']+'" data-fullname="'+obj['full_name']+'" data-masterbranch="'+obj['master_branch']+'" data-defaultbranch="'+obj['default_branch']+'" data-owner="'+obj['owner']+'" data-avatar="'+obj['avatar']+'" data-homepage="'+obj['homepage']+'" data-language="'+obj['language']+'" data-pushedat="'+obj['pushed_at']+'" data-createdat="'+obj['created_at']+'" data-updatedat="'+obj['updated_at']+'" data-watcherscount="'+obj['watchers_count']+'" data-forkscount="'+obj['forks_count']+'" data-openissuescount="'+obj['open_issues_count']+'">\n\
                                                 <div class="pull-left" href="#"><h1 class="pull-left"><i class="github-untitled-160"></i></h1></div>\n\
@@ -319,8 +316,7 @@ function getrepositories() {
             }
         },
         complete: function() {
-        repositorystatus = true;
-        $('.toast').hide();
+        repositorystatus = true;        
         getlimit();
         },
         error: function(x,t,m) {
@@ -328,24 +324,25 @@ function getrepositories() {
                 $('#error').empty();
                 $('#error').append('<strong>Erreur</strong> : La requête a mis trop de temps à répondre');
                 $('.alert').removeClass('hide');
-                $('.toast').hide();
+                getlimit();
             } else {
                $('#error').append('<strong>'+t+'</strong> : '+m+x+'');
                $('.alert').removeClass('hide');
-               $('.toast').hide();
+               getlimit();
             }
         }
     });
 }
 function getwatched() {
-    $('.toast').addClass('in');
+    $("#progressouter").removeClass("hide");
     $.ajax({
         type: 'POST',
         dataType: 'json',
         url: '{{ path('watched_ajax') }}',
-        timeout: 5000,
-        success: function(response) {
-            for( i=0;i<response.length;i++) {
+        timeout: 5000,       
+        success: function(response) {            
+            for(var i=0;i<response.length;i++) {                
+                $("#progress").css('width',(i*100/i)+'%');                 
                 var obj = response[i];
                 $('#starred-list').append('<div class="listview-item watched" data-name="'+obj['name']+'" data-fullname="'+obj['fullname']+'" data-owner="'+obj['owner']+'" data-createdat="'+obj['created_at']+'" data-updatedat="'+obj['updated_at']+'" data-pushedat="'+obj['pushed_at']+'" data-avatar='+obj['avatar']+' data-description="'+obj['description'] +'" data-langage="'+obj['language']+'" data-fork="'+obj['forks']+'" data-watchers="'+obj['watchers']+'" data-link="'+obj['html_url']+'" style="background-color:#377C89;">\n\
                                            <div class="pull-left" href="#">\n\
@@ -356,33 +353,34 @@ function getwatched() {
             }
         },
         complete: function() {
-        watchedstatus = true;
-        $('.toast').hide();
-        getlimit();
+        watchedstatus = true;       
+        getlimit();             
         },
         error: function(x,t,m) {
             if ( t === 'timeout') {
                 $('#error').empty();
                 $('#error').append('<strong>Erreur</strong> : La requête a mis trop de temps à répondre');
                 $('.alert').removeClass('hide');
-                $('.toast').hide();
+                getlimit();  
             } else {
                $('#error').append('<strong>'+t+'</strong> : '+m+x+'');
                $('.alert').removeClass('hide');
-               $('.toast').hide();
+               getlimit();  
             }
         }
     });
+
 }
 function getfollowing() {
-    $('.toast').show();
+    $("#progressouter").removeClass("hide");    
     $.ajax({
         type: 'POST',
         dataType: 'json',
         url: '{{ path('following_ajax') }}',
         timeout: 5000,
         success: function(response) {
-            for(var i=0;i<response.length;i++) {
+            for(var i=0;i<response.length;i++) {                
+                $("#progress").css('width',(i*100/i)+'%');                
                 var obj = response[i];
                 $('#following-list').append('<div class="listview-item following" data-login="'+obj['login']+'" style="background-color:#377C89;">\n\
                                            <div class="pull-left" href="#">\n\
@@ -393,8 +391,7 @@ function getfollowing() {
             }
         },
         complete: function() {
-        followingstatus = true;
-        $('.toast').hide();
+        followingstatus = true;        
         getlimit();
         },
         error: function(x,t,m) {
@@ -402,17 +399,17 @@ function getfollowing() {
                 $('#error').empty();
                 $('#error').append('<strong>Erreur</strong> : La requête a mis trop de temps à répondre');
                 $('.alert').removeClass('hide');
-                $('.toast').hide();
+                getlimit();
             } else {
                $('#error').append('<strong>'+t+'</strong> : '+m+x+'');
                $('.alert').removeClass('hide');
-               $('.toast').hide();
+               getlimit();
             }
         }
     });
 }
 function getfollowers() {
-    $('.toast').show();
+    $("#progressouter").removeClass("hide");    
     $.ajax({
         type: 'POST',
         dataType: 'json',
@@ -420,6 +417,7 @@ function getfollowers() {
         timeout: 5000,
         success: function(response) {
             for(var i=0;i<response.length;i++) {
+                $("#progress").css('width',(i*100/i)+'%');                
                 var obj = response[i];
                 $('#followers-list').append('<div class="listview-item followers" data-login="'+obj['login']+'" style="background-color:#377C89;">\n\
                                            <div class="pull-left" href="#">\n\
@@ -430,8 +428,7 @@ function getfollowers() {
             }
         },
         complete: function() {
-        followersstatus = true;
-        $('.toast').hide();
+        followersstatus = true;        
         getlimit();
         },
         error: function(t,m) {
@@ -439,17 +436,17 @@ function getfollowers() {
                 $('#error').empty();
                 $('#error').append('<strong>Erreur</strong> : La requête a mis trop de temps à répondre');
                 $('.alert').removeClass('hide');
-                $('.toast').hide();
+                getlimit();
             } else {
                $('#error').append('<strong>'+t+'</strong> : '+m+'');
                $('.alert').removeClass('hide');
-               $('.toast').hide();
+               getlimit();
             }
         }
     });
 }
 function getgists() {
-    $('.toast').show();
+    $("#progressouter").removeClass("hide");    
     $.ajax({
         type: 'POST',
         dataType: 'json',
@@ -457,6 +454,7 @@ function getgists() {
         timeout: 10000,
         success: function(response) {
             for(var i=0;i<response.length;i++) {
+                $("#progress").css('width',(i*100/i)+'%');                
                 var obj = response[i];
                 $('#gists-list').append('<div id="'+obj['id']+'" class="listview-item gistcolor bg-color-purple">\n\
                                            <div class="pull-left" href="#">\n\
@@ -469,8 +467,7 @@ function getgists() {
             }
         },
         complete: function() {
-        gistliststatus = true;
-        $('.toast').hide();
+        gistliststatus = true;        
         getlimit();
         },
         error: function(t,m) {
@@ -478,17 +475,17 @@ function getgists() {
                 $('#error').empty();
                 $('#error').append('<strong>Erreur</strong> : La requête a mis trop de temps à répondre');
                 $('.alert').removeClass('hide');
-                $('.toast').hide();
+                getlimit();
             } else {
                $('#error').append('<strong>'+t+'</strong> : '+m+'');
                $('.alert').removeClass('hide');
-               $('.toast').hide();
+               getlimit();
             }
         }
     });
 }
 function getGistInfo(gist) {
-    $('.toast').show();
+    $("#progressouter").removeClass("hide");    
     $.ajax({
         type: 'POST',
         dataType: 'json',
@@ -497,6 +494,11 @@ function getGistInfo(gist) {
         timeout: 10000,
         success: function(response) {
              for(var i=0;i<response.length;i++) {
+                if( i > 1) {
+                $("#progress").css('width',(i*100/i)+'%');
+                }else{
+                $("#progress").css('width','100%');
+                }
                 var obj = response[i];
                 for(var key in obj){
                    if(key === 'filename') {
@@ -508,8 +510,7 @@ function getGistInfo(gist) {
                 }
             }
         },
-        complete: function() {
-        $('.toast').hide();
+        complete: function() {        
         getlimit();
         },
         error: function(t,m) {
@@ -517,11 +518,11 @@ function getGistInfo(gist) {
                 $('#error').empty();
                 $('#error').append('<strong>Erreur</strong> : La requête a mis trop de temps à répondre');
                 $('.alert').removeClass('hide');
-                $('.toast').hide();
+                getlimit();
             } else {
                $('#error').append('<strong>'+t+'</strong> : '+m+'');
                $('.alert').removeClass('hide');
-               $('.toast').hide();
+               getlimit();
             }
         }
     });
