@@ -1,7 +1,7 @@
 {# \Symfony\src\foxp2\backofficeBundle\Resources\views\Gist\index.html.twig #}
 {% extends "foxp2backofficeBundle:Common:layout_admin.html.twig" %}
 {% block apptopbar %}
-        <div class="win-ui-dark progress hide" id="progressouter"> 
+        <div class="win-ui-dark progress hide" id="progressouter" style="background-image: url({{ asset("bundles/foxp2backoffice/images/bkg-4.png") }}"> 
             <h3 class="text-info text-center"><strong>Chargement des données ...</strong></h3><br />
             <div class="bar" id="progress"></div>
         </div>
