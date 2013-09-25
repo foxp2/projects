@@ -10,9 +10,9 @@
         <ul class="dropdown-menu">
             <li {% if app.request.getRequestUri == path('foxp2backoffice_homepage') %}class="bg-color-yellow"{% endif %}><a href="{{ path('foxp2backoffice_homepage') }}"><strong><i class="icon-home-6"></i> Accueil</strong></a></li>
             <li {% if app.request.getRequestUri == path('profil_index') %}class="bg-color-yellow"{% endif %}><a href="{{ path('profil_index') }}"><strong><i class="icon-github"></i> Profil</strong></a></li>
-            <li {% if app.request.getRequestUri == path('categories_index') %}class="bg-color-yellow"{% endif %}><a href="{{ path('categories_index') }}"><strong><i class="icon-list"></i> Catégories</strong></a></li>
-            <li {% if app.request.getRequestUri == path('articles_index') %}class="bg-color-yellow"{% endif %}><a href="{{ path('articles_index') }}"><strong><i class="icon-list"></i> Articles</strong></a></li>
-            <li {% if app.request.getRequestUri == path('gist_index') %}class="bg-color-yellow"{% endif %}><a href="{{ path('gist_index') }}"><strong><i class="icon-list"></i> Gists</strong></a></li>
+            <li {% if app.request.get('_route')|slice(0,10) == 'categories' %}class="bg-color-yellow"{% endif %}><a href="{{ path('categories_index') }}"><strong><i class="icon-list"></i> Catégories</strong></a></li>
+            <li {% if app.request.get('_route')|slice(0,8) == 'articles' %}class="bg-color-yellow"{% endif %}><a href="{{ path('articles_index') }}"><strong><i class="icon-list"></i> Articles</strong></a></li>
+            <li {% if app.request.get('_route')|slice(0,4) == 'gist' %}class="bg-color-yellow"{% endif %}><a href="{{ path('gist_index') }}"><strong><i class="icon-list"></i> Gists</strong></a></li>
             <li class="divider"></li>
             <li class="bg-color-red"><a style="color:#fff;" href="{{ path('logout') }}"><strong><i class="icon-logout"></i> Quitter</strong></a></li>
         </ul>
