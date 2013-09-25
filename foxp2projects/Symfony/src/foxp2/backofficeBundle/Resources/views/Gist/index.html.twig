@@ -141,10 +141,10 @@ function getGistInfo(gist) {
                 $("#progress").css('width','100%');
                 }
                    if(key === 'filename') {
-                   $('#gistdetail').append('<h2 id="file'+i+'"><strong>'+obj["filename"]+'</strong><small class="pull-right">langage : '+obj["language"]+'</small></h2>');
+                   $('#gistdetail').append('<h2 id="file'+i+'"><strong>'+obj["filename"]+'</strong><small class="pull-right">langage : '+obj["language"]+'</small></h2>').hide().fadeIn(1000);
                    }
                    if(key === 'content') {
-                   $('#gistdetail').append('<h3>Le code</h3><div id="code'+i+'">'+obj[key]+'</div><br /><a href="#file'+i+'" id="'+i+'" class="btn btn-inverse pull-left fullcode"><i class="icon-arrow-down"></i>Déplier le code</a><a href="'+obj["raw_url"]+'" target="_blank" class="btn btn-info pull-right"><i class="icon-github"></i> Voir sur github</a><br /><hr>');
+                   $('#gistdetail').append('<h3>Le code</h3><div id="code'+i+'">'+obj[key]+'</div><br /><a href="#file'+i+'" id="'+i+'" class="btn btn-inverse pull-left fullcode"><i class="icon-arrow-down"></i>Déplier le code</a><a href="'+obj["raw_url"]+'" target="_blank" class="btn btn-info pull-right"><i class="icon-github"></i> Voir sur github</a><br /><hr>').hide().fadeIn(1000);
                    }                   
                 }
             }        
