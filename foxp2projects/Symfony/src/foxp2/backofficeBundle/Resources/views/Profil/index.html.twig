@@ -133,7 +133,7 @@ repositorystatus = false;
 followingstatus = false;
 followersstatus = false;
 gistliststatus = false;
-getwatched();
+//getwatched();
 $('#profiltab li a').click(function(){
     $('.watched').removeClass('selected');$('.following').removeClass('selected'); $('.followers').removeClass('selected');
     switch($(this).attr('href')) {
@@ -196,7 +196,15 @@ function getActivity(id) {
                 }
                 if ( obj['type'] === 'WatchEvent') {
                 $('#data-activityid').append('<ul class="nav nav-list text-left">\n\
-                                              <li>'+obj['action']+'</li></ul>');
+                                              <li>Etat : '+obj['action']+'</li></ul>');
+                }
+                if ( obj['type'] === 'IssuesEvent') {
+                $('#data-activityid').append('<ul class="nav nav-list text-left">\n\
+                                              <li>Etat :'+obj['action']+'</li>\n\
+                                              <li>Status : '+obj['status']+'</li>\n\
+                                              <li>Titre : '+obj['title']+'</li>\n\
+                                              <li>Description :</li><br />\n\
+                                              <blockquote>'+obj['body']+'</blockquote></ul><hr><a class="btn" target="_blank" href="'+obj['link']+'">Voir sur Github</a>');
                 }
             }
         },
@@ -230,7 +238,7 @@ function getdevprofil(name) {
         for(var i=0;i<response['size'];i++) {
           $("#progress").css('width',(i*100/i)+'%');             
         }
-          $('#rightprofildata').append('<h2 class="pull-left"><strong>'+response['size']+response['login']+'</h2><img style="height:90px;width:90px;" class="pull-right img-polaroid" src="'+response['avatar_url']+'" alt="avatar">\n\
+          $('#rightprofildata').append('<h2 class="pull-left"><strong>'+response['login']+'</h2><img style="height:90px;width:90px;" class="pull-right img-polaroid" src="'+response['avatar_url']+'" alt="avatar">\n\
                                         <div class="clearfix"></div>'+response['name']+response['bio']+'<hr><h3 class="media-heading text-left"><i class="icon-clipboard"></i> Détails :</h3>\n\
                                         <ul class="nav nav-list text-left">\n\
                                         <li><i class="icon-user-3"></i> Compte créé le : '+response['created_at']+'</li>'+response['company']+response['location']+response['email']+response['blog']+'\n\

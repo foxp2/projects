@@ -162,15 +162,21 @@ class ProfilController extends Controller{
                             }
                             break;
                         case 'WatchEvent':
-                            foreach ($value['payload'] as $payload) {
-
                                 $data[] = array(
-                                    'action' => $payload,
-                                    'type' => 'WatchEvent'
-                                 );
-                            }
+                                    'type' => 'WatchEvent',
+                                    'action' => $value['payload']['action']                                    
+                                 );                            
                             break;
-
+                        case 'IssuesEvent':                            
+                                $data[] = array(
+                                    'type' => 'IssuesEvent',
+                                    'action' => $value['payload']['action'],
+                                    'status' => $value['payload']['issue']['state'],
+                                    'title' => array_key_exists('title', $value['payload']['issue']) ? $value['payload']['issue']['title'] : '',
+                                    'body' => array_key_exists('body', $value['payload']['issue']) ? nl2br($value['payload']['issue']['body']) : '',
+                                    'link' => $value['payload']['issue']['html_url']
+                                );                            
+                            break;
                         default:
                             break;
                     }
@@ -180,6 +186,7 @@ class ProfilController extends Controller{
             $response = new Response(json_encode($data));
 
             $response->headers->set('Content-Type', 'application/json');
+
         }
 
         return $response;
