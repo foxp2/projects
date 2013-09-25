@@ -1,4 +1,4 @@
-FoxP2 projects - Documentation for :
+FoxP2 projects
 ========
 
 Public Admin Area :
@@ -8,6 +8,8 @@ http://foxp2projects.fr.nf/login
 login : admin
 
 password : 123456
+
+#Documentation for :
 
 ## osCommerce 2.4 Public Admin Area 
   *(based on osCommerce 2.4 -- branch : Master)*
