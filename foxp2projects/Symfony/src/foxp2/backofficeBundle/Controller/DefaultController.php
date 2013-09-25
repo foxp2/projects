@@ -6,31 +6,27 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\SecurityContext;
 
+class DefaultController extends Controller {
 
-class DefaultController extends Controller
-{
-        
-    public function indexAction()
-    {
+    public function indexAction() {
+
         $em = $this->getDoctrine()->getManager();
-        
+
         $categories_count = $em->getRepository('foxp2backofficeBundle:Categories')->getCategoriesCount();
-        
+
         $articles_count = $em->getRepository('foxp2backofficeBundle:Articles')->getArticlesCount();
-        
+
         // todo : factoriser le code
         $service = $this->container->get('github_api');
         $gists = $service->getClient();
         $listgist = sizeof($gists->api('users')->gists('foxp2'));
-        
-        return $this->render('foxp2backofficeBundle:Default:index.html.twig',
-                array('categories_count' => $categories_count, 
-                      'gist_count' => $listgist,
-                      'articles_count' => $articles_count));
+
+        return $this->render('foxp2backofficeBundle:Default:index.html.twig', array('categories_count' => $categories_count,
+                    'gist_count' => $listgist,
+                    'articles_count' => $articles_count));
     }
-    
-    public function loginAction(Request $request)
-    {
+
+    public function loginAction(Request $request) {
         $request = $this->getRequest();
         $session = $request->getSession();
         if ($request->attributes->has(SecurityContext::AUTHENTICATION_ERROR)) {
@@ -39,23 +35,21 @@ class DefaultController extends Controller
             $error = $request->getSession()->get(SecurityContext::AUTHENTICATION_ERROR);
             $session->remove(SecurityContext::AUTHENTICATION_ERROR);
         }
-        
+
         return $this->render('foxp2backofficeBundle:Secured:login.html.twig', array(
-            'last_username' => $request->getSession()->get(SecurityContext::LAST_USERNAME),
-            'error'         => $error,
+                    'last_username' => $request->getSession()->get(SecurityContext::LAST_USERNAME),
+                    'error' => $error,
         ));
     }
 
-    public function login_checkAction()
-    {
-           
+    public function login_checkAction() {
         
     }
 
-    public function logoutAction()
-    {
-       $request = $this->getRequest();
-       $session = $request->getSession();
-       $session->remove(SecurityContext::LAST_USERNAME);       
+    public function logoutAction() {
+        $request = $this->getRequest();
+        $session = $request->getSession();
+        $session->remove(SecurityContext::LAST_USERNAME);
     }
+
 }
