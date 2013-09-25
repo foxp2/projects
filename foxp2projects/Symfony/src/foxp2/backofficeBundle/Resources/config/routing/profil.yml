@@ -11,8 +11,11 @@ activities_ajax:
     pattern:  /activities
     defaults: { _controller: "foxp2backofficeBundle:Profil:getajaxactivities" }
 activity_ajax:
-    pattern:  /activity/{id}
+    pattern:  /activity/id={id}
     defaults: { _controller: "foxp2backofficeBundle:Profil:getajaxactivity"}
+    requirements:
+        _method:  POST
+        id: \d+
 repositories_ajax:
     pattern:  /repositories
     defaults: { _controller: "foxp2backofficeBundle:Profil:getajaxrepositories" }

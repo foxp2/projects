@@ -21,7 +21,7 @@
                 </p>
             </div>
         </div>
-        <div class="alert alert-block alert-danger hide">
+        <div class="alert alert-block alert-danger">
             <button type="button" class="close" data-dismiss="alert" type="button"></button>
             <h4>Erreur !</h4>
             <p id="error"></p>
@@ -133,6 +133,7 @@
 <div id="profil-footer" class="well well-profil-stat" style="margin-left: -20px;"></div>
 
 <script>
+$('.alert').hide();
 activitystatus = false;
 repositorystatus = false;
 followingstatus = false;
@@ -179,11 +180,55 @@ function getlimit() {
         }
     });
 }
+function getActivity(id) {
+    $('.toast').show();    
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: '{{path('activity_ajax',{'id':0})}}',
+        timeout: 10000,
+        data: 'id=' + parseInt(id),        
+        success: function(data) {
+        $('#data-activityid').append('<hr><h2 class="text-left"><i class="icon-feed"></i> Actions :<strong></h2>');
+            for(var i=0; i<data.length;i++) {
+                var obj = data[i];
+                if ( obj['type'] === 'PushEvent') {
+                $('#data-activityid').append('<ul class="nav nav-list text-left">\n\
+                                              <li><i class="icon-user"></i> Auteur : '+obj['author']+'</li>\n\
+                                              <li><i class="icon-envelope"></i> Email : '+obj['email']+'</li>\n\
+                                              <li><i class="icon-comment"></i> Commentaire : <br /><blockquote>'+obj['message']+'</blockquote></li>\n\
+                                              <li class="divider"></li></ul><a class="btn" href="https://github.com/'+obj['repo']+'/commit/'+obj['sha']+'" target="_blank">Voir sur github</a><br />');
+                }
+                if ( obj['type'] === 'WatchEvent') {
+                $('#data-activityid').append('<ul class="nav nav-list text-left">\n\
+                                              <li>'+obj['action']+'</li></ul>');
+                }
+            }
+        },
+        complete: function() {
+        $('.toast').hide();
+        getlimit();
+        },
+        error: function(xhr, status) {
+            if ( xhr.statusText === 'timeout') {
+                $('#error').empty();
+                $('#error').append('La requête a mis trop de temps à répondre');
+                $('.alert').show();
+                $('.toast').hide();
+            } else {
+               $('#error').empty();
+               $('#error').append('<strong>'+xhr.status+'</strong> : '+xhr.statusText+'');
+               $('.alert').show();
+               $('.toast').hide();
+            }
+        }
+    });
+}
 function getdevprofil(name) {
     $('.toast').show();
     $.ajax({
         type: 'POST',
-        datatype: 'json',
+        dataType: 'json',
         url: '{{ path('profil_ajax',{'id':0}) }}',
         timeout: 10000,
         data: 'id=' + name,
@@ -481,44 +526,7 @@ function getGistInfo(gist) {
         }
     });
 }
-function getActivity(actid) {
-    $('.toast').show();
-    $.ajax({
-        type: 'POST',
-        dataType: 'json',
-        url: '{{ path('activity_ajax', {'id':0}) }}',
-        data: 'id' + actid,
-        timeout: 10000,
-        success: function(response) {
-        $('#data-activityid').append('<hr><strong>Réponse ajax : '+response.lenght+'</strong>');
-            for(var i=0; i<response.lenght;i++) {
-                var obj = response[i];
-                $('#data-activityid').append('<h2 class="pull-left"><strong>'+obj['owner']+'</h2>\n\
-                                           <ul class="nav nav-list text-left">\n\
-                                           <li></li>\n\
-                                           <li></li>\n\
-                                           <li></li></ul>');
-            }
-        },
-        complete: function() {
-        $('.toast').hide();
-        getlimit();
-        },
-        error: function(xhr, status) {
-            if ( xhr.statusText === 'timeout') {
-                $('#error').empty();
-                $('#error').append('La requête a mis trop de temps à répondre');
-                $('.alert').removeClass('hide');
-                $('.toast').hide();
-            } else {
-               $('#error').empty();
-               $('#error').append('<strong>'+xhr.status+'</strong> : '+xhr.statusText+'');
-               $('.alert').show();
-               $('.toast').hide();
-            }
-        }
-    });
-}
+
 $(document).on("click", ".activity", function() {
     $('.activity').removeClass('selected');
     $(this).addClass('selected');
@@ -530,9 +538,8 @@ $(document).on("click", ".activity", function() {
                                   <ul class="nav nav-list text-left">\n\
                                   <li><i class="icon-calendar-alt-stroke"></i> Créé le : '+$(this).data('createdat')+'</li>\n\
                                   <li><i class="icon-file"></i> Nombre de fichiers : '+$(this).data('filescount')+'</li>\n\
-                                  </ul>').hide().slideDown('slow');
-    var actid = $(this).data('actid');
-    getActivity(actid);
+                                  </ul>').hide().slideDown('slow');    
+    getActivity($(this).data('actid'));
 });
 $(document).on("click", ".repositories", function() {
     $('.repositories').removeClass('selected');
