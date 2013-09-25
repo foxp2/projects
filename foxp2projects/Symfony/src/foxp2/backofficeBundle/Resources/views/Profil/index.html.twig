@@ -1,7 +1,7 @@
 {# \Symfony\src\foxp2\backofficeBundle\Resources\views\Profil\index.html.twig #}
 {% extends "foxp2backofficeBundle:Common:layout_admin.html.twig" %}
 {% block application -%}
-        <div class="win-ui-dark progress hide" id="progressouter"> 
+        <div class="win-ui-dark progress hide" id="progressouter" style="background-image: url({{ asset("bundles/foxp2backoffice/images/bkg-4.png") }}"> 
             <h3 class="text-info text-center"><strong>Chargement des données ...</strong></h3><br />
             <div class="bar" id="progress"></div>
         </div>
@@ -510,10 +510,10 @@ function getGistInfo(gist) {
                 var obj = response[i];
                 for(var key in obj){
                    if(key === 'filename') {
-                   $('#gistdetail').append('<h2 id="file'+i+'"><strong>'+obj["filename"]+'</strong><small class="pull-right">langage : '+obj["language"]+'</small></h2>');
+                   $('#gistdetail').append('<h2 id="file'+i+'"><strong>'+obj["filename"]+'</strong><small class="pull-right">langage : '+obj["language"]+'</small></h2>').hide().fadeIn(1000);
                    }
                    if(key === 'content') {
-                   $('#gistdetail').append('<h3>Le code</h3><div id="code'+i+'">'+obj[key]+'</div><br /><a href="#file'+i+'" id="'+i+'" class="btn btn-inverse pull-left fullcode"><i class="icon-arrow-down"></i>Déplier le code</a><a href="'+obj["raw_url"]+'" target="_blank" class="btn btn-info pull-right"><i class="icon-github"></i> Voir sur github</a><br /><hr>');
+                   $('#gistdetail').append('<h3>Le code</h3><div id="code'+i+'">'+obj[key]+'</div><br /><a href="#file'+i+'" id="'+i+'" class="btn btn-inverse pull-left fullcode"><i class="icon-arrow-down"></i>Déplier le code</a><a href="'+obj["raw_url"]+'" target="_blank" class="btn btn-info pull-right"><i class="icon-github"></i> Voir sur github</a><br /><hr>').hide().fadeIn(1000);
                    }
                 }
             }
@@ -622,10 +622,10 @@ var id= $(this).attr('id');
 if ($('#code'+id).children().hasClass('pre-scrollable-fox'))
     {
         $(this).html('<i class="icon-arrow-up"></i>Replier le code');
-        $('#code'+id).children().removeClass('pre-scrollable-fox');
+        $('#code'+id).children().removeClass('pre-scrollable-fox').hide().fadeIn(500);
     }else{
         $(this).html('<i class="icon-arrow-down"></i>Deplier le code');
-        $('#code'+id).children().addClass('pre-scrollable-fox').css('overflow-x','hidden');
+        $('#code'+id).children().addClass('pre-scrollable-fox').css('overflow-x','hidden').hide().fadeIn(500);
     }
 });
 </script>
