@@ -1,6 +1,10 @@
 {# \Symfony\src\foxp2\backofficeBundle\Resources\views\Gist\index.html.twig #}
 {% extends "foxp2backofficeBundle:Common:layout_admin.html.twig" %}
 {% block apptopbar %}
+        <div class="win-ui-dark progress hide" id="progressouter"> 
+            <h3 class="text-info text-center"><strong>Chargement des données ...</strong></h3><br />
+            <div class="bar" id="progress"></div>
+        </div>
 <!-- app top bar -->
 <div id="app-bar-top" class="win-ui-dark">
     <a class="win-command white pull-right" href="">{# todo : formulaire de création de gist #}
@@ -10,7 +14,7 @@
 </div>
 {% endblock %}
 {% block application -%}
-<div class="row-fluid" style="height:100%;background-image: url({{ asset("bundles/foxp2backoffice/images/bkg-4.png") }});">
+<div class="row-fluid">
     <div id="header-container" style="margin-left: 0px;margin-top:20px;margin-bottom: 20px;">
         <a id="backbutton" class="win-backbutton" style="margin-right: 10px;" href="{{ path('foxp2backoffice_homepage')}}"></a>
         <div class="dropdown pull-right">
@@ -48,7 +52,7 @@
     {% endfor %}
     </div>
 {% endif %}
-        <div class="listview list-layout span3" style="max-height:600px;">
+        <div class="listview list-layout span3" style="max-height:600px;margin-top:40px;">
             {% for gist in Gist %}
                 <div id="{{ gist.id }}" class="listview-item bg-color-purple">
                     <div class="pull-left" href="#">
@@ -62,11 +66,7 @@
                 </div>
             {% endfor %}
         </div>
-        <div id="gistdetailprogress" class="hide text-center">
-        <h3 class="text-info text-center">chargement des données</h3>
-        <progress></progress>
-        </div>        
-        <div id="gistdetail" class="span8" style="margin-top: 7px;">
+        <div id="gistdetail" class="span8" style="margin-top: 47px;">
             <div class="hero-unit">
                 <h1>Chargement des fichiers</h1>
                 <hr>
@@ -81,7 +81,7 @@
 <div id="profil-footer" class="well well-profil-stat hide" style="margin-left:-20px"></div>
 </div>
 <script>
-$(document).on("click", ".fullcode", function(e) {
+$(document).on("click", ".fullcode", function() {
 var id= $(this).attr('id');
 if ($('#code'+id).children().hasClass('pre-scrollable-fox'))
     {
@@ -94,10 +94,8 @@ if ($('#code'+id).children().hasClass('pre-scrollable-fox'))
 });
 $('.listview-item').click(function(){ 
     $('.listview-item').removeClass('bg-color-yellow selected').addClass('bg-color-purple').css('color','#fff');
-    $(this).removeClass('bg-color-purple').addClass('bg-color-yellow selected').css('color','#000');
-    
-    $("#gistdetail").empty();
-    $('#gistdetailprogress').removeClass('hide'); 
+    $(this).removeClass('bg-color-purple').addClass('bg-color-yellow selected').css('color','#000');    
+    $("#gistdetail").empty();    
     getGistInfo($(this).attr('id'));
 });
 jQuery('#app-bar-top').animate({top: '-96px'},0);
@@ -107,6 +105,8 @@ function getlimit() {
         datatype: 'json',
         url: '{{ path('profil_limit')}}',
         success: function(response) {
+        $("#progressouter").addClass("hide");
+        $("#progress").css('width','0%');
         $('#profil-footer').empty();
         $('#profil-footer').append('<p class="text-center">\n\
                                     <strong>Statistiques Requêtes sur le serveur Github : </strong> \n\
@@ -122,7 +122,8 @@ function getlimit() {
         }        
     });
 }
-function getGistInfo(gist) {    
+function getGistInfo(gist) {
+    $("#progressouter").removeClass("hide");    
     $.ajax({
         type: 'POST',
         dataType: 'json',
@@ -131,9 +132,14 @@ function getGistInfo(gist) {
         timeout: 10000,
         success: function(response) {        
         $('#gistdetailprogress').addClass('hide'); 
-             for(var i=0;i<response.length;i++) {                 
+             for(var i=0;i<response.length;i++) {
                 var obj = response[i];               
                 for(var key in obj){                   
+                if( i > 1) {
+                $("#progress").css('width',(i*100/i)+'%');
+                }else{
+                $("#progress").css('width','100%');
+                }
                    if(key === 'filename') {
                    $('#gistdetail').append('<h2 id="file'+i+'"><strong>'+obj["filename"]+'</strong><small class="pull-right">langage : '+obj["language"]+'</small></h2>');
                    }
