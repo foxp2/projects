@@ -10,7 +10,7 @@ class ProfilController extends Controller{
 
     public function indexAction() {
 
-        return $this->render('foxp2backofficeBundle:Profil:index.html.twig');
+        return $this->render('foxp2backofficeBundle:Profil:index.html.twig', array('profil_github_name' => $this->container->getParameter('user_github_api')));
 
     }
 
@@ -273,7 +273,7 @@ class ProfilController extends Controller{
                     'avatar' => $value['owner']['avatar_url'],
                     'owner' => $value['owner']['login'],
                     'html_url' => $value['html_url'],
-                    'description' => $value['description'],
+                    'description' => strip_tags($value['description']),
                     'forks' => $value['forks'],
                     'watchers' => $value['watchers'],
                     'language' => $value['language'],
