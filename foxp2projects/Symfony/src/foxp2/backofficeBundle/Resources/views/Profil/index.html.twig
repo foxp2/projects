@@ -9,7 +9,7 @@
     <div id="header-container" style="margin-left: 0px;margin-top:20px;margin-bottom: 20px;">
         <a id="backbutton" class="win-backbutton" style="margin-right: 10px;" href="{{ path('foxp2backoffice_homepage')}}"></a>
         <div class="dropdown pull-right">
-            <h1 class="header-dropdown" style="line-height:40px;">Le profil de FoxP2</h1>
+            <h1 class="header-dropdown" style="line-height:40px;">Le profil de {{profil_github_name}}</h1>
         </div>
     </div>
 {% include "foxp2backofficeBundle:Secured:logout.html.twig" %}
@@ -85,7 +85,7 @@
             <h2 class="text-left" style="color:#2C83EF;"><strong>Dépôts publics</strong></h2><hr>
             <div class="row-fluid">
                 <div class="span9">
-                <div id="data-repositories" class="listview grid-layout" style="max-height: 600px;"></div>
+                <div id="data-repositories" class="listview grid-layout text-left" style="max-height: 600px;"></div>
                 </div>
                 <div class="span3 pull-right">
                     <div class="well well-blue" style="min-height:600px;margin-right:20px;margin-left: -20px;margin-top:16px;">
@@ -287,6 +287,7 @@ function getactivities() {
                                               <p class="two-lines"><strong>Dépôt : </strong>'+obj['repo']+'<br />\n\
                                               </p></div></div>').hide().fadeIn(1000);
             }
+            if ( response.length === 0 ) {$("#progress").css('width','100%');$('#data-activities').append('<div class="alert alert-info text-center"><strong>Aucun résultat pour {{profil_github_name}}</strong></div>').hide().fadeIn(1000);}
         },
         complete: function() {
         activitystatus = true;        
@@ -321,6 +322,7 @@ function getrepositories() {
                                                 <div class="pull-left" href="#"><h1 class="pull-left"><i class="github-untitled-160"></i></h1></div>\n\
                                                 <div class="listview-item-body"><h4 class="text-left">'+obj['name']+'</h4></div></div>').hide().fadeIn(1000);
             }
+        if ( response.length === 0 ) {$("#progress").css('width','100%');$('#data-repositories').append('<div class="alert alert-info text-center"><strong>Aucun résultat pour {{profil_github_name}}</strong></div>').hide().fadeIn(1000);}
         },
         complete: function() {
         repositorystatus = true;        
@@ -358,6 +360,7 @@ function getwatched() {
                                            <div class="listview-item-body">\n\
                                            <h4 class="listview-item-heading">'+obj['name']+'</h4></div></div>').hide().fadeIn(1000);
             }
+            if ( response.length === 0 ) {$("#progress").css('width','100%');$('#starred-list').append('<div class="alert alert-info text-center"><strong>Aucun résultat pour {{profil_github_name}}</strong></div>').hide().fadeIn(1000);}
         },
         complete: function() {
         watchedstatus = true;       
@@ -394,8 +397,9 @@ function getfollowing() {
                                            <img class="listview-item-object" src="'+obj['avatar']+'" style="height:90px;width:90px;">\n\
                                            </div>\n\
                                            <div class="listview-item-body">\n\
-                                           <h4 class="listview-item-heading">'+obj['login']+'</h4></div></div>').hide().fadeIn(1000);;
+                                           <h4 class="listview-item-heading">'+obj['login']+'</h4></div></div>').hide().fadeIn(1000);            
             }
+            if ( response.length === 0 ) {$("#progress").css('width','100%');$('#following-list').append('<div class="alert alert-info text-center"><strong>Aucun résultat pour {{profil_github_name}}</strong></div>').hide().fadeIn(1000);}
         },
         complete: function() {
         followingstatus = true;        
@@ -431,8 +435,9 @@ function getfollowers() {
                                            <img class="listview-item-object" src="'+obj['avatar']+'" style="height:90px;width:90px;">\n\
                                            </div>\n\
                                            <div class="listview-item-body">\n\
-                                           <h4 class="listview-item-heading">'+obj['login']+'</h4></div></div>').css('background-color','transparent').hide().fadeIn(1000);
+                                           <h4 class="listview-item-heading">'+obj['login']+'</h4></div></div>').css('background-color','transparent').hide().fadeIn(1000);            
             }
+            if ( response.length === 0 ) {$("#progress").css('width','100%');$('#followers-list').append('<div class="alert alert-info text-center"><strong>Aucun résultat pour {{profil_github_name}}</strong></div>').hide().fadeIn(1000);}
         },
         complete: function() {
         followersstatus = true;        
@@ -470,8 +475,9 @@ function getgists() {
                                            <div class="listview-item-body">\n\
                                            <h4 class="listview-item-heading">'+obj['id']+'</h4>\n\
                                            <h5 class="listview-item-subheading">'+obj['created_at']+'</h5>\n\
-                                           </div></div>').css('background-color','transparent').hide().fadeIn(1000);
+                                           </div></div>').css('background-color','transparent').hide().fadeIn(1000);            
             }
+            if ( response.length === 0 ) {$("#progress").css('width','100%');$('#gists-list').append('<div class="alert alert-info text-center"><strong>Aucun résultat pour {{profil_github_name}}</strong></div>').hide().fadeIn(1000);}
         },
         complete: function() {
         gistliststatus = true;        
