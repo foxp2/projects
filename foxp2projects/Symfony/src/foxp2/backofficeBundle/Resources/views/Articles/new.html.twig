@@ -2,6 +2,15 @@
 {% extends "foxp2backofficeBundle:Common:layout_admin.html.twig" %}
 {% form_theme form  'foxp2backofficeBundle:Form:fields.html.twig' %}
 {% block application -%}
+{% set flashbag_messages = app.session.flashbag.get('message') %}
+{% if flashbag_messages is not empty %}        
+<div class="alert alert-danger span5">
+<button type="button" class="close" data-dismiss="alert"></button>   
+    {% for message in flashbag_messages %}
+            <strong>{{ message|raw }}</strong>
+    {% endfor %}
+</div>
+{% endif %} 
         <div id="nav-bar">
             <div class="row">
                 <div class="span9">
@@ -16,37 +25,27 @@
             </div>
         </div>
 <div class="row-fluid">
-{% set flashbag_messages = app.session.flashbag.get('message') %}
-{% if flashbag_messages is not empty %}        
-<div class="alert alert-danger span5">
-<button type="button" class="close" data-dismiss="alert"></button>   
-    {% for message in flashbag_messages %}
-            <strong>{{ message|raw }}</strong>
-    {% endfor %}
-</div>
-{% endif %} 
-
-    <form style="margin-bottom:93px;" id="article_create" action="{{ path('articles_create') }}" method="post" {{ form_enctype(form) }}>
-        {{ form_widget(form) }}
+    <form style="margin-bottom:123px;" id="article_create" action="{{ path('articles_create') }}" method="post" {{ form_enctype(form) }}>
+        {{ form_widget(form) }}            
     </form>
 </div>
 {# fenêtre modale ajaxifiée #}
-        <div id="gistinfo">
-            <h2 class="heading-title"><strong>Détails du gist :</strong></h2>
-            <div id="gistinfoprogress">
-                <h3>chargement des données</h3>
-                <progress></progress>
-            </div>
-            <ul id="gistinfodet">
-            </ul>
-        </div>
+<div id="gistinfo">
+    <h2 class="heading-title"><strong>Détails du gist :</strong></h2>
+    <div id="gistinfoprogress">
+        <h3>chargement des données</h3>
+        <progress></progress>
+    </div>
+    <ul id="gistinfodet">
+    </ul>
+</div>
 <!-- app bar -->
 <div id="app-bar" class="win-commandlayout win-ui-dark">
     <a class="win-command orange" href="{{ path('articles_index') }}">
         <span class="win-commandicon win-commandring icon-list icon-fox"></span>   
         <span class="win-label orange">Liste des articles</span>
     </a>
-    <a title="" id="button_submit" class="win-command white pull-right" href="#">
+    <a title="" id="button_submit" class="win-command white pull-right" href="#" onclick="$('#article_create').submit();">
         <span class="win-commandicon win-commandring icon-plus"></span>   
         <span class="win-label white">Créer</span>
     </a>
@@ -105,9 +104,12 @@ function getGistInfo() {
 }
     
 jQuery('#app-bar').animate({'bottom': '+0px'},400);
-$('#button_submit').click(function() {
-  $('#article_create').submit();
-}); 
+
+// bug with ckeditor : jquery submit form does not work with several instances of ckeditor
+//$('#button_submit').click(function() {
+//  $('#article_create').submit();
+//});
+
 // mouse left click
 $('#application').mousedown(function(e) {    
     if (e.which === 1) {

@@ -27,7 +27,7 @@
         "knplabs/knp-snappy-bundle": "dev-master",
         "knplabs/github-api": "~1.2@dev",        
         "knplabs/knp-markdown-bundle": "1.2.*@dev",
-        "egeloen/ckeditor-bundle": "2.*",
+        "egeloen/ckeditor-bundle": "dev-master",
         "jms/security-extra-bundle": "dev-master"        
     },
     "scripts": {

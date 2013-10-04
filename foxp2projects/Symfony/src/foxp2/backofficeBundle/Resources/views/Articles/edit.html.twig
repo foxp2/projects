@@ -26,9 +26,9 @@
 </div>
 {% endif %} 
 
-    <form style="margin-bottom:93px;" id="articles_update" action="{{ path('articles_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
+    <form style="margin-bottom:123px;" id="articles_update" action="{{ path('articles_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
         <input type="hidden" name="_method" value="PUT" />
-        {{ form_widget(edit_form) }}
+        {{ form_widget(edit_form) }}        
     </form>
 </div>
 {# fenêtre modale ajaxifiée #}
@@ -47,16 +47,13 @@
         <span class="win-commandicon win-commandring icon-list icon-fox"></span>   
         <span class="win-label orange">Liste des articles</span>
     </a>
-    <a title="" id="button_submit" class="win-command blue pull-right" href="#">
+    <a title="" id="button_submit" class="win-command blue pull-right" href="#" onclick="$('#articles_update').submit();">
         <span class="win-commandicon win-commandring icon-pen-2"></span>   
         <span class="win-label blue">Editer</span>
     </a>
 </div>
 <script>
 jQuery('#app-bar').animate({'bottom': '+0px'},400);
-$('#button_submit').click(function() {
-  $('#articles_update').submit();
-});
 gist = '';
 var selected = $('#foxp2_backofficeBundle_articlestype_articleGistReference option:selected').val();
 if($('#foxp2_backofficeBundle_articlestype_articleGistReference option:selected').val() !== ''){

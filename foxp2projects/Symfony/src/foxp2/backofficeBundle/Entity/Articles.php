@@ -27,6 +27,7 @@ class Articles
     /** 
      * @ORM\ManyToOne(targetEntity="foxp2\backofficeBundle\Entity\Categories", inversedBy="articles")
      * @ORM\JoinColumn(name="categories_id",referencedColumnName="id", onDelete="CASCADE")
+     * @Assert\NotBlank(message = "Le choix de la catégorie est obligatoire")
      */
     private $category;
 

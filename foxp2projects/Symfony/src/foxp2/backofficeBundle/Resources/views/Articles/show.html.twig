@@ -13,88 +13,115 @@
                 {% include "foxp2backofficeBundle:Secured:logout.html.twig" %}
             </div>
         </div>
-<div class="row-fluid">
 {% set flashbag_messages = app.session.flashbag.get('message') %}
-{% if flashbag_messages is not empty %}        
-    <div id="alerts-container">    
+{% if flashbag_messages is not empty %}
+<div id="alerts-container">
     <div class="toast fade in">
         <button type="button" class="close" data-dismiss="alert" type="button"></button>
         <div class="pull-left">
-            <img class="toast-object"  style="width: 90px; height: 90px;" 
+            <img class="toast-object"  style="width: 90px; height: 90px;"
                  src="{{ asset("bundles/foxp2projects/images/foxp2-90-90.png") }}" />
         </div>
-    <div class="toast-body">
-        <h4 class="toast-heading">Message de l'application</h4>
-        <p>
+        <div class="toast-body">
+            <h4 class="toast-heading">Message de l'application</h4>
+            <p>
     {% for message in flashbag_messages %}
-            <strong>{{ message|raw }}</strong>
+                    <strong>{{ message|raw }}</strong>
     {% endfor %}
-        </p>
-    </div>
-    </div>
+                </p>
+            </div>
+        </div>
     </div>
 {% endif %}
-    <table class="table table-bordered table-hover table-striped">
-        <thead>
-            <tr>
-                <th>Id article</th>                
-                <th style="text-align: center;">Nom de l'article</th> 
-                <th style="text-align: center;">Nom de la catégorie</th> 
-                <th style="text-align: center;">Date de création</th>
-                <th style="text-align: center;">Date de modification</th>                            
-                <th style="text-align: center;">Référence Gist</th>                
-            </tr>
-            </tr>
-        </thead>
-        <tbody class="listarticles">
-            <tr id="{{ entity.id }}" data-article="{{ entity.id }}">                
-                <td>{{ entity.id }}</td>                 
-                <td style="text-align: center;">{{ entity.articleName }}</td>  
-                <td style="text-align: center;">{{ category_name }}</td>  
-                <td style="text-align: center;">{{ entity.articleDateCreated|date('d-m-Y') }}</td>                      
-                <td style="text-align: center;">{{ entity.articleDateModified|date('d-m-Y') }}</td>  
-                <td style="text-align: center;">{{ entity.articleGistReference }}</td>
-            </tr>
-            <tr>
-                <th style="text-align: center;">titre :</th>
-                <td colspan="2">{{ entity.articleTitle }}</td>
-                <th style="text-align: center;">sous titre :</th>
-                <td colspan="2">{{ entity.articleSubTitle }}</td>
-            </tr>
-            <tr>
-                <th style="text-align: center;vertical-align: middle;">Description courte:</th>
-                <td colspan="6">{{ entity.articleShortDescription|raw }}</td>
-            </tr>
-            <tr>
-                <th style="text-align: center;vertical-align: middle;">Description longue:</th>
-                <td colspan="6">{{ entity.articleLongDescription|replace({'[img]':'<div class="text-center"><img alt="illustration" src="', '[/img]':'" width="100" />','[url]':'<br /><a class="btn btn-info" href="', '[/url]':'" target="_blank"><strong><i class="icon-picture"></i> Voir sur flickr</strong></a></div>'})|raw }}</td>
-            </tr>
-        </tbody>
-    </table>
+<div class="row-fluid">
+    <ul id="myTab" class="nav nav-tabs">
+        <li  class="active"><a href="#profile" data-toggle="tab"><h3 style="color:#F09609"><i class="icon-pilcrow-2"></i> Libellés</h3></a></li>
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><h3 style="color:#F09609"><i class="icon-article"></i> Description <b class="caret"></b></h3></a>
+            <ul class="dropdown-menu">
+                <li><a href="#dropdown1" data-toggle="tab">Description courte</a></li>
+                <li><a href="#dropdown2" data-toggle="tab">Description longue</a></li>
+            </ul>
+        </li>
+        <li><a href="#data" data-toggle="tab"><h3 style="color:#F09609"><i class="icon-bars-alt"></i> Données</h3></a></li>
+    </ul>
+    <div id="myTabContent" class="tab-content">
+        <div class="tab-pane fade in active" id="profile">
+            <table class="table table-striped">
+                <tbody class="listarticles bg-color-yellow">
+                    <tr>
+                        <th style="text-align: center;width:25%;color:#000;">Nom de l'article :</th>
+                        <td style="text-align: left;width:75%;">{{ entity.articleName }}</td>
+                    </tr>
+                    <tr>
+                        <th style="text-align: center;width:25%;color:#000;">Nom de la catégorie :</th>
+                        <td style="text-align: left;width:75%;">{{ category_name }}</td>
+                    </tr>
+                    <tr>
+                        <th style="text-align: center;width:25%;color:#000;">Titre de l'article :</th>
+                        <td style="text-align: left;width:75%;">{{ entity.articleTitle }}</td>
+                    </tr>
+                    <tr>
+                        <th style="text-align: center;width:25%;color:#000;">Sous titre de l'article :</th>
+                        <td style="text-align: left;width:75%;">{{ entity.articleSubTitle }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane fade" id="dropdown1">
+            <div class="well">{{ entity.articleShortDescription|raw }}</div>
+        </div>
+        <div class="tab-pane fade" id="dropdown2">
+            <div class="well">{{ entity.articleLongDescription|replace({'[img]':'<div class="text-center"><img alt="illustration" src="', '[/img]':'" width="100" />','[url]':'<br /><a class="btn btn-info" href="', '[/url]':'" target="_blank"><strong><i class="icon-picture"></i> Voir sur flickr</strong></a></div>'})|raw }}</div>
+        </div>
+        <div class="tab-pane fade" id="data">
+            <table class="table table-striped">
+                <tbody class="listarticles bg-color-yellow">
+                    <tr>
+                        <th style="text-align: center;width:25%;color:#000;">Id article :</th>
+                        <td style="text-align: left;width:75%;">{{ entity.id }}</td>
+                    </tr>
+                    <tr>
+                        <th style="text-align: center;width:25%;color:#000;">Date de création :</th>
+                        <td style="text-align: left;width:75%;">{{ entity.articleDateCreated|date('d-m-Y') }}</td>
+                    </tr>
+                    <tr>
+                        <th style="text-align: center;width:25%;color:#000;">Date de modification :</th>
+                        <td style="text-align: left;width:75%;">{{ entity.articleDateModified|date('d-m-Y') }}</td>
+                    </tr>
+                    <tr>
+                        <th style="text-align: center;width:25%;color:#000;">Référence Gist :</th>
+                        <td style="text-align: left;width:75%;">{{ entity.articleGistReference }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
     <form id="delete_articles" action="{{ path('articles_delete', { 'id': entity.id }) }}" method="post">
     <input type="hidden" name="_method" value="DELETE" />
-    {{ form_widget(delete_form) }}   
+    {{ form_widget(delete_form) }}
     </form>
 <!-- app bar -->
 <div id="app-bar" class="win-commandlayout win-ui-dark">
     <a class="win-command orange" href="{{ path('articles_index', {'page':1}) }}">
-        <span class="win-commandicon win-commandring icon-list icon-fox"></span>   
+        <span class="win-commandicon win-commandring icon-list icon-fox"></span>
         <span class="win-label orange">Liste des articles</span>
     </a>
     <a title="" id="button_submit" class="win-command red pull-right" href="#">
-        <span class="win-commandicon win-commandring icon-delete"></span>   
+        <span class="win-commandicon win-commandring icon-delete"></span>
         <span class="win-label red">Supprimer</span>
     </a>
     <a class="win-command white pull-right" href="{{ path('articles_edit', { 'id': entity.id }) }}">
-        <span class="win-commandicon win-commandring icon-pencil-2"></span>   
+        <span class="win-commandicon win-commandring icon-pencil-2"></span>
         <span class="win-label white">Editer</span>
     </a>
 </div>
 <script>
-jQuery('#app-bar').animate({'bottom': '+0px'},400);  
+jQuery('#app-bar').animate({'bottom': '+0px'},400);
 $('#button_submit').click(function() {
   $('#delete_articles').submit();
-}); 
+});
 </script>
 </div>
 {% endblock %}
