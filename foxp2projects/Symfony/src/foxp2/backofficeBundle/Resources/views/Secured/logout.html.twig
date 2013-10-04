@@ -1,7 +1,7 @@
 {# \Symfony\src\foxp2\backofficeBundle\Resources\views\Secured\logout.html.twig #}
-<div class="tile wide image collection span3 pull-right text-right">
-    <img alt="login" class="pull-right" src="{{ asset("bundles/foxp2projects/images/login.jpg") }}" style="width: 54px; height: 54px;margin-top: 20px;margin-right:10px;">
-    <h4 style="margin-top: 20px;font-weight: bold;margin-bottom: 3px;">Bienvenue {{ app.user ? app.user.username : '' }}&nbsp;</h4>
+<div id="quickaccess" class="tile wide image collection span3 pull-right text-right">
+    <img alt="login" class="pull-right img-polaroid" src="{{ asset("bundles/foxp2projects/images/login.jpg") }}">
+    <h4 style="font-weight: bold;margin-bottom: 3px;">Bienvenue {{ app.user ? app.user.username : '' }}&nbsp;</h4>
     <div class="btn-group text-left">
         <button class="btn">Accès rapide</button>
         <button class="btn dropdown-toggle" data-toggle="dropdown">

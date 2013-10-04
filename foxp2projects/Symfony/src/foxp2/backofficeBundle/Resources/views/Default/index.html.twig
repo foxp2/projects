@@ -1,17 +1,39 @@
 {# \Symfony\src\foxp2\backofficeBundle\Resources\views\Default\index.html.twig #}
 {% extends "foxp2backofficeBundle:Common:layout_admin.html.twig" %}
 {% block application %}
-<div class="row-fluid">
-    <div id="header-container" style="margin-left: 0px;margin-top:20px;margin-bottom: 20px;">
-        <a id="backbutton" class="win-backbutton" style="margin-right: 10px;" href="{{ path('foxp2backoffice_homepage')}}"></a>
-        <div class="dropdown pull-right">
-            <h1 class="header-dropdown" style="line-height:40px;">Back Office<small> - Accueil</small></h1>
+        <div id="nav-bar">
+            <div class="row">
+                <div class="span9">
+                    <div id="header-container">
+                        <a id="backbutton" class="win-backbutton" href="{{ path('foxp2backoffice_homepage')}}"></a>
+                        <div class="dropdown pull-right">
+                            <h1 class="header-dropdown">Back Office<small> - Accueil</small></h1>
+                        </div>
+                    </div>
+                </div>
+                {% include "foxp2backofficeBundle:Secured:logout.html.twig" %}
+            </div>
         </div>
+{% set flashbag_messages = app.session.flashbag.get('message') %}
+{% if flashbag_messages is not empty %}        
+    <div id="alerts-container">    
+    <div class="toast fade in">
+        <button type="button" class="close" data-dismiss="alert" type="button"></button>
+        <div class="pull-left">
+            <img class="toast-object" alt="90x90" style="width: 90px; height: 90px;" src="{{ asset("bundles/foxp2projects/images/foxp2-90-90.png") }}" />
+        </div>
+    <div class="toast-body">
+        <h4 class="toast-heading">Message de l'application</h4>
+        <p>
+    {% for message in flashbag_messages %}
+            <strong>{{ message|raw }}</strong>
+    {% endfor %}
+        </p>
     </div>
-{% include "foxp2backofficeBundle:Secured:logout.html.twig" %}
+    </div>
+    </div>
+{% endif %}
 {% include "foxp2backofficeBundle:Common:panorama.html.twig" %}
-</div>
 {% endblock %}
-
 {% block footer %}
 {% endblock %}

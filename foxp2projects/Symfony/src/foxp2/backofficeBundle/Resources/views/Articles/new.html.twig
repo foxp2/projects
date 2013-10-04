@@ -2,14 +2,20 @@
 {% extends "foxp2backofficeBundle:Common:layout_admin.html.twig" %}
 {% form_theme form  'foxp2backofficeBundle:Form:fields.html.twig' %}
 {% block application -%}
-<div class="row-fluid">
-    <div id="header-container" style="margin-left: 0px;margin-top:20px;margin-bottom: 20px;">
-        <a id="backbutton" class="win-backbutton" style="margin-right: 10px;" href="{{ path('articles_index') }}"></a>
-        <div class="dropdown pull-right">
-            <h1 class="header-dropdown" style="line-height:40px;">Création d'un article</h1>
+        <div id="nav-bar">
+            <div class="row">
+                <div class="span9">
+                    <div id="header-container">
+                        <a id="backbutton" class="win-backbutton" style="margin-right: 10px;" href="{{ path('articles_index') }}"></a>
+                        <div class="dropdown pull-right">
+                            <h1 class="header-dropdown">Création d'un article</h1>
+                        </div>
+                    </div>
+                </div>
+                {% include "foxp2backofficeBundle:Secured:logout.html.twig" %}
+            </div>
         </div>
-    </div>   
-{% include "foxp2backofficeBundle:Secured:logout.html.twig" %}
+<div class="row-fluid">
 {% set flashbag_messages = app.session.flashbag.get('message') %}
 {% if flashbag_messages is not empty %}        
 <div class="alert alert-danger span5">

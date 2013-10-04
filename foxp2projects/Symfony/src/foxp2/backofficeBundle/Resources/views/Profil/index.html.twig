@@ -1,21 +1,26 @@
 {# \Symfony\src\foxp2\backofficeBundle\Resources\views\Profil\index.html.twig #}
 {% extends "foxp2backofficeBundle:Common:layout_admin.html.twig" %}
 {% block application -%}
-        <div class="win-ui-dark progress hide" id="progressouter" style="background-image: url({{ asset("bundles/foxp2backoffice/images/bkg-4.png") }}"> 
+        <div class="win-ui-dark progress hide" id="progressouter" style="background-image: url({{ asset("bundles/foxp2backoffice/images/bkg-4.png") }};"> 
             <h3 class="text-info text-center"><strong>Chargement des données ...</strong></h3><br />
-            <div class="bar" id="progress"></div>
+            <div class="bar" id="progress" style="max-height: 50px;"></div>
+        </div>
+        <div id="nav-bar">
+            <div class="row">
+                <div class="span9">
+                    <div id="header-container">
+                        <a id="backbutton" class="win-backbutton" style="margin-right: 10px;" href="{{ path('foxp2backoffice_homepage')}}"></a>
+                        <div class="dropdown pull-right">
+                            <h1 class="header-dropdown">Le profil de {{profil_github_name}}</h1>
+                        </div>
+                    </div>
+                </div>
+                {% include "foxp2backofficeBundle:Secured:logout.html.twig" %}
+            </div>
         </div>
 <div class="row-fluid">
-    <div id="header-container" style="margin-left: 0px;margin-top:20px;margin-bottom: 20px;">
-        <a id="backbutton" class="win-backbutton" style="margin-right: 10px;" href="{{ path('foxp2backoffice_homepage')}}"></a>
-        <div class="dropdown pull-right">
-            <h1 class="header-dropdown" style="line-height:40px;">Le profil de {{profil_github_name}}</h1>
-        </div>
-    </div>
-{% include "foxp2backofficeBundle:Secured:logout.html.twig" %}
-
         <div class="alert alert-block alert-danger">
-            <button type="button" class="close" data-dismiss="alert" type="button"></button>
+            <button type="button" class="close" data-dismiss="alert"></button>
             <h4>Erreur !</h4>
             <p id="error"></p>
         </div>
@@ -40,20 +45,20 @@
                         </ul>
                         <div id="myTabContent" class="tab-content">
                             <div class="tab-pane fade active in" id="starred" style="overflow-x:hidden;overflow-y:hidden">
-                                <div class="listview grid-layout text-left" id="starred-list" style="max-height:650px;"></div>
+                                <div class="listview grid-layout text-left" id="starred-list"></div>
                             </div>
                             <div class="tab-pane fade" id="following" style="overflow-x:hidden;overflow-y:hidden">
-                                <div class="listview grid-layout text-left" id="following-list" style="max-height:650px;"></div>
+                                <div class="listview grid-layout text-left" id="following-list"></div>
                             </div>
                             <div class="tab-pane fade" id="followers" style="overflow-x:hidden;overflow-y:hidden">
-                                <div class="listview grid-layout text-left" id="followers-list" style="max-height:650px;"></div>
+                                <div class="listview grid-layout text-left" id="followers-list"></div>
                             </div>
                         </div>
                 </div>
             <div class="span3 text-left" id="rightprofil">
                         <h3 class="text-center">Détails sur le dépôt</h3>
                         <hr>
-                        <div class="well well-kaki text-center" style="min-height:600px;margin-top:30px;margin-left: -20px;">
+                        <div class="well well-kaki text-center" style="margin-top:30px;margin-left: -20px;">
                             <div id="rightprofildata"></div>
                             <div id="rightprofilinfo">
                                  <h3>Cliquer sur un dépôt dans la liste ci-contre pour obtenir plus d'informations.</h3>
@@ -355,7 +360,7 @@ function getwatched() {
                 var obj = response[i];
                 $('#starred-list').append('<div class="listview-item watched" data-name="'+obj['name']+'" data-fullname="'+obj['fullname']+'" data-owner="'+obj['owner']+'" data-createdat="'+obj['created_at']+'" data-updatedat="'+obj['updated_at']+'" data-pushedat="'+obj['pushed_at']+'" data-avatar='+obj['avatar']+' data-description="'+obj['description'] +'" data-langage="'+obj['language']+'" data-fork="'+obj['forks']+'" data-watchers="'+obj['watchers']+'" data-link="'+obj['html_url']+'" style="background-color:#377C89;">\n\
                                            <div class="pull-left" href="#">\n\
-                                           <img class="listview-item-object" src="'+obj['avatar']+'" style="height:90px;width:90px;">\n\
+                                           <img class="listview-item-object" alt="avatar" src="'+obj['avatar']+'" style="height:90px;width:90px;" />\n\
                                            </div>\n\
                                            <div class="listview-item-body">\n\
                                            <h4 class="listview-item-heading">'+obj['name']+'</h4></div></div>').hide().fadeIn(1000);
