@@ -1,12 +1,19 @@
 parameters:
-#    foxp2backoffice.example.class: foxp2\backofficeBundle\Example
-
+    foxp2backoffice.login_success_handler.class: foxp2\backofficeBundle\Service\LoginSuccessHandler
+    foxp2backoffice.logout_success_handler.class: foxp2\backofficeBundle\Service\LogoutSuccessHandler
 services:
-#    foxp2backoffice.example:
-#        class: %foxp2backoffice.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
+    foxp2backoffice.login_success_handler:
+        class: foxp2\backofficeBundle\Service\LoginSuccessHandler
+        arguments: ["@router","@security.context", "@mailer"]        
+        tags:
+            - { name: 'monolog.logger', channel: 'security' }
+    foxp2backoffice.logout_success_handler:
+        class: foxp2\backofficeBundle\Service\LogoutSuccessHandler
+        arguments: ["@router","@mailer"]        
+        tags:
+            - { name: 'monolog.logger', channel: 'security' }
     github_api:
         class: foxp2\backofficeBundle\Service\GithubService
         arguments:
-            # cahce_dir : fichiers dans app/cache [dev] ou [prod]
+            # commentaire foxp2 - cache_dir : fichiers dans app/cache [dev] ou [prod]
             cache_dir:  %kernel.cache_dir%/githubapi
