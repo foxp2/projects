@@ -1,4 +1,5 @@
 <?php
+
 namespace foxp2\backofficeBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -6,12 +7,11 @@ use Symfony\Component\HttpFoundation\Response;
 use foxp2\backofficeBundle\Lib\Utils;
 use Github;
 
-class ProfilController extends Controller{
+class ProfilController extends Controller {
 
     public function indexAction() {
 
         return $this->render('foxp2backofficeBundle:Profil:index.html.twig', array('profil_github_name' => $this->container->getParameter('user_github_api')));
-
     }
 
     public function getlimitAction() {
@@ -42,7 +42,7 @@ class ProfilController extends Controller{
 
         $userApi = $client->api('user');
 
-        $paginator  = new Github\ResultPager($client);
+        $paginator = new Github\ResultPager($client);
 
         $request = $this->getRequest();
 
@@ -52,23 +52,23 @@ class ProfilController extends Controller{
 
         if ($request->isXmlHttpRequest()) {
 
-                $data = array(
-                    'login' => $profil['login'],
-                    'name' => array_key_exists('name', $profil) ? '<h3>' . $profil['name'] . '</h3>' : '',
-                    'location' =>  array_key_exists('location', $profil) ? '<li><i class="icon-globe"></i> Location : ' . $profil['location'] . '</li>' : '<li><i class="icon-globe"></i> Location : N/C </li>',
-                    'email' =>  array_key_exists('email', $profil) ?  '<li><i class="icon-envelope"></i> Email : ' . $profil['email'] . '</li>' : '<li><i class="icon-envelope"></i> Email : N/C</li>',
-                    'blog' => array_key_exists('blog', $profil) ? ( isset($profil['blog']) && (!empty($profil['blog'])) ? '<li><i class="github-untitled-92"></i> Blog : <a href="' . $profil['blog'] . '" target="_blank">' . $profil['blog'] . '</a></li>' : '') : '',
-                    'company' => array_key_exists('company', $profil) ? '<li><i class="icon-archive"></i> Entreprise : ' . $profil['company'] .'</li>' : '<li><i class="icon-archive"></i> Entreprise : N/C</li>',
-                    'bio' => array_key_exists('bio', $profil) ? ( isset($profil['bio']) && (!empty($profil['bio'])) ? '<hr><div class="bio"><h3 class="text-left"><i class="icon-book-2"></i> Bio :</h3><br /><blockquote class="text-left">' . nl2br($profil['bio']) . '</blockquote></div>' : '') : '',
-                    'avatar_url' => $profil['avatar_url'],
-                    'public_repos' => $profil['public_repos'],
-                    'public_gists' => $profil['public_gists'],
-                    'followers' => $profil['followers'],
-                    'following' => $profil['following'],
-                    'html_url' => $profil['html_url'],
-                    'created_at' => date('d m Y',strtotime($profil['created_at'],0)),
-                    'size' => '14'
-                );
+            $data = array(
+                'login' => $profil['login'],
+                'name' => array_key_exists('name', $profil) ? '<h3>' . $profil['name'] . '</h3>' : '',
+                'location' => array_key_exists('location', $profil) ? '<li><i class="icon-globe"></i> Location : ' . $profil['location'] . '</li>' : '<li><i class="icon-globe"></i> Location : N/C </li>',
+                'email' => array_key_exists('email', $profil) ? '<li><i class="icon-envelope"></i> Email : ' . $profil['email'] . '</li>' : '<li><i class="icon-envelope"></i> Email : N/C</li>',
+                'blog' => array_key_exists('blog', $profil) ? ( isset($profil['blog']) && (!empty($profil['blog'])) ? '<li><i class="github-untitled-92"></i> Blog : <a href="' . $profil['blog'] . '" target="_blank">' . $profil['blog'] . '</a></li>' : '') : '',
+                'company' => array_key_exists('company', $profil) ? '<li><i class="icon-archive"></i> Entreprise : ' . $profil['company'] . '</li>' : '<li><i class="icon-archive"></i> Entreprise : N/C</li>',
+                'bio' => array_key_exists('bio', $profil) ? ( isset($profil['bio']) && (!empty($profil['bio'])) ? '<hr><div class="bio"><h3 class="text-left"><i class="icon-book-2"></i> Bio :</h3><br /><blockquote class="text-left">' . nl2br($profil['bio']) . '</blockquote></div>' : '') : '',
+                'avatar_url' => $profil['avatar_url'],
+                'public_repos' => $profil['public_repos'],
+                'public_gists' => $profil['public_gists'],
+                'followers' => $profil['followers'],
+                'following' => $profil['following'],
+                'html_url' => $profil['html_url'],
+                'created_at' => date('d m Y', strtotime($profil['created_at'], 0)),
+                'size' => '14'
+            );
 
             $response = new Response(json_encode($data));
 
@@ -98,24 +98,23 @@ class ProfilController extends Controller{
 
         $request = $this->getRequest();
 
-            foreach ($activities as $value) {
-                $data[] = array(
-                    'actid' => $value['id'],
-                    'type' => $value['type'],
-                    'login' => $value['actor']['login'],
-                    'avatar' => $value['actor']['avatar_url'],
-                    'filescount' => array_key_exists('size', $value['payload']) ? $value['payload']['size'] : '',
-                    'created_at' => date('d m Y', strtotime($value['created_at'], 0)),
-                    'repo' => $value['repo']['name']
-                );
-            }
+        foreach ($activities as $value) {
+            $data[] = array(
+                'actid' => $value['id'],
+                'type' => $value['type'],
+                'login' => $value['actor']['login'],
+                'avatar' => $value['actor']['avatar_url'],
+                'filescount' => array_key_exists('size', $value['payload']) ? $value['payload']['size'] : '',
+                'created_at' => date('d m Y', strtotime($value['created_at'], 0)),
+                'repo' => $value['repo']['name']
+            );
+        }
 
         if ($request->isXmlHttpRequest()) {
 
             $response = new Response(json_encode($data));
 
             $response->headers->set('Content-Type', 'application/json');
-
         }
 
         return $response;
@@ -162,20 +161,20 @@ class ProfilController extends Controller{
                             }
                             break;
                         case 'WatchEvent':
-                                $data[] = array(
-                                    'type' => 'WatchEvent',
-                                    'action' => $value['payload']['action']                                    
-                                 );                            
+                            $data[] = array(
+                                'type' => 'WatchEvent',
+                                'action' => $value['payload']['action']
+                            );
                             break;
-                        case 'IssuesEvent':                            
-                                $data[] = array(
-                                    'type' => 'IssuesEvent',
-                                    'action' => $value['payload']['action'],
-                                    'status' => $value['payload']['issue']['state'],
-                                    'title' => array_key_exists('title', $value['payload']['issue']) ? $value['payload']['issue']['title'] : '',
-                                    'body' => array_key_exists('body', $value['payload']['issue']) ? nl2br($value['payload']['issue']['body']) : '',
-                                    'link' => $value['payload']['issue']['html_url']
-                                );                            
+                        case 'IssuesEvent':
+                            $data[] = array(
+                                'type' => 'IssuesEvent',
+                                'action' => $value['payload']['action'],
+                                'status' => $value['payload']['issue']['state'],
+                                'title' => array_key_exists('title', $value['payload']['issue']) ? $value['payload']['issue']['title'] : '',
+                                'body' => array_key_exists('body', $value['payload']['issue']) ? nl2br($value['payload']['issue']['body']) : '',
+                                'link' => $value['payload']['issue']['html_url']
+                            );
                             break;
                         default:
                             break;
@@ -186,14 +185,12 @@ class ProfilController extends Controller{
             $response = new Response(json_encode($data));
 
             $response->headers->set('Content-Type', 'application/json');
-
         }
 
         return $response;
     }
 
-    public function getajaxrepositoriesAction()
-    {
+    public function getajaxrepositoriesAction() {
         $response = null;
 
         $data = array();
@@ -204,7 +201,7 @@ class ProfilController extends Controller{
 
         $repositoriesApi = $client->api('user');
 
-        $paginator  = new Github\ResultPager($client);
+        $paginator = new Github\ResultPager($client);
 
         $parameters = $this->container->getParameter('user_github_api');
 
@@ -226,9 +223,9 @@ class ProfilController extends Controller{
                     'avatar' => $value['owner']['avatar_url'],
                     'homepage' => ($value['homepage'] !== null) ? $value['homepage'] : '',
                     'language' => ($value['language'] !== null) ? $value['language'] : '',
-                    'pushed_at' => date('d m Y',strtotime($value['pushed_at'],0)),
-                    'created_at' => date('d m Y',strtotime($value['created_at'],0)),
-                    'updated_at' => date('d m Y',strtotime($value['updated_at'],0)),
+                    'pushed_at' => date('d m Y', strtotime($value['pushed_at'], 0)),
+                    'created_at' => date('d m Y', strtotime($value['created_at'], 0)),
+                    'updated_at' => date('d m Y', strtotime($value['updated_at'], 0)),
                     'watchers_count' => $value['watchers_count'],
                     'forks_count' => $value['forks_count'],
                     'open_issues_count' => $value['open_issues_count']
@@ -241,11 +238,9 @@ class ProfilController extends Controller{
         }
 
         return $response;
-
     }
 
-    public function getajaxwatchedAction()
-    {
+    public function getajaxwatchedAction() {
         $response = null;
 
         $data = array();
@@ -256,7 +251,7 @@ class ProfilController extends Controller{
 
         $userApi = $client->api('user');
 
-        $paginator  = new Github\ResultPager($client);
+        $paginator = new Github\ResultPager($client);
 
         $parameters = $this->container->getParameter('user_github_api');
 
@@ -266,7 +261,7 @@ class ProfilController extends Controller{
 
         if ($request->isXmlHttpRequest()) {
 
-            foreach( $watched as $value) {
+            foreach ($watched as $value) {
                 $data[] = array(
                     'name' => $value['name'],
                     'fullname' => $value['full_name'],
@@ -277,9 +272,9 @@ class ProfilController extends Controller{
                     'forks' => $value['forks'],
                     'watchers' => $value['watchers'],
                     'language' => $value['language'],
-                    'pushed_at' => date('d m Y',strtotime($value['pushed_at'],0)),
-                    'created_at' => date('d m Y',strtotime($value['created_at'],0)),
-                    'updated_at' => date('d m Y',strtotime($value['updated_at'],0))
+                    'pushed_at' => date('d m Y', strtotime($value['pushed_at'], 0)),
+                    'created_at' => date('d m Y', strtotime($value['created_at'], 0)),
+                    'updated_at' => date('d m Y', strtotime($value['updated_at'], 0))
                 );
             }
 
@@ -289,11 +284,9 @@ class ProfilController extends Controller{
         }
 
         return $response;
-
     }
 
-    public function getajaxfollowingAction()
-    {
+    public function getajaxfollowingAction() {
         $response = null;
 
         $data = array();
@@ -304,7 +297,7 @@ class ProfilController extends Controller{
 
         $userApi = $client->api('user');
 
-        $paginator  = new Github\ResultPager($client);
+        $paginator = new Github\ResultPager($client);
 
         $parameters = $this->container->getParameter('user_github_api');
 
@@ -314,7 +307,7 @@ class ProfilController extends Controller{
 
         if ($request->isXmlHttpRequest()) {
 
-            foreach( $following as $value) {
+            foreach ($following as $value) {
 
                 $data[] = array(
                     'login' => $value['login'],
@@ -331,8 +324,7 @@ class ProfilController extends Controller{
         return $response;
     }
 
-    public function getajaxfollowersAction()
-    {
+    public function getajaxfollowersAction() {
         $response = null;
 
         $data = array();
@@ -343,7 +335,7 @@ class ProfilController extends Controller{
 
         $userApi = $client->api('user');
 
-        $paginator  = new Github\ResultPager($client);
+        $paginator = new Github\ResultPager($client);
 
         $parameters = $this->container->getParameter('user_github_api');
 
@@ -353,7 +345,7 @@ class ProfilController extends Controller{
 
         if ($request->isXmlHttpRequest()) {
 
-            foreach( $followers as $value) {
+            foreach ($followers as $value) {
 
                 $data[] = array(
                     'login' => $value['login'],
@@ -370,8 +362,7 @@ class ProfilController extends Controller{
         return $response;
     }
 
-    public function getgistsajaxAction()
-    {
+    public function getgistsajaxAction() {
         $response = null;
 
         $data = array();
@@ -396,7 +387,7 @@ class ProfilController extends Controller{
 
                 $data[] = array(
                     'id' => $value['id'],
-                    'created_at' => date('d m Y',strtotime($value['created_at'],0)),
+                    'created_at' => date('d m Y', strtotime($value['created_at'], 0)),
                     'avatar' => $value['user']['avatar_url']
                 );
             }
@@ -464,7 +455,6 @@ class ProfilController extends Controller{
             $response->headers->set('Content-Type', 'application/json');
         }
         return $response;
-
     }
 
     protected static function getCode($code) {
@@ -475,5 +465,7 @@ class ProfilController extends Controller{
 
         return $encode;
     }
+
 }
+
 ?>
