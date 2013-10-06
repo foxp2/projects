@@ -9,7 +9,7 @@ services:
             - { name: 'monolog.logger', channel: 'security' }
     foxp2backoffice.logout_success_handler:
         class: foxp2\backofficeBundle\Service\LogoutSuccessHandler
-        arguments: ["@router","@mailer"]        
+        arguments: ["@router","@security.context","@mailer"]        
         tags:
             - { name: 'monolog.logger', channel: 'security' }
     github_api:
