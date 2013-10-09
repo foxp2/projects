@@ -66,8 +66,7 @@
                     </div>
                     <div class="listview-item-body">
                         <h4 class="listview-item-heading">{{ gist.id }}</h4>
-                        <h5 class="listview-item-subheading">{{ gist.created_at|date('d m Y') }}</h5>
-                        <p class="two-lines">{{ gist.description }}</p>
+                        <h5 class="listview-item-subheading">{{ gist.created_at|date('d m Y') }}</h5>                        
                     </div>
                 </div>
             {% endfor %}
@@ -100,7 +99,8 @@ if ($('#code'+id).children().hasClass('pre-scrollable-fox'))
 });
 $('.listview-item').click(function(){ 
     $('.listview-item').removeClass('bg-color-yellow selected').addClass('bg-color-purple').css('color','#fff');
-    $(this).removeClass('bg-color-purple').addClass('bg-color-yellow selected').css('color','#000');    
+    $('.listview-item h5').css('color','#fff');    
+    $(this).removeClass('bg-color-purple').hide().fadeIn(1000).addClass('bg-color-yellow selected').css('color','#000').find('h5').css('color','#000');    
     $("#gistdetail").empty();    
     getGistInfo($(this).attr('id'));
 });
@@ -127,6 +127,7 @@ function getlimit() {
         $('#profil-footer').removeClass('hide');
         }        
     });
+    
 }
 function getGistInfo(gist) {
     $("#progressouter").removeClass("hide");    
@@ -138,6 +139,9 @@ function getGistInfo(gist) {
         timeout: 10000,
         success: function(response) {        
         $('#gistdetailprogress').addClass('hide'); 
+        if(response[0]['description'] !== '') {
+        $('#gistdetail').append('<h2><strong>Description du gist :</strong></h2><blockquote>'+response[0]['description']+'</blockquote>');
+        }
              for(var i=0;i<response.length;i++) {
                 var obj = response[i];               
                 for(var key in obj){                   
@@ -153,10 +157,10 @@ function getGistInfo(gist) {
                    $('#gistdetail').append('<h3>Le code</h3><div id="code'+i+'">'+obj[key]+'</div><br /><a href="#file'+i+'" id="'+i+'" class="btn btn-inverse pull-left fullcode"><i class="icon-arrow-down"></i>Déplier le code</a><a href="'+obj["raw_url"]+'" target="_blank" class="btn btn-info pull-right"><i class="icon-github"></i> Voir sur github</a><br /><hr>').hide().fadeIn(1000);
                    }                   
                 }
-            }        
+            }
         },
         complete: function() {
-        getlimit();
+        getlimit();              
         },
         error: function(x,t,m) {            
             if( t === 'timeout') { $('#gistdetail').append('<li><strong>Erreur</strong> : La requête a mis trop de temps à répondre</li>');
@@ -166,6 +170,25 @@ function getGistInfo(gist) {
         }
     }); 
 }
+// surcharge de la fonction native 'append' de jquery : http://jsfiddle.net/H8ygx/
+(function($) {
+    var origAppend = $.fn.append;
+
+    $.fn.append = function () {
+        return origAppend.apply(this, arguments).trigger("append");
+    };
+})(jQuery);
+// modification du dom bindé sur la fonction 'apppend'
+$("#gistdetail").bind("append", function() { 
+    setTimeout(function () {
+    $(document).find('[id^="code"]').each(function(){    
+    if($(this).height() < '340'){
+        $(this).children().closest('div').removeClass('pre-scrollable-fox').css('overflow-y','hidden');
+        $('#'+$(this).attr('id').substr(4,1)).remove();
+    }    
+}); 
+},1100);
+});
 </script>
 {% endblock %}
 {% block footer %}

@@ -82,7 +82,7 @@ class GistController extends Controller{
                     $file = file_get_contents($cache . '/' . $data['filename'] . '.cache');
                 }
 
-                $files_data[] = array('language' => $data['language'], 'filename' => $data['filename'], 'raw_url' => $data['raw_url'], 'content' => $file);
+                $files_data[] = array('language' => $data['language'], 'filename' => $data['filename'], 'raw_url' => $data['raw_url'], 'content' => $file, 'description' => $gist['description']);
             }
 
             $response = new Response(json_encode($files_data));
