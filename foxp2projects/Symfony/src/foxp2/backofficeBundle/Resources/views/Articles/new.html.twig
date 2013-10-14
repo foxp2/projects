@@ -2,12 +2,16 @@
 {% extends "foxp2backofficeBundle:Common:layout_admin.html.twig" %}
 {% form_theme form  'foxp2backofficeBundle:Form:fields.html.twig' %}
 {% block application -%}
+<div class="win-ui-dark progress hide" id="progressouter" style="background-image: url({{ asset("bundles/foxp2backoffice/images/bkg-4.png") }}">
+    <h3 class="text-info text-center"><strong>{{ 'loading data ...'|trans }}</strong></h3><br />
+    <div class="bar" id="progress"></div>
+</div>
 {% set flashbag_messages = app.session.flashbag.get('message') %}
 {% if flashbag_messages is not empty %}        
 <div class="alert alert-danger span5">
 <button type="button" class="close" data-dismiss="alert"></button>   
     {% for message in flashbag_messages %}
-            <strong>{{ message|raw }}</strong>
+            <strong>{{ message|trans|raw }}</strong>
     {% endfor %}
 </div>
 {% endif %} 
@@ -17,7 +21,7 @@
                     <div id="header-container">
                         <a id="backbutton" class="win-backbutton" style="margin-right: 10px;" href="{{ path('articles_index') }}"></a>
                         <div class="dropdown pull-right">
-                            <h1 class="header-dropdown">Création d'un article</h1>
+                            <h1 class="header-dropdown">{{ 'Creation of article'|trans }}</h1>
                         </div>
                     </div>
                 </div>
@@ -30,24 +34,16 @@
     </form>
 </div>
 {# fenêtre modale ajaxifiée #}
-<div id="gistinfo">
-    <h2 class="heading-title"><strong>Détails du gist :</strong></h2>
-    <div id="gistinfoprogress">
-        <h3>chargement des données</h3>
-        <progress></progress>
-    </div>
-    <ul id="gistinfodet">
-    </ul>
-</div>
+<div id="gistinfo"></div>
 <!-- app bar -->
 <div id="app-bar" class="win-commandlayout win-ui-dark">
     <a class="win-command orange" href="{{ path('articles_index') }}">
         <span class="win-commandicon win-commandring icon-list icon-fox"></span>   
-        <span class="win-label orange">Liste des articles</span>
+        <span class="win-label orange">{{ 'List of articles'|trans }}</span>
     </a>
     <a title="" id="button_submit" class="win-command white pull-right" href="#" onclick="$('#article_create').submit();">
         <span class="win-commandicon win-commandring icon-plus"></span>   
-        <span class="win-label white">Créer</span>
+        <span class="win-label white">{{ 'Create'|trans }}</span>
     </a>
 </div>
 <script>
@@ -58,7 +54,7 @@ $('#foxp2_backofficeBundle_articlestype_articleGistReference').change(function()
     $('.gistbutton').remove();
     if(options.val() !== '') {
         $('.gistbutton').remove();
-        $('#foxp2_backofficeBundle_articlestype_articleGistReference').after('<a id="'+options.val()+'" class="btn btn-info gistbutton"><i class="icon-plus"></i> info</a>');
+        $('#foxp2_backofficeBundle_articlestype_articleGistReference').after('<a id="'+options.val()+'" class="btn btn-info gistbutton"><i class="icon-plus"></i> {{ 'More info'|trans }}</a>');
         return false;
     }
 });
@@ -68,36 +64,36 @@ $(document).on("click", ".gistbutton", function(e) {
     gist = $(this).attr('id'); 
     getGistInfo();
 })
-// clean up catinfo modal
-function cleargistinfo(){ $('#gistinfodet').find("li").remove(); $('#gistinfoprogress').hide(); $('#avatar').remove();}
+function clearprogress(){ $("#progressouter").addClass("hide"); $("#progress").css('width','0%'); }
 function getGistInfo() {
-    $('#gistinfodet').find("li").remove();
-    $('#gistinfoprogress').show(); 
+    $('#gistinfo').empty();
+    $("#progressouter").removeClass("hide");    
     $.ajax({
         type: 'POST',
         dataType: 'json',
         url: '{{ path('articles_ajaxgist', {'id': 0}) }}',
         data: 'id=' + gist,
         timeout: 5000,
-        success: function(response) {
-            cleargistinfo();
-            $.each(response, function(i, item) { 
-                if(item === null){
-                    data= '';
-                }else{
-                    data=item;
-                };
-                if( i === 'avatar') {
-                $('.heading-title').append('<img id="avatar" src="'+data+'" class="pull-right img-polaroid" style="top:0px;height:45px;width:45px;">');   
-                }else{
-                $('#gistinfodet').append('<li><strong class="muted">'+i+'</strong> : '+data+'</li>'); 
-                }});
+        success: function(response) {            
+            for(var i=0;i<response.length;i++) {
+                $("#progress").css('width',(i*100/i)+'%');
+                var obj = response[i];            
+                $('#gistinfo').append('<h2 class="heading-title"><strong>{{ 'Details of gist'|trans }}</strong>\n\
+                                       <img id="avatar" src="'+obj['avatar']+'" class="pull-right img-polaroid" style="top:0px;height:45px;width:45px;"></h2>\n\
+                                       <ul><li><strong>{{ 'Id gist'|trans }} : </strong>'+obj['id']+'</li>\n\
+                                           <li><strong>{{ 'Created at'|trans }} : </strong>'+obj['created_at']+'</li>\n\
+                                           <li><strong>{{ 'Author'|trans }} : </strong>'+obj['author']+'</li>\n\
+                                           <li><strong>{{ 'Description of gist'|trans }} : </strong>'+obj['description']+'</li>\n\
+                                           <li><strong>{{ 'Files'|trans }} : </strong>'+obj['files']+'</li></ul>');
+            }
         },
-        error: function(x,t,m) {
-            cleargistinfo();
-            if( t === 'timeout') { $('#gistinfodet').append('<li><strong>Erreur</strong> : La requête a mis trop de temps à répondre</li>');
+        complete: function() {
+        clearprogress();
+        },
+        error: function(x,t,m) {            
+            if( t === 'timeout') { $('#gistinfo').empty(); $('#gistinfo').append('<strong>{{ 'Error'|trans }}</strong><br /> : {{ 'The request failed because the remote server took too long to respond'|trans}}');
                 } else {                    
-                    $('#gistinfodet').append('<li><strong>'+t+'</strong> : '+m+x+'</li>');
+                    $('#gistinfo').empty(); $('#gistinfo').append('<strong>'+t+'</strong> : '+m+x+'');
                 }                
         }
     }); 

@@ -1,29 +1,52 @@
 foxp2backofficeBundle_categories:
     resource: "@foxp2backofficeBundle/Resources/config/routing/categories.yml"
-    prefix:   /backoffice/categories
+    prefix:   /{_locale}/backoffice/categories
+    requirements:
+        _locale: %foxp2.locales%
 foxp2backofficeBundle_articles:
     resource: "@foxp2backofficeBundle/Resources/config/routing/articles.yml"
-    prefix:   /backoffice/articles
+    prefix:   /{_locale}/backoffice/articles
+    requirements:
+        _locale: %foxp2.locales%
 foxp2backofficeBundle_gist:
     resource: "@foxp2backofficeBundle/Resources/config/routing/gist.yml"
-    prefix:   /backoffice/gist
+    prefix:   /{_locale}/backoffice/gist
+    requirements:
+        _locale: %foxp2.locales%
 foxp2backofficeBundle_profil:
     resource: "@foxp2backofficeBundle/Resources/config/routing/profil.yml"
-    prefix:   /backoffice/profil
+    prefix:   /{_locale}/backoffice/profil
+    requirements:
+        _locale: %foxp2.locales%
 foxp2backofficeBundle_private:
     resource: "@foxp2backofficeBundle/Resources/config/routing/private.yml"
-    prefix:   /backoffice/private
+    prefix:   /{_locale}/backoffice/private
+    requirements:
+        _locale: %foxp2.locales%
+foxp2backofficeBundle_gistcomments:
+    resource: "@foxp2backofficeBundle/Resources/config/routing/gistcomments.yml"
+    prefix:   /{_locale}/backoffice/gistcomments
+    requirements:
+        _locale: %foxp2.locales%
 foxp2backoffice:
     pattern:  /
     defaults: { _controller: foxp2backofficeBundle:Default:index }
+    requirements:
+        _locale: %foxp2.locales%
 foxp2backoffice_homepage:
-    pattern:  /backoffice
+    pattern:  /{_locale}/backoffice
     defaults: { _controller: foxp2backofficeBundle:Default:index }
+    requirements:
+        _locale: %foxp2.locales%
+foxp2backoffice_about:
+    pattern:  /{_locale}/backoffice/about
+    defaults: { _controller: foxp2backofficeBundle:Default:about }
+    requirements:
+        _locale: %foxp2.locales%
 login:
     pattern:  /login
     defaults:  { _controller: foxp2backofficeBundle:Default:login }
 login_check:
-    pattern:  /backoffice/login_check
+    pattern:  /backoffice/login_check   
 logout:
-    path:   /logout  
-    
+    path:   /logout

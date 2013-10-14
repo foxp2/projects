@@ -32,7 +32,7 @@ class CategoriesController extends Controller {
 
         if ($page < 1 or $page > $number_of_page && $counter != 0) {
 
-            $this->get('session')->getFlashBag()->add('message', 'Cette page n\'existe pas.');
+            $this->get('session')->getFlashBag()->add('error', 'This page does not exist !');
             return $this->redirect($this->generateUrl('categories_index'));
         }
 
@@ -79,6 +79,10 @@ class CategoriesController extends Controller {
                 if ($result > 1) {
 
                     $number_of_page = ceil($result / $result_per_page);
+                    
+                    $this->get('session')->getFlashBag()->add('message', 'Research with %s has returned %s results');
+                    $this->get('session')->getFlashBag()->add('keyword', $keyword);
+                    $this->get('session')->getFlashBag()->add('result', $result);
 
                     return $this->render('foxp2backofficeBundle:Categories:index.html.twig', array(
                                 'page' => 1,
@@ -94,7 +98,8 @@ class CategoriesController extends Controller {
                      
                     $deleteForm = $this->createDeleteForm($entity[0]->getId());
                     
-                    $this->get('session')->getFlashBag()->add('message', 'La recherche avec ' . $keyword . ' n\'a retourné que ce résultat.');
+                    $this->get('session')->getFlashBag()->add('message', 'Research with %s only returned this result');
+                    $this->get('session')->getFlashBag()->add('keyword', $keyword);
 
                     return $this->render('foxp2backofficeBundle:Categories:show.html.twig', array(                                
                                 'entity' => $aloneentity,
@@ -103,7 +108,8 @@ class CategoriesController extends Controller {
                 }
             } else {
 
-                $this->get('session')->getFlashBag()->add('message', 'La recherche avec  ' . $keyword . ' n\'a retourné aucun résultat.');
+                 $this->get('session')->getFlashBag()->add('error', 'Research with %s did not return any results');
+                 $this->get('session')->getFlashBag()->add('keyword', $keyword);
 
                 return $this->redirect($this->generateUrl('categories_index'));
             }
@@ -118,7 +124,7 @@ class CategoriesController extends Controller {
         
        if (false === $this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
 
-            $this->get('session')->getFlashBag()->add('error', 'Cette action necessite des droits administrateur !');
+            $this->get('session')->getFlashBag()->add('error', 'This action requires administrator rights !');
             return $this->redirect($this->generateUrl('categories_index'));
         } else {
         
@@ -134,7 +140,10 @@ class CategoriesController extends Controller {
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
-            $this->get('session')->getFlashBag()->add('message', 'La nouvelle catégorie ' . $entity->getCategoriesName() . ' a été créé avec succès.');
+            
+            $this->get('session')->getFlashBag()->add('message', 'Category %s was successfully created');
+            $this->get('session')->getFlashBag()->add('keyword', $entity->getCategoriesName()); 
+            
             return $this->redirect($this->generateUrl('categories_show', array('id' => $entity->getId())));
         }
         return $this->render('foxp2backofficeBundle:Categories:new.html.twig', array(
@@ -180,14 +189,17 @@ class CategoriesController extends Controller {
 
                 foreach ($entity as $key) {
 
-                    $data = array(
-                        'id de la catégorie' => $key->getId(),
-                        'parent id de la catégorie' => ($key->getParentId() !== null ) ? $key->getParentId()->__tostring() : null,
-                        'nom de la catégorie' => $key->getCategoriesName(),
-                        'titre' => $key->getcategoriesTitle(),
-                        'sous titre' => $key->getcategoriesSubTitle(),
-                        'date de création' => $key->getDateCreated()->format('d-m-Y'),
-                        'date de modification' => ($key->getDateModified() !== null) ? $key->getDateModified()->format('d-m-Y') : null
+                    $data[] = array(
+                        'id_category' => $key->getId(),
+                        // donnée optionnelle
+                        'parent_id_category' => ($key->getParentId() !== null ) ? $key->getParentId()->__tostring() : '',
+                        'category_name' => $key->getCategoriesName(),
+                        'category_title' => $key->getcategoriesTitle(),
+                        // donnée optionnelle
+                        'category_sub_title' => ($key->getcategoriesSubTitle() !== null) ? $key->getcategoriesSubTitle() : '',
+                        'created_at' => $key->getDateCreated()->format('d-m-Y'),
+                        // donnée optionnelle
+                        'updated_at' => ($key->getDateModified() !== null) ? $key->getDateModified()->format('d-m-Y') : '' 
                     );
                 }
 
@@ -213,7 +225,7 @@ class CategoriesController extends Controller {
         $entity = $em->getRepository('foxp2backofficeBundle:Categories')->find($id);    
         
         if (!$entity) {
-            $this->get('session')->getFlashBag()->add('message', 'Cette catégories n\'existe pas.');
+            $this->get('session')->getFlashBag()->add('error', 'This category does not exist');
             return $this->redirect($this->generateUrl('categories_index'));
         }
 
@@ -236,7 +248,7 @@ class CategoriesController extends Controller {
         $entity = $em->getRepository('foxp2backofficeBundle:Categories')->find($id);
 
         if (!$entity) {
-            $this->get('session')->getFlashBag()->add('message', 'Cette catégories n\'existe pas.');
+            $this->get('session')->getFlashBag()->add('error', 'This category does not exist');
             return $this->redirect($this->generateUrl('categories_index'));
         }
         $editForm = $this->createForm(new CategoriesType(), $entity);
@@ -257,7 +269,7 @@ class CategoriesController extends Controller {
         
        if (false === $this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
 
-            $this->get('session')->getFlashBag()->add('error', 'Cette action necessite des droits administrateur !');
+            $this->get('session')->getFlashBag()->add('error', 'This action requires administrator rights !');
             return $this->redirect($this->generateUrl('categories_index'));
         } else {        
         
@@ -266,7 +278,7 @@ class CategoriesController extends Controller {
         $entity = $em->getRepository('foxp2backofficeBundle:Categories')->find($id);
 
         if (!$entity) {
-            throw $this->createNotFoundException('Cette catégories n\'existe pas..');
+            throw $this->createNotFoundException('This category does not exist');
         }
 
         $deleteForm = $this->createDeleteForm($id);
@@ -274,7 +286,7 @@ class CategoriesController extends Controller {
         $editForm->submit($request);
 
         if ($id == $entity->getParentId()) {
-            $this->get('session')->getFlashBag()->add('message', 'Une catégorie ne peut être parente d\'elle même.');
+            $this->get('session')->getFlashBag()->add('error', 'A category can not be parent itself');
             return $this->render('foxp2backofficeBundle:Categories:edit.html.twig', array(
                         'id' => $id,
                         'entity' => $entity,
@@ -286,7 +298,9 @@ class CategoriesController extends Controller {
         if ($editForm->isValid()) {
             $em->persist($entity);
             $em->flush();
-            $this->get('session')->getFlashBag()->add('message', 'La catégorie ' . $entity->getCategoriesName() . ' a été mise à jour avec succès.');
+            
+            $this->get('session')->getFlashBag()->add('message', 'The %s category has been updated successfully');
+            $this->get('session')->getFlashBag()->add('keyword', $entity->getCategoriesName());
 
             return $this->redirect($this->generateUrl('categories_index'));
         }
@@ -312,7 +326,7 @@ class CategoriesController extends Controller {
         
        if (false === $this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
 
-            $this->get('session')->getFlashBag()->add('error', 'Cette action necessite des droits administrateur !');
+            $this->get('session')->getFlashBag()->add('error', 'This action requires administrator rights !');
             return $this->redirect($this->generateUrl('categories_index'));
         } else {
 
@@ -321,13 +335,15 @@ class CategoriesController extends Controller {
             $entity = $em->getRepository('foxp2backofficeBundle:Categories')->find($id);             
 
             if (!$entity) {
-                $this->get('session')->getFlashBag()->add('message', 'Cette catégories n\'existe pas.');
+                $this->get('session')->getFlashBag()->add('message', 'This category does not exist !');
                 return $this->redirect($this->generateUrl('categories_index'));
             }
             
             $em->remove($entity);
             $em->flush();
-            $this->get('session')->getFlashBag()->add('message', 'La catégorie ' . $entity->getCategoriesName() . ' a été supprimée avec succès.');
+            
+            $this->get('session')->getFlashBag()->add('message', 'The %s category was removed successfully');
+            $this->get('session')->getFlashBag()->add('keyword', $entity->getCategoriesName());
         }
 
         return $this->redirect($this->generateUrl('categories_index'));

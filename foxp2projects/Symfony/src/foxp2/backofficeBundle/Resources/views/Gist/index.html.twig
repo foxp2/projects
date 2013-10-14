@@ -1,15 +1,15 @@
 {# \Symfony\src\foxp2\backofficeBundle\Resources\views\Gist\index.html.twig #}
 {% extends "foxp2backofficeBundle:Common:layout_admin.html.twig" %}
 {% block apptopbar %}
-        <div class="win-ui-dark progress hide" id="progressouter" style="background-image: url({{ asset("bundles/foxp2backoffice/images/bkg-4.png") }}"> 
-            <h3 class="text-info text-center"><strong>Chargement des données ...</strong></h3><br />
-            <div class="bar" id="progress"></div>
-        </div>
+<div class="win-ui-dark progress hide" id="progressouter" style="background-image: url({{ asset("bundles/foxp2backoffice/images/bkg-4.png") }}"> 
+    <h3 class="text-info text-center"><strong>{{ 'loading data ...'|trans }}</strong></h3><br />
+    <div class="bar" id="progress"></div>
+</div>
 <!-- app top bar -->
 <div id="app-bar-top" class="win-ui-dark">
     <a class="win-command white pull-right" href="">{# todo : formulaire de création de gist #}
         <span class="win-commandicon win-commandring icon-plus-5"></span>
-        <span class="win-label white">Créer un gist</span>
+        <span class="win-label white">{{ 'Create a gist'|trans }}</span>
     </a>
 </div>
 {% endblock %}
@@ -20,7 +20,7 @@
                     <div id="header-container">
                         <a id="backbutton" class="win-backbutton" style="margin-right: 10px;" href="{{ path('foxp2backoffice_homepage')}}"></a>
                         <div class="dropdown pull-right">
-                            <h1 class="header-dropdown">Liste des gist</h1>
+                            <h1 class="header-dropdown">{{ 'List of gists'|trans }}</h1>
                         </div>
                     </div>
                 </div>
@@ -37,10 +37,10 @@
             <img class="toast-object" alt="90x90" style="width: 90px; height: 90px;" src="{{ asset("bundles/foxp2projects/images/foxp2-90-90.png") }}" />
         </div>
     <div class="toast-body">
-        <h4 class="toast-heading">Message de l'application</h4>
+        <h4 class="toast-heading">{{ 'Message of application'|trans }}</h4>
         <p>
     {% for message in flashbag_messages %}
-            <strong>{{ message|raw }}</strong>
+            <strong>{{ message|trans|raw }}</strong>
     {% endfor %}
         </p>
     </div>
@@ -54,7 +54,7 @@
     <div class="alert alert-danger">
     <button type="button" class="close" data-dismiss="alert"></button>
     {% for message in flashbag_erreurs %}
-            <strong>{{ message|raw }}</strong>
+            <strong>{{ message|trans }}</strong>
     {% endfor %}
     </div>
 {% endif %}
@@ -73,27 +73,35 @@
         </div>
         <div id="gistdetail" class="span8" style="margin-top: 47px;">
             <div class="hero-unit">
-                <h1>Chargement des fichiers</h1>
+                <h1>{{ 'loadind files'|trans }}</h1>
                 <hr>
                      <p>
-                         <strong>Veuillez selectionner un gist dans la liste ci contre pour obtenir l'ensemble des codes sources hébergés sur les serveurs Github</strong>
+                         <strong>{{ 'Please select a gist from the list below to get all source code hosted on Github servers'|trans }}</strong>
                          <br /><br />
-                         <em>Nota bene : Les données sont mis en cache</em>
+                         <em>{{ 'Please note: The data are cached'|trans }}</em>
                      </p>
             </div>
         </div>
         <div class="clearfix"></div>
 <div id="profil-footer" class="well well-profil-stat hide" style="margin-left:-20px"></div>
 </div>
+<!-- app bar -->
+<div id="app-bar" class="win-commandlayout win-ui-dark">
+    <a id="gistcomments" class="win-command white pull-right" href="{{ path('gistcomments_new', {'id':0}) }}">
+        <span class="win-commandicon win-commandring icon-comment-3"></span>
+        <span class="win-label white">{{ 'Comment this gist'|trans }}</span>
+    </a>
+</div>
 <script>
+jQuery('#app-bar').animate({bottom: '-92px'},0);
 $(document).on("click", ".fullcode", function() {
-var id= $(this).attr('id');
+id= $(this).attr('id');
 if ($('#code'+id).children().hasClass('pre-scrollable-fox'))
     {
-        $(this).html('<i class="icon-arrow-up"></i>Replier le code');        
+        $(this).html('<i class="icon-arrow-up"></i>{{ 'Collapse the code'|trans }}');        
         $('#code'+id).children().removeClass('pre-scrollable-fox');
     }else{        
-        $(this).html('<i class="icon-arrow-down"></i>Deplier le code');        
+        $(this).html('<i class="icon-arrow-down"></i>{{ 'Extend the code'|trans }}');        
         $('#code'+id).children().addClass('pre-scrollable-fox').css('overflow-x','hidden');
     }
 });
@@ -102,7 +110,13 @@ $('.listview-item').click(function(){
     $('.listview-item h5').css('color','#fff');    
     $(this).removeClass('bg-color-purple').hide().fadeIn(1000).addClass('bg-color-yellow selected').css('color','#000').find('h5').css('color','#000');    
     $("#gistdetail").empty();    
-    getGistInfo($(this).attr('id'));
+    getGistInfo($(this).attr('id'));    
+     var href = $('#gistcomments').attr("href");     
+     href = href.replace(/id=+[0-9]+/,"id="+$(this).attr('id'));     
+     $('#gistcomments').attr("href",href);
+     setTimeout(function () {
+        jQuery('#app-bar').animate({'bottom': '+0px'},400);    
+     },2000);    
 });
 jQuery('#app-bar-top').animate({top: '-96px'},0);
 function getlimit() {
@@ -115,9 +129,9 @@ function getlimit() {
         $("#progress").css('width','0%');
         $('#profil-footer').empty();
         $('#profil-footer').append('<p class="text-center">\n\
-                                    <strong>Statistiques Requêtes sur le serveur Github : </strong> \n\
-                                    - Nombre de requêtes : <strong><em>'+response['rate']['limit']+'</em></strong> \n\
-                                    - Nombre de requêtes restantes: <strong><em>'+response['rate']['remaining']+'</em></strong></p>');
+                                    <strong>{{ 'Statistics Queries on Github server'|trans }} : </strong> \n\
+                                    - {{ 'Number of requests'|trans }} : <strong><em>'+response['rate']['limit']+'</em></strong> \n\
+                                    - {{ 'Remaining number of requests'|trans }} : <strong><em>'+response['rate']['remaining']+'</em></strong></p>');
         },
         complete: function() {
         $('#profil-footer').removeClass('hide');
@@ -140,7 +154,7 @@ function getGistInfo(gist) {
         success: function(response) {        
         $('#gistdetailprogress').addClass('hide'); 
         if(response[0]['description'] !== '') {
-        $('#gistdetail').append('<h2><strong>Description du gist :</strong></h2><blockquote>'+response[0]['description']+'</blockquote>');
+        $('#gistdetail').append('<h2><strong>{{'Description of gist'|trans}}:</strong></h2><blockquote>'+response[0]['description']+'</blockquote>');
         }
              for(var i=0;i<response.length;i++) {
                 var obj = response[i];               
@@ -151,10 +165,10 @@ function getGistInfo(gist) {
                 $("#progress").css('width','100%');
                 }
                    if(key === 'filename') {
-                   $('#gistdetail').append('<h2 id="file'+i+'"><strong>'+obj["filename"]+'</strong><small class="pull-right">langage : '+obj["language"]+'</small></h2>').hide().fadeIn(1000);
+                   $('#gistdetail').append('<h2 id="file'+i+'"><strong>'+obj["filename"]+'</strong><small class="pull-right">{{ 'Language'|trans }} : '+obj["language"]+'</small></h2>').hide().fadeIn(1000);
                    }
                    if(key === 'content') {
-                   $('#gistdetail').append('<h3>Le code</h3><div id="code'+i+'">'+obj[key]+'</div><br /><a href="#file'+i+'" id="'+i+'" class="btn btn-inverse pull-left fullcode"><i class="icon-arrow-down"></i>Déplier le code</a><a href="'+obj["raw_url"]+'" target="_blank" class="btn btn-info pull-right"><i class="icon-github"></i> Voir sur github</a><br /><hr>').hide().fadeIn(1000);
+                   $('#gistdetail').append('<br /><h3>{{'Code of gist'|trans}} :</h3><br /><div id="code'+i+'">'+obj[key]+'</div><br /><a href="#file'+i+'" id="'+i+'" class="btn btn-inverse pull-left fullcode"><i class="icon-arrow-down"></i>{{ 'Extend the code'|trans }}</a><a href="'+obj["raw_url"]+'" target="_blank" class="btn btn-info pull-right"><i class="icon-github"></i> {{ 'See on Github'|trans }}</a><br /><hr>').hide().fadeIn(1000);
                    }                   
                 }
             }
@@ -163,9 +177,9 @@ function getGistInfo(gist) {
         getlimit();              
         },
         error: function(x,t,m) {            
-            if( t === 'timeout') { $('#gistdetail').append('<li><strong>Erreur</strong> : La requête a mis trop de temps à répondre</li>');
+            if( t === 'timeout') {$("#gistdetail").empty(); $('#gistdetail').append('<strong>{{ 'Error'|trans }}</strong> :<br /> {{ 'The request failed because the remote server took too long to respond'|trans }}');
                 } else {                    
-                    $('#gistdetail').append('<li><strong>'+t+'</strong> : '+m+x+'</li>');
+                    $("#gistdetail").empty();$('#gistdetail').append('<strong>'+t+'</strong> : <br />'+m+x+'');
                 }                
         }
     }); 

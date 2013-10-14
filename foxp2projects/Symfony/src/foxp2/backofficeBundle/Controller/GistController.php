@@ -12,11 +12,9 @@ use Github;
 class GistController extends Controller{
     
 
-    public function indexAction() {
-
-        return $this->render('foxp2backofficeBundle:Gist:index.html.twig', array(
-                    'Gist' => $this->getListofGist(),
-        ));
+    public function indexAction() {       
+        
+        return $this->render('foxp2backofficeBundle:Gist:index.html.twig', array('Gist' => $this->getListofGist()));
     }
     
     private function getListofGist() {
@@ -43,7 +41,7 @@ class GistController extends Controller{
         return $data;
     }
     
-    public function getGistFilesAction() {
+    public function getGistFilesAction() {       
 
         $service = $this->container->get('github_api');
 

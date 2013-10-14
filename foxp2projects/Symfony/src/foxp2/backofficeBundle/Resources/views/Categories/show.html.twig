@@ -7,7 +7,7 @@
                     <div id="header-container">
                         <a id="backbutton" class="win-backbutton" style="margin-right: 10px;" href="{{ path('categories_index',{'page':1}) }}"></a>
                         <div class="dropdown pull-right">
-                            <h1 class="header-dropdown">{{ 'Visualisation d\'une catégorie'|trans }}</h1>
+                            <h1 class="header-dropdown">{{ 'See a category'|trans }}</h1>
                         </div>
                     </div>
                 </div>
@@ -25,10 +25,10 @@
                  src="{{ asset("bundles/foxp2projects/images/foxp2-90-90.png") }}" />
         </div>
     <div class="toast-body">
-        <h4 class="toast-heading">Message de l'application</h4>
+        <h4 class="toast-heading">{{ 'Message of application'|trans }}</h4>
         <p>
     {% for message in flashbag_messages %}
-            <strong>{{ message|raw }}</strong>
+            <strong>{{ message|trans|raw }}</strong>
     {% endfor %}
         </p>
     </div>
@@ -39,12 +39,12 @@
         <thead>
             <tr>
                 <th>Id catégorie</th>
-                <th style="text-align: center;">Nom de la catégorie</th>                
-                <th style="text-align: center;">Date de création</th>
-                <th style="text-align: center;">Date de modification</th>
+                <th style="text-align: center;">{{ 'Category name'|trans }}</th>                
+                <th style="text-align: center;">{{ 'Created at'|trans }}</th>
+                <th style="text-align: center;">{{ 'Updated at'|trans }}</th>
                 {% if entity.parentId %}               
-                <th style="text-align: center;">Catégorie parente</th>
-                <th style="text-align: right;">Action</th>
+                <th style="text-align: center;">{{ 'Category parent'|trans }}</th>
+                <th style="text-align: right;">{{ 'Action'|trans }}</th>
                 {% endif %}
             </tr>
         </thead>
@@ -66,25 +66,25 @@
                 {% endif %}
             </tr>
             <tr>
-                <th style="text-align: center;">titre :</th>
+                <th style="text-align: center;">{{ 'Title'|trans }} :</th>
                 <td colspan="{% if entity.parentId %}2{% else %}1{% endif %}">{{ entity.categoriesTitle }}</td>
-                <th style="text-align: center;">sous titre :</th>
+                <th style="text-align: center;">{{ 'Sub title'|trans }} :</th>
                 <td colspan="{% if entity.parentId %}3{% else %}1{% endif %}">{{ entity.categoriesSubTitle }}</td>
             </tr>
             <tr>
-                <th style="text-align: center;vertical-align: middle;">Description :</th>
+                <th style="text-align: center;vertical-align: middle;">{{ 'Description'|trans }} :</th>
                 <td colspan="{% if entity.parentId %}5{% else %}4{% endif %}">{{ entity.categoriesDescription|raw }}</td>
             </tr>
         </tbody>
     </table>
     {% if entity.children|length > 0 %}
-    <h2>Liste des sous catégories : <small>{{ entity.children|length }} sous catégorie{% if entity.children|length > 1 %}s{% endif %}</small></h2><hr>
+    <h2>{{ 'List of children category'|trans }} : <small>{{ entity.children|length }} {{ 'Sub category'|trans }}{% if entity.children|length > 1 %}s{% endif %}</small></h2><hr>
     <table class="table table-bordered table-hover table-striped">    
         <thead>
             <tr>
-                <th>Id sous catégorie</th>
-                <th style="text-align: center;">Nom de la sous catégorie</th>
-                <th style="text-align: right;">Action</th>
+                <th>{{ 'Id of sub category'|trans }}</th>
+                <th style="text-align: center;">{{ 'Name of children category'|trans }}</th>
+                <th style="text-align: right;">{{ 'Action'|trans }}</th>
             </tr>
         </thead>
         <tbody>
@@ -94,8 +94,8 @@
                 <td style="text-align: center;">{{ category.categoriesName }}</td>
                 <td style="text-align: right;">
                     <div class="btn-group">
-                    <a class="btn btn-info" href="{{ path('categories_edit',{'id' : category.id}) }}"><strong>éditer</strong></a>
-                    <a class="btn btn-primary" href="{{ path('categories_show',{'id' : category.id}) }}"><strong>voir</strong></a>
+                    <a class="btn btn-info" href="{{ path('categories_edit',{'id' : category.id}) }}"><strong>{{ 'Edit'|trans }}</strong></a>
+                    <a class="btn btn-primary" href="{{ path('categories_show',{'id' : category.id}) }}"><strong>{{ 'See'|trans }}</strong></a>
                     </div>
                 </td>
             </tr>
@@ -104,13 +104,13 @@
     </table> 
     {% endif %}
     {% if entity.articles|length > 0 %}
-    <h2>Liste des articles : <small>{{ entity.articles|length }} article{% if entity.articles|length > 1 %}s{% endif %}</small></h2><hr>
+    <h2>{{ 'List of articles'|trans }} : <small>{{ entity.articles|length }} {{ 'article'|trans }}{% if entity.articles|length > 1 %}s{% endif %}</small></h2><hr>
     <table class="table table-bordered table-hover table-striped">
         <thead>
             <tr>
-                <th>Id de l'article</th>
-                <th style="text-align: center;">Nom de l'article</th>
-                <th style="text-align: right;">Action</th>
+                <th>{{ 'id article'|trans }}</th>
+                <th style="text-align: center;">{{ 'Article Name'|trans }}</th>
+                <th style="text-align: right;">{{ 'Action'|trans }}</th>
             </tr>
         </thead>
         <tbody>
@@ -120,8 +120,8 @@
             <td>{{ article.articleName }}</td>
             <td style="text-align: right;">
                 <div class="btn-group">
-                <a class="btn btn-info" href="{{ path('articles_edit',{'id' : article.id}) }}"><strong>éditer</strong></a>
-                <a class="btn btn-primary" href="{{ path('articles_show',{'id' : article.id}) }}"><strong>voir</strong></a>
+                    <a class="btn btn-info" href="{{ path('articles_edit',{'id' : article.id}) }}"><strong>{{ 'Edit'|trans }}</strong></a>
+                <a class="btn btn-primary" href="{{ path('articles_show',{'id' : article.id}) }}"><strong>{{ 'See'|trans }}</strong></a>
                 </div>
             </td>
             </tr>
@@ -137,15 +137,15 @@
 <div id="app-bar" class="win-commandlayout win-ui-dark">
     <a class="win-command orange" href="{{ path('categories_index', {'page':1}) }}">
         <span class="win-commandicon win-commandring icon-list icon-fox"></span>   
-        <span class="win-label orange">Liste des catégories</span>
+        <span class="win-label orange">{{ 'List of categories'|trans }}</span>
     </a>
     <a title="" id="button_submit" class="win-command red pull-right" href="#">
         <span class="win-commandicon win-commandring icon-delete"></span>   
-        <span class="win-label red">Supprimer</span>
+        <span class="win-label red">{{ 'Delete'|trans }}</span>
     </a>
     <a class="win-command white pull-right" href="{{ path('categories_edit', { 'id': entity.id }) }}">
         <span class="win-commandicon win-commandring icon-pencil-2"></span>   
-        <span class="win-label white">Editer</span>
+        <span class="win-label white">{{ 'Edit'|trans }}</span>
     </a>
 </div>
 <script>

@@ -33,7 +33,7 @@ class ArticlesController extends Controller
 
         if ($page < 1 or $page > $number_of_page && $counter != 0) {
 
-            $this->get('session')->getFlashBag()->add('message', 'Cette page n\'existe pas !');
+            $this->get('session')->getFlashBag()->add('error', 'This page does not exist !');
             return $this->redirect($this->generateUrl('articles_index'));
         }
 
@@ -70,7 +70,7 @@ class ArticlesController extends Controller
         if ($request->getMethod() == 'POST') {
             $keyword = $request->request->get("search");
 
-            $entity = $em->getRepository('foxp2backofficeBundle:Articles')->findArticleyByName(trim($keyword));
+            $entity = $em->getRepository('foxp2backofficeBundle:Articles')->findArticleyByName(trim($keyword));          
 
             if ($entity) {
 
@@ -80,8 +80,10 @@ class ArticlesController extends Controller
 
                     $number_of_page = ceil($result / $result_per_page);
 
-                    $this->get('session')->getFlashBag()->add('message', 'La recherche avec ' . $keyword . ' a retourné ' . $result . ' résultat(s).');
-
+                    $this->get('session')->getFlashBag()->add('message', 'Research with %s has returned %s results');
+                    $this->get('session')->getFlashBag()->add('keyword', $keyword);
+                    $this->get('session')->getFlashBag()->add('result', $result);
+                    
                     return $this->render('foxp2backofficeBundle:Articles:index.html.twig', array(
                                 'page' => 1,
                                 'counter' => $result,
@@ -92,20 +94,23 @@ class ArticlesController extends Controller
                     ));
                 } else {
 
-                    $aloneentity = $em->getRepository('foxp2backofficeBundle:Articles')->find($entity[0]->getId());
+                    $aloneentity = $em->getRepository('foxp2backofficeBundle:Articles')->find($entity[0]->getId());                  
 
                     $deleteForm = $this->createDeleteForm($entity[0]->getId());
 
-                    $this->get('session')->getFlashBag()->add('message', 'La recherche avec ' . $keyword . ' n\'a retourné que ce résultat.');
+                    $this->get('session')->getFlashBag()->add('message', 'Research with %s only returned this result');
+                    $this->get('session')->getFlashBag()->add('keyword', $keyword);
 
                     return $this->render('foxp2backofficeBundle:Articles:show.html.twig', array(
                                 'entity' => $aloneentity,
+                                'category_name' => $aloneentity->getCategory()->getCategoriesName(),
                                 'delete_form' => $deleteForm->createView(),
                     ));
                 }
             } else {
 
-                $this->get('session')->getFlashBag()->add('message', 'La recherche avec  ' . $keyword . ' n\'a retourné aucun résultat.');
+                 $this->get('session')->getFlashBag()->add('error', 'Research with %s did not return any results');
+                 $this->get('session')->getFlashBag()->add('keyword', $keyword);
 
                 return $this->redirect($this->generateUrl('articles_index'));
             }
@@ -119,7 +124,7 @@ class ArticlesController extends Controller
 
         if (false === $this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
 
-            $this->get('session')->getFlashBag()->add('error', 'Cette action necessite des droits administrateur !');
+            $this->get('session')->getFlashBag()->add('error', 'This action requires administrator rights !');
             return $this->redirect($this->generateUrl('articles_index'));
         } else {
             $entity = new Articles();
@@ -132,8 +137,9 @@ class ArticlesController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')->getFlashBag()->add('message', 'L\'article ' . $entity->getArticleName() . ' a été créé avec succès.');
-
+                $this->get('session')->getFlashBag()->add('message', 'Article %s was successfully created');
+                $this->get('session')->getFlashBag()->add('keyword', $entity->getArticleName());
+                        
                 return $this->redirect($this->generateUrl('articles_show', array('id' => $entity->getId())));
             }
 
@@ -171,7 +177,7 @@ class ArticlesController extends Controller
         $entity = $em->getRepository('foxp2backofficeBundle:Articles')->find($id);
 
         if (!$entity) {
-            $this->get('session')->getFlashBag()->add('message', 'Cet article n\'existe pas !');
+            $this->get('session')->getFlashBag()->add('message', 'This article does not exist !');
             return $this->redirect($this->generateUrl('articles_index'));
         }
 
@@ -194,7 +200,7 @@ class ArticlesController extends Controller
         $entity = $em->getRepository('foxp2backofficeBundle:Articles')->find($id);
 
         if (!$entity) {
-            $this->get('session')->getFlashBag()->add('message', 'Cet article n\'existe pas !');
+            $this->get('session')->getFlashBag()->add('message', 'This article does not exist !');
             return $this->redirect($this->generateUrl('articles_index'));
         }
 
@@ -215,7 +221,7 @@ class ArticlesController extends Controller
     public function updateAction(Request $request, $id) {
         if (false === $this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
 
-            $this->get('session')->getFlashBag()->add('error', 'Cette action necessite des droits administrateur !');
+            $this->get('session')->getFlashBag()->add('error', 'This action requires administrator rights !');
             return $this->redirect($this->generateUrl('articles_index'));
         } else {
             $em = $this->getDoctrine()->getManager();
@@ -223,7 +229,7 @@ class ArticlesController extends Controller
             $entity = $em->getRepository('foxp2backofficeBundle:Articles')->find($id);
 
             if (!$entity) {
-                    $this->get('session')->getFlashBag()->add('message', 'Cet article n\'existe pas !');
+                    $this->get('session')->getFlashBag()->add('message', 'This article does not exist !');
                     return $this->redirect($this->generateUrl('articles_index'));
             }
 
@@ -236,8 +242,9 @@ class ArticlesController extends Controller
                 $em->persist($entity);
                 $em->flush();
 
-                $this->get('session')->getFlashBag()->add('message', 'L\'article ' . $entity->getArticleName() . ' a été mise à jour avec succès.');
-
+                $this->get('session')->getFlashBag()->add('message', 'The %s article has been updated successfully');
+                $this->get('session')->getFlashBag()->add('keyword', $entity->getArticleName());
+                
                 return $this->redirect($this->generateUrl('articles_index'));
             }
 
@@ -255,7 +262,7 @@ class ArticlesController extends Controller
     public function deleteAction(Request $request, $id) {
         if (false === $this->get('security.context')->isGranted('ROLE_SUPER_ADMIN')) {
 
-            $this->get('session')->getFlashBag()->add('error', 'Cette action necessite des droits administrateur !');
+            $this->get('session')->getFlashBag()->add('error', 'This action requires administrator rights !');
             return $this->redirect($this->generateUrl('articles_index'));
         } else {
             $form = $this->createDeleteForm($id);
@@ -266,13 +273,15 @@ class ArticlesController extends Controller
                 $entity = $em->getRepository('foxp2backofficeBundle:Articles')->find($id);
 
                 if (!$entity) {
-                    $this->get('session')->getFlashBag()->add('message', 'Cet article n\'existe pas !');
+                    $this->get('session')->getFlashBag()->add('message', 'This article does not exist !');
                     return $this->redirect($this->generateUrl('articles_index'));
                 }
 
                 $em->remove($entity);
                 $em->flush();
-                $this->get('session')->getFlashBag()->add('message', 'L\'article ' . $entity->getArticleName() . ' a été supprimé avec succès.');
+                
+                $this->get('session')->getFlashBag()->add('message', 'The %s article was removed successfully');
+                $this->get('session')->getFlashBag()->add('keyword', $entity->getArticleName());
             }
 
             return $this->redirect($this->generateUrl('articles_index'));
@@ -313,13 +322,13 @@ class ArticlesController extends Controller
         if ($request->isXmlHttpRequest()) {
 
             if (is_array($gist) && sizeof($gist) > 0) {
-                $data = array(
+                $data[] = array(
                     'avatar' => $gist['user']['avatar_url'],
                     'id' => $gist['id'],
-                    'date de création' => date('d m Y', strtotime($gist['created_at'], 0)),
-                    'auteur' => $gist['user']['login'],
+                    'created_at' => date('d m Y', strtotime($gist['created_at'], 0)),
+                    'author' => $gist['user']['login'],
                     'description' => $gist['description'],
-                    'Nombre de fichiers' => sizeof($gist['files'])
+                    'files' => sizeof($gist['files'])
                 );
             }
             $response = new Response(json_encode($data));

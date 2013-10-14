@@ -42,7 +42,7 @@ class LoginSuccessHandler implements AuthenticationSuccessHandlerInterface {
                     ->setBody('nouvelle connexion : ' . $_SERVER['REMOTE_ADDR']);
             $this->mailer->send($message);
             
-            $session->getFlashBag()->add('message', 'Autentification réussie !');
+            $session->getFlashBag()->add('message', 'Successful authentication !');
             
             $response = new RedirectResponse($this->router->generate('foxp2backoffice_homepage'));
         } 
@@ -59,7 +59,7 @@ class LoginSuccessHandler implements AuthenticationSuccessHandlerInterface {
                     ->setBody('nouvelle connexion : ' . $_SERVER['REMOTE_ADDR']);
             $this->mailer->send($message);
             
-            $session->getFlashBag()->add('message', 'Autentification réussie !');                        
+            $session->getFlashBag()->add('message', 'Successful authentication !');                        
             $response = new RedirectResponse($this->router->generate('foxp2backoffice_homepage'));
         }
             

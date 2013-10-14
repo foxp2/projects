@@ -15,20 +15,20 @@ class ArticlesType extends AbstractType {
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
-                ->add('articleName', 'text', array('label' => '<strong>libellé de l\'article</strong>'))
+                ->add('articleName', 'text', array('label' => 'Wording of article'))
                 ->add('category', 'entity', array(
                     'class' => 'foxp2backofficeBundle:Categories',
-                    'empty_value' => 'choisir ...',
+                    'empty_value' => 'Please select ...',
                     'property' => 'categoriesName',
                     'query_builder' => function(CategoriesRepository $er) {
                         return $er->getCategoriesList();
                     },
                     'required' => true,
-                    'label' => '<strong>Choisir la catégorie :</strong>'
+                    'label' => 'Choose category'
                 ))
-                ->add('articleGistReference', 'choice', array('choices' => $options['gists'], 'label' => '<strong>Lier avec un gist</strong><br /><em class="muted">Facultatif</em>', 'required' => false, 'empty_value' => 'Choisir un numéro de gist', 'attr' => array('class' => 'span5')))
-                ->add('articleTitle', 'text', array('label' => '<strong>Titre de l\'article</strong>'))
-                ->add('articleSubTitle', 'text', array('label' => '<strong>Sous titre de l\'article</strong>'))
+                ->add('articleGistReference', 'choice', array('choices' => $options['gists'], 'label' => 'Link with a gist', 'required' => false, 'empty_value' => 'Choose a gist ...', 'attr' => array('class' => 'span5')))
+                ->add('articleTitle', 'text', array('label' => 'Title of article'))
+                ->add('articleSubTitle', 'text', array('label' => 'Sub title of article'))
                 ->add('articleShortDescription', 'ckeditor', array(
                     'config' => array(
                         'toolbar' => array(
@@ -45,8 +45,8 @@ class ArticlesType extends AbstractType {
                                 'items' => array('Styles', 'Format', 'Font', 'FontSize')
                             )
                         )),
-                    'label' => '<br /><strong>Description courte de l\'article</strong><br /><br />'))
-                ->add('articleLongDescription', 'ckeditor', array('config' => array('toolbar' => 'basic'), 'label' => '<br /><strong>Description longue de article</strong><br /><br />'));
+                    'label' => 'Short description'))
+                ->add('articleLongDescription', 'ckeditor', array('config' => array('toolbar' => 'basic'), 'label' => 'Long description'));
     }
 
     /**

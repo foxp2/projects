@@ -25,6 +25,10 @@ class DefaultController extends Controller {
                     'gist_count' => $listgist,
                     'articles_count' => $articles_count));
     }
+    
+    public function aboutAction() {
+        return $this->render('foxp2backofficeBundle:Common:about.html.twig', array('bundles' => $this->container->getParameter('kernel.bundles')));
+    }
 
     public function loginAction(Request $request) {
         $request = $this->getRequest();

@@ -2,10 +2,14 @@
 {% extends "foxp2backofficeBundle:Common:layout_admin.html.twig" %}
 {% block apptopbar %}
 <!-- app top bar -->
+<div class="win-ui-dark progress hide" id="progressouter" style="background-image: url({{ asset("bundles/foxp2backoffice/images/bkg-4.png") }}">
+    <h3 class="text-info text-center"><strong>{{ 'loading data ...'|trans }}</strong></h3><br />
+    <div class="bar" id="progress"></div>
+</div>
 <div id="app-bar-top" class="win-ui-dark">
     <a class="win-command white pull-right" href="{{ path('categories_new') }}">
-        <span class="win-commandicon win-commandring icon-plus-5"></span>   
-        <span class="win-label white">Ajouter une catégorie</span>
+        <span class="win-commandicon win-commandring icon-plus-5"></span>
+        <span class="win-label white">{{ 'Add a category'|trans }}</span>
     </a>
 </div>
 {% endblock %}
@@ -16,7 +20,7 @@
                     <div id="header-container">
                         <a id="backbutton" class="win-backbutton" style="margin-right: 10px;" href="{{ path('foxp2backoffice_homepage')}}"></a>
                         <div class="dropdown pull-right">
-                            <h1 class="header-dropdown">Liste des catégories</h1>
+                            <h1 class="header-dropdown">{{ 'List of categories'|trans }}</h1>
                         </div>
                     </div>
                 </div>
@@ -25,18 +29,24 @@
         </div>
 <div class="row-fluid">
 {% set flashbag_messages = app.session.flashbag.get('message') %}
-{% if flashbag_messages is not empty %}        
-    <div id="alerts-container">    
+{% if flashbag_messages is not empty %}
+    <div id="alerts-container">
     <div class="toast fade in">
         <button type="button" class="close" data-dismiss="alert" type="button"></button>
         <div class="pull-left">
             <img class="toast-object" alt="90x90" style="width: 90px; height: 90px;" src="{{ asset("bundles/foxp2projects/images/foxp2-90-90.png") }}" />
         </div>
     <div class="toast-body">
-        <h4 class="toast-heading">Message de l'application</h4>
+        <h4 class="toast-heading">{{ 'Message of application'|trans }}</h4>
         <p>
     {% for message in flashbag_messages %}
-            <strong>{{ message|raw }}</strong>
+            {% if app.session.flashbag.has('result') %}
+            <strong>{{ message|trans|format(app.session.flashbag.get('keyword')[0],app.session.flashbag.get('result')[0]) }}</strong>
+            {% elseif app.session.flashbag.has('keyword') %}
+            <strong>{{ message|trans|format(app.session.flashbag.get('keyword')[0]) }}</strong>
+            {% else %}
+            <strong>{{ message|trans|raw }}</strong>
+            {% endif %}
     {% endfor %}
         </p>
     </div>
@@ -49,32 +59,36 @@
             {% if keyword != '' %}
             <a class="btn" href="{{ path('categories_index',{'page':page}) }}" title=""><i class="icon-refresh"></i></a>
             {% endif %}
-            <input id="search" type="text" name="search" class="input-large" style="height:30px" placeholder="Rechercher une catégorie" {% if keyword != '' %}value="{{ keyword }}"{% endif %}/>
+            <input id="search" type="text" name="search" class="input-large" style="height:30px" placeholder="{{ 'Search a category'|trans }}" {% if keyword != '' %}value="{{ keyword }}"{% endif %}/>
             <button class="btn" type="submit"><i class="icon-search"></i></button></div>
         </form>
         <div class="clearfix"></div>
 {% set flashbag_erreurs = app.session.flashbag.get('error') %}
-{% if flashbag_erreurs is not empty %}        
+{% if flashbag_erreurs is not empty %}
     <div class="alert alert-danger">
-    <button type="button" class="close" data-dismiss="alert"></button>    
+    <button type="button" class="close" data-dismiss="alert"></button>
     {% for message in flashbag_erreurs %}
-            <strong>{{ message|raw }}</strong>
-    {% endfor %}       
+            {% if app.session.flashbag.has('keyword') %}
+            <strong>{{ message|trans|format(app.session.flashbag.get('keyword')[0]) }}</strong>
+            {% else %}
+            <strong>{{ message|trans|raw }}</strong>
+            {% endif %}
+    {% endfor %}
     </div>
 {% endif %}
  <table class="table table-bordered table-hover table-striped">
         <thead>
             <tr>
-                <th>Id Catégorie</th>
-                <th style="text-align: center;">Nom de la catégorie</th>
-                <th style="text-align: center;">Date de création</th>
-                <th style="text-align: center;">Date de modification</th>
+                <th>{{ 'Id of category'|trans }}</th>
+                <th style="text-align: center;">{{ 'Category name'|trans }}</th>
+                <th style="text-align: center;">{{ 'Created at'|trans }}</th>
+                <th style="text-align: center;">{{ 'Updated at'|trans }}</th>
             </tr>
         </thead>
         <tfoot>
             <tr>
-                <td colspan="4" style="text-align: right;" class="muted">{% if nb_pages is not null %}Affichage : page {{ page }}/{{ nb_pages}}{% endif %} </td>
-            </tr>        
+                <td colspan="4" style="text-align: right;" class="muted">{% if nb_pages is not null %}{{'Display'|trans }} : {{ 'page'|trans }} {{ page }}/{{ nb_pages}}{% endif %} </td>
+            </tr>
         </tfoot>
         <tbody class="listcategories">
         {% for entity in entities %}
@@ -89,15 +103,15 @@
     </table>
         <div class="pagination">
         <div class="pull-left">
-            <a data-toggle="modal" href="#keyboard" class="btn btn-info"><i class="icon-keyboard" style="vertical-align: middle;font-size: 16px;"></i><strong> contrôle clavier</strong></a>
+            <a id="keyboard-controls" data-toggle="modal" href="#keyboard" class="btn btn-info"><i class="icon-keyboard" style="vertical-align: middle;font-size: 16px;"></i><strong> {{ 'Keyboard controls'|trans }}</strong></a>
         </div>
 
-{% include "foxp2backofficeBundle:Categories:keyboard.html.twig" %}     
+{% include "foxp2backofficeBundle:Categories:keyboard.html.twig" %}
 {# pagination #}
 {% if nb_pages != null and counter > 0 %}
         <div class="pagination-right">
-            <ul>                
-                {% for p in range(1,nb_pages) %} 
+            <ul>
+                {% for p in range(1,nb_pages) %}
                     <li{% if p == page %} class="active"{% endif %}><a href="{{ path('categories_index', {'page':p})}}" title=""><span>{{ p }}</span></a></li>
                 {% endfor %}
             </ul>
@@ -105,35 +119,27 @@
 {% endif %}
         </div>
 {# fenêtre modale ajaxifiée #}
-        <div id="catinfo">
-            <h2 class="heading-title"><strong>Détails de la catégorie :</strong></h2>
-            <div id="catinfoprogress">
-                <h3>chargement des données</h3>
-                <progress></progress>
-            </div>
-            <ul id="catinfodet">
-            </ul>
-        </div>
+        <div id="catinfo"></div>
 </div>
 {% endblock %}
 {% block appbar %}
 <!-- app bar -->
 <div id="app-bar" class="win-commandlayout win-ui-dark">
     <a class="win-command orange" href="{{ path('categories_index',{'page':1}) }}">
-        <span class="win-commandicon win-commandring icon-home icon-fox"></span>   
-        <span class="win-label orange">Accueil</span>
+        <span class="win-commandicon win-commandring icon-home icon-fox"></span>
+        <span class="win-label orange">{{ 'List of categories'|trans }}</span>
     </a>
     <a class="win-command white pull-right" href="{{ path('categories_edit', { 'id': 0 }) }}">
-        <span class="win-commandicon win-commandring icon-pencil-2"></span>   
-        <span class="win-label white">Editer</span>
+        <span class="win-commandicon win-commandring icon-pencil-2"></span>
+        <span class="win-label white">{{ 'Edit'|trans }}</span>
     </a>
     <a class="win-command white pull-right" href="{{ path('categories_show', { 'id': 0 }) }}">
-        <span class="win-commandicon win-commandring icon-eye-3"></span>   
-        <span class="win-label white">Voir</span>
+        <span class="win-commandicon win-commandring icon-eye-3"></span>
+        <span class="win-label white">{{ 'See'|trans }}</span>
     </a>
     <a id="ajax_show" class="win-command white pull-right" href="{{ path('categories_ajaxshow', { 'id': 0 }) }}">
-        <span class="win-commandicon win-commandring icon-ellipsis "></span>   
-        <span class="win-label white">+ d'infos</span>
+        <span class="win-commandicon win-commandring icon-ellipsis "></span>
+        <span class="win-label white">{{ 'More info'|trans }}</span>
     </a>
 </div>
 <script>
@@ -141,34 +147,34 @@
 catid = '';dataloaded = false;ishowed = false;
 // init
 jQuery('#catinfo').animate({bottom: '-600px'},0);
-jQuery('#app-bar').animate({bottom: '-92px'},0);   
+jQuery('#app-bar').animate({bottom: '-92px'},0);
 jQuery('#app-bar-top').animate({top: '-96px'},0);
 // keyboard detection for actions
-$('body').keypress(function(e){    
+$('body').keypress(function(e){
     if ($("#search").is(":focus")) {
         // do not detect keyboard for search form.
     }else{
-    switch(String.fromCharCode(e.which)){        
+    switch(String.fromCharCode(e.which)){
     case 'i':
     if (String.fromCharCode(e.which) === 'i' && catid !== '' && ishowed === false) {
-        getCategoryInfo();      
+        getCategoryInfo();
         ishowed = true;
     }else if(String.fromCharCode(e.which) === 'i' && dataloaded === true && ishowed === true){
         jQuery('#catinfo').animate({bottom: '-600px'},400);
-        ishowed = false;    
+        ishowed = false;
     }
     break;
     case 'a':
         document.location.href="{{ path('categories_new') }}";
     break;
-    case 'e':        
+    case 'e':
         if (String.fromCharCode(e.which) === 'e' && catid !== '')
             {
                 href = "{{ path('categories_edit', {'id':0}) }}";
                 document.location.href=href.replace(/id=+[0-9]+/,"id="+catid);;
             }
     break;
-    case 'v':        
+    case 'v':
         if (String.fromCharCode(e.which) === 'v' && catid !== '')
             {
                 href = "{{ path('categories_show', {'id':0}) }}";
@@ -177,70 +183,81 @@ $('body').keypress(function(e){
     break;
     }
     }
-}); 
-
-// clean up catinfo modal
-function clearcatinfo(){ $('#catinfodet').find("li").remove(); $('#catinfoprogress').hide(); }
+});
+function clearprogress(){ $("#progressouter").addClass("hide"); $("#progress").css('width','0%'); }
 // ajax call for category selected
 function getCategoryInfo() {
     jQuery('#catinfo').animate({bottom: '+0px'},400);
-    $('#catinfodet').find("li").remove();
-    $('#catinfoprogress').show();    
+    $('#catinfo').empty();
+    $("#progressouter").removeClass("hide");
     $.ajax({
         type: 'POST',
         dataType: 'json',
         url: '{{ path('categories_ajaxshow', {'id': 0}) }}',
         data: 'id=' + catid,
         timeout: 5000,
-        success: function(response) {        
-            $('#dataloaded').show();dataloaded = true;clearcatinfo(); $.each(response, function(i, item) { if(item === null){data= '';}else{data=item;};$('#catinfodet').append('<li><strong class="muted">'+i+'</strong> : '+data+'</li>'); });       
+        success: function(response) {
+            $('#dataloaded').show();dataloaded = true;
+            for(var i=0;i<response.length;i++) {
+              $("#progress").css('width',(i*100/i)+'%');
+              var obj = response[i];
+              $('#catinfo').append('<h2 class="heading-title"><strong>{{ 'Category detail'|trans }}</strong></h2>\n\
+                                       <ul><li><strong class="muted">{{'Id of category'|trans }}</strong> : '+obj['id_category']+'</li>\n\
+                                       <li><strong class="muted">{{'Parent_id_category'|trans}}</strong> : '+obj['parent_id_category']+'</li>\n\
+                                       <li><strong class="muted">{{'Category name'|trans}}</strong> : '+obj['category_name']+'</li>\n\
+                                       <li><strong class="muted">{{'Category title'|trans}}</strong> : '+obj['category_title']+'</li>\n\
+                                       <li><strong class="muted">{{'Category sub title'|trans}}</strong> : '+obj['category_sub_title']+'</li>\n\
+                                       <li><strong class="muted">{{'Created at'|trans}}</strong> : '+obj['created_at']+'</li>\n\
+                                       <li><strong class="muted">{{'Updated at'|trans}}</strong> : '+obj['updated_at']+'</li></ul>');
+          }
+        },
+        complete: function() {
+        clearprogress();
         },
         error: function(x,t,m) {
-            if( t === 'timeout') { clearcatinfo(); $('#catinfodet').append('<li><strong>Erreur</strong> : La requête a mis trop de temps à répondre</li>');
+            if( t === 'timeout') { $('#catinfo').empty(); $('#catinfo').append('<strong>{{ 'Error'|trans }}</strong><br /> : {{ 'The request failed because the remote server took too long to respond'|trans}}');
                 } else {
-                    clearcatinfo(); $('#catinfodet').append('<li><strong>'+t+'</strong> : '+m+'</li>');
-                }                
+                    $('#catinfo').empty(); $('#catinfo').append('<strong>'+t+'</strong> : '+m+'');
+                }
         }
-    });  
+    });
 }
+$('#keyboard-controls').click(function(){$('.alert').hide();});
 $('#ajax_show').click(function(e){
     e.preventDefault();
-    getCategoryInfo()
+    getCategoryInfo();
     });
 
 // mouse right click
 $(document).bind('contextmenu', function(e){
     e.preventDefault();
-    jQuery('#app-bar-top').animate({'top': '+0px'},400);    
-    jQuery('#app-bar').animate({bottom: '-92px'},0); 
-    jQuery('#catinfo').animate({bottom: '-600px'},400); 
+    jQuery('#app-bar-top').animate({'top': '+0px'},400);
+    jQuery('#app-bar').animate({bottom: '-92px'},0);
+    jQuery('#catinfo').animate({bottom: '-600px'},400);
     return false;
 });
 // mouse left click
-$('#application').mousedown(function(e) {    
+$('#application').mousedown(function(e) {
     if (e.which === 1) {
        jQuery('#app-bar-top').animate({top: '-96px'},400);
-       jQuery('#app-bar').animate({bottom: '-92px'},400); 
+       jQuery('#app-bar').animate({bottom: '-92px'},400);
        jQuery('#catinfo').animate({bottom: '-600px'},400);
     }
 });
 
 $('.listcategories tr').click(function(){
-    catid = $(this).data('category'); 
+    catid = $(this).data('category');
     ishowed = false;
-    jQuery('#catinfo').animate({bottom: '-600px'},400); 
-    $('.listcategories tr').removeClass('info'); 
-    $(this).addClass('info text-white');    
-    jQuery('#app-bar').animate({'bottom': '+0px'},400); 
+    jQuery('#catinfo').animate({bottom: '-600px'},400);
+    $('.listcategories tr').removeClass('info');
+    $(this).addClass('info text-white');
+    jQuery('#app-bar').animate({'bottom': '+0px'},400);
     $(".win-ui-dark a").each(function(){
-        var href = $(this).attr("href"); 
-        href = href.replace(/id=+[0-9]+/,"id="+catid);  
+        var href = $(this).attr("href");
+        href = href.replace(/id=+[0-9]+/,"id="+catid);
         $(this).attr("href",href);});
-    
 });
 </script>
 {% endblock %}
-
 {% block footer %}
-
 {% endblock %}

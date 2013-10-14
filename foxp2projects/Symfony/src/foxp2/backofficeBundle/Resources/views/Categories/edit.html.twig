@@ -8,7 +8,7 @@
                     <div id="header-container">
                         <a id="backbutton" class="win-backbutton" style="margin-right: 10px;" href="{{ path('categories_index') }}"></a>
                         <div class="dropdown pull-right">
-                            <h1 class="header-dropdown">{{ 'Edition une catégorie'|trans }}</h1>
+                            <h1 class="header-dropdown">{{ 'Edit a category'|trans }}</h1>
                         </div>
                     </div>
                 </div>
@@ -18,17 +18,16 @@
 <div class="row-fluid">
 {% set flashbag_messages = app.session.flashbag.get('message') %}
 {% if flashbag_messages is not empty %}  
-        <div class="clearfix"></div>
+<div class="clearfix"></div>
 <div class="alert alert-danger">
 <button type="button" class="close" data-dismiss="alert"></button>   
     {% for message in flashbag_messages %}
-            <strong>{{ message|raw }}</strong>
+            <strong>{{ message|trans|raw }}</strong>
     {% endfor %}
 </div>
 {% endif %}   
     <form style="margin-bottom:93px;" id="categories_update" action="{{ path('categories_update', { 'id': entity.id }) }}" method="post" {{ form_enctype(edit_form) }}>
-        <input type="hidden" name="_method" value="PUT" />
-        {# commentaire : affichage des champs du formulaire #}
+        <input type="hidden" name="_method" value="PUT" />        
         {{ form_widget(edit_form) }}
     </form>
    
@@ -36,11 +35,11 @@
 <div id="app-bar" class="win-commandlayout win-ui-dark">
     <a class="win-command orange" href="{{ path('categories_index') }}">
         <span class="win-commandicon win-commandring icon-list icon-fox"></span>   
-        <span class="win-label orange">Liste des catégories</span>
+        <span class="win-label orange">{{ 'List of categories'|trans }}</span>
     </a>
     <a title="" id="button_submit" class="win-command blue pull-right" href="#">
         <span class="win-commandicon win-commandring icon-pen-2"></span>   
-        <span class="win-label blue">Editer</span>
+        <span class="win-label blue">{{ 'Edit'|trans }}</span>
     </a>
 </div>
 <script>

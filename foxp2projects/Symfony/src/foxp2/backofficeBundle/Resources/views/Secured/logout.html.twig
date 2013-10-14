@@ -1,20 +1,21 @@
 {# \Symfony\src\foxp2\backofficeBundle\Resources\views\Secured\logout.html.twig #}
-<div id="quickaccess" class="tile wide image collection span3 pull-right text-right">
+<div id="quickaccess" class="wide image collection span3 pull-right text-right">
     <img alt="login" class="pull-right img-polaroid" src="{{ asset("bundles/foxp2projects/images/login.jpg") }}">
-    <h4 style="font-weight: bold;margin-bottom: 3px;">Bienvenue {{ app.user ? app.user.username : '' }}&nbsp;</h4>
+    <h4 style="font-weight: bold;margin-bottom: 3px;">{{ 'Welcome'|trans }} {{ app.user ? app.user.username : '' }}&nbsp;</h4>
     <div class="btn-group text-left">
-        <button class="btn">Accès rapide</button>
+        <button class="btn">{{ 'Quick access'|trans }}</button>
         <button class="btn dropdown-toggle" data-toggle="dropdown">
             <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
-            <li {% if app.request.getRequestUri == path('foxp2backoffice_homepage') %}class="bg-color-yellow"{% endif %}><a href="{{ path('foxp2backoffice_homepage') }}"><strong><i class="icon-home-6"></i> Accueil</strong></a></li>
-            <li {% if app.request.getRequestUri == path('profil_index') %}class="bg-color-yellow"{% endif %}><a href="{{ path('profil_index') }}"><strong><i class="icon-github"></i> Profil</strong></a></li>
-            <li {% if app.request.get('_route')|slice(0,10) == 'categories' %}class="bg-color-yellow"{% endif %}><a href="{{ path('categories_index') }}"><strong><i class="icon-list"></i> Catégories</strong></a></li>
-            <li {% if app.request.get('_route')|slice(0,8) == 'articles' %}class="bg-color-yellow"{% endif %}><a href="{{ path('articles_index') }}"><strong><i class="icon-list"></i> Articles</strong></a></li>
-            <li {% if app.request.get('_route')|slice(0,4) == 'gist' %}class="bg-color-yellow"{% endif %}><a href="{{ path('gist_index') }}"><strong><i class="icon-list"></i> Gists</strong></a></li>
+            <li {% if app.request.getRequestUri == path('foxp2backoffice_homepage') %}class="bg-color-yellow"{% endif %}><a href="{{ path('foxp2backoffice_homepage') }}"><strong><i class="icon-home-6"></i> {{ 'Homepage'|trans }}</strong></a></li>
+            <li {% if app.request.getRequestUri == path('profil_index') %}class="bg-color-yellow"{% endif %}><a href="{{ path('profil_index') }}"><strong><i class="icon-github"></i> {{ 'Profil'|trans }}</strong></a></li>
+            <li {% if app.request.get('_route')|slice(0,10) == 'categories' %}class="bg-color-yellow"{% endif %}><a href="{{ path('categories_index') }}"><strong><i class="icon-list"></i> {{ 'Categories'|trans }}</strong></a></li>
+            <li {% if app.request.get('_route')|slice(0,8) == 'articles' %}class="bg-color-yellow"{% endif %}><a href="{{ path('articles_index') }}"><strong><i class="icon-list"></i> {{ 'Articles'|trans }}</strong></a></li>
+            <li {% if app.request.get('_route')|slice(0,4) == 'gist' %}class="bg-color-yellow"{% endif %}><a href="{{ path('gist_index') }}"><strong><i class="icon-list"></i> {{ 'Gists'|trans }}</strong></a></li>
+            <li {% if app.request.getRequestUri == path('foxp2backoffice_about') %}class="bg-color-yellow"{% endif %}><a href="{{ path('foxp2backoffice_about') }}"><strong><i class="icon-info-2"></i> {{ 'About'|trans }}</strong></a></li>
             <li class="divider"></li>
-            <li class="bg-color-red"><a style="color:#fff;" href="{{ path('logout') }}"><strong><i class="icon-logout"></i> Quitter</strong></a></li>
+            <li class="bg-color-red"><a style="color:#fff;" href="{{ path('logout') }}"><strong><i class="icon-logout"></i> {{ 'Logout'|trans }}</strong></a></li>
         </ul>
     </div>
 </div>

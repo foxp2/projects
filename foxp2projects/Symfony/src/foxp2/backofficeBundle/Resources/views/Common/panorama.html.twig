@@ -2,109 +2,119 @@
 <div class="metro panorama">
     <div class="panorama-sections">
         <div class="panorama-section tile-span-2">
-        <h2><strong>Mon profil</strong></h2>
+        <h2><strong>{{ 'My profil'|trans }}</strong></h2>
         <a class="tile wide imagetext bg-color-orange" href="{{ path('profil_index')}}">
                <div class="image-wrapper">
                    <span class="icon icon-github"></span>
                </div>
                <div class="column-text">
-                   <div class="text"><strong>Mon Profil</strong></div>
-                   <div class="text"><strong>Sur github</strong></div>
+                   <div class="text"><strong>{{ 'My profil'|trans }}</strong></div>
+                   <div class="text"><strong>{{ 'on Github'|trans }}</strong></div>
                </div>
-               <span class="app-label">Accès public</span>
+               <span class="app-label">{{ 'Public access'|trans }}</span>
+        </a>
+        <a class="tile wide imagetext bg-color-yellow" href="{{ path('foxp2backoffice_about')}}">
+               <div class="image-wrapper">
+                   <span class="icon icon-beta"></span>
+               </div>
+               <div class="column-text">
+                   <div class="text"><strong>{{ 'About'|trans }}</strong></div>
+                   <div class="text"><strong>{{ 'this application'|trans }}</strong></div>
+               </div>
+               <span class="app-label">{{ 'Public access'|trans }}</span>
         </a>
         {% include "foxp2backofficeBundle:Common:private.html.twig" %}
         </div>
         <div class="panorama-section tile-span-2">
 
-            <h2><strong>Gestion des catégories</strong></h2>
+            <h2><strong>{{ 'Category operations'|trans }}</strong></h2>
 
             <a class="tile wide imagetext bg-color-blue" href="{{ path('categories_new') }}">
                 <div class="image-wrapper">
                     <span class="icon icon-add-to-list"></span>
                 </div>
                 <div class="column-text">
-                    <div class="text"><strong>Ajouter une</strong></div>
-                    <div class="text"><strong>nouvelle catégorie</strong></div>
+                    <div class="text"><strong>{{ 'Add a'|trans }}</strong></div>
+                    <div class="text"><strong>{{ 'new category'|trans }}</strong></div>
                 </div>
-                <span class="app-label">Droits administrateur requis</span>
+                <span class="app-label">{{ 'Administrator rights required'|trans }}</span>
             </a>
 
             <a class="tile wide imagetext bg-color-blueDark" href="{{ path('categories_index') }}">
                 <div class="image-wrapper" style="color:#14C1E0;">
                     <span class="icon icon-list-7"></span>
                 </div>
-                <div class="column-text">
-                    <div class="text"><strong>Voir la</strong></div>
-                    <div class="text"><strong>liste complète</strong></div>
-                    <div class="text"><strong>des catégories</strong></div>
+                <div class="column-text">                    
+                    <div class="text"><strong>{{ 'full list of'|trans }}</strong></div>
+                    <div class="text"><strong>{{ 'categories'|trans }}</strong></div>
                 </div>
-                <div class="app-label">Nombre de catégories : </div>
+                <div class="app-label">{{ 'Number of categories'|trans }} : </div>
                 <div class="app-count">{{ categories_count}}</div>
             </a>
         </div>
 
         <div class="panorama-section tile-span-2">
-            <h2><strong>Gestion des articles</strong></h2>
+            <h2><strong>{{ 'Articles operations'|trans }}</strong></h2>
             <a class="tile wide imagetext  bg-color-blue" href="{{ path('articles_new') }}">
                 <div class="image-wrapper">
                     <span class="icon icon-add-to-list"></span>
                 </div>
 
                 <div class="column-text">
-                    <div class="text4"><strong>Ajouter un nouvel article</strong></div>
+                    <div class="text4"><strong>{{ 'Add a new article'|trans }}</strong></div>
                 </div>
-                <div class="app-label">Droits administrateur requis</div>
+                <div class="app-label">{{ 'Administrator rights required'|trans }}</div>
             </a>
 
             <a class="tile wide imagetext bg-color-blueDark" href="{{ path('articles_index') }}">
                 <div class="image-wrapper" style="color:#14C1E0">
                     <span class="icon icon-list-7"></span>
                 </div>
-                <div class="column-text">
-                    <div class="text"><strong>Voir la</strong></div>
-                    <div class="text"><strong>liste complète</strong></div>
-                    <div class="text"><strong>des articles</strong></div>
+                <div class="column-text">                    
+                    <div class="text"><strong>{{ 'full list of'|trans }}</strong></div>
+                    <div class="text"><strong>{{ 'articles'|trans }}</strong></div>
                 </div>
-                <div class="app-label">Nombre d'articles : </div>
+                <div class="app-label">{{ 'Number of articles'|trans }} : </div>
                 <div class="app-count">{{ articles_count}}</div>
             </a>
             <a class="tile app bg-color-orange" href="#">
                 <div class="image-wrapper">
                     <span class="icon icon-bars-5"></span>
                 </div>
-                <div class="app-label"><strong>Statistiques</strong></div>
+                <div class="app-label"><strong>{{ 'Statistics'|trans }}</strong></div>
             </a>
         </div>
 
         <div class="panorama-section tile-span-3">
-            <h2><strong>Gestion des Gists</strong></h2>
+            <h2><strong>{{ 'Gists operations'|trans }}</strong></h2>
             <a class="tile wide imagetext  bg-color-blue" href="https://gist.github.com/" target="_blank">
                 <div class="image-wrapper">
                     <span class="icon github-untitled-122"></span>
                 </div>
                 <div class="column-text">
-                    <div class="text4"><strong>Créer un nouveau gist</strong></div>
+                    <div class="text4"><strong>{{ 'Create a new gist'|trans }}</strong></div>
                 </div>
-                <div class="app-label">Lien externe</div>
+                <div class="app-label">{{ 'External link'|trans }}</div>
             </a>
             <a class="tile wide imagetext bg-color-blueDark" href="{{ path('gist_index')}}">
                 <div class="image-wrapper" style="color:#14C1E0">
                     <span class="icon github-untitled-14"></span>
                 </div>
-                <div class="column-text">
-                    <div class="text"><strong>Voir la</strong></div>
-                    <div class="text"><strong>liste complète</strong></div>
-                    <div class="text"><strong>des gist</strong></div>
+                <div class="column-text">                    
+                    <div class="text"><strong>{{ 'full list of'|trans }}</strong></div>
+                    <div class="text"><strong>{{ 'gists'|trans }}</strong></div>
                 </div>
-                <div class="app-label">gist:</div>
+                <div class="app-label">{{ 'gist'|trans }}:</div>
                 <div class="app-count">{{ gist_count }}</div>
             </a>
-            <a class="tile app bg-color-orange" href="#">
+            <a class="tile wide imagetext bg-color-blueLight" href="{{ path('gistcomments_index')}}">
                 <div class="image-wrapper">
-                    <span class="icon github-untitled-67"></span>
+                    <span class="icon icon-comment-2"></span>
                 </div>
-                <div class="app-label"><strong>Statistiques</strong></div>
+                <div class="column-text">
+                <div class="text"><strong>{{ 'Comment a gist'|trans }}</strong></div>
+                <div class="app-label">{{ 'Administrator rights required'|trans }}</div>
+                </div>
             </a>
         </div>
     </div>

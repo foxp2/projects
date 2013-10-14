@@ -25,7 +25,7 @@
         {% if label is empty %}
             {% set label = name|humanize %}
         {% endif %}
-        <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ label|trans({}, translation_domain)|raw }}</label>
+        <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}><strong>{{ label|trans|raw }}</strong></label>
     {% endif %}
 {% endspaceless %}
 {% endblock form_label %}

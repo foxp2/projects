@@ -17,21 +17,21 @@ class CategoriesType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {        
         $builder            
-            ->add('categoriesName','text',array('label'=>'<strong>Nom de la catégorie :</strong>'))
-            ->add('categoriesTitle','text',array('label' => '<strong>Titre de la catégorie :</strong>'))
-            ->add('categoriesSubTitle', 'text', array('label' => '<strong>Sous titre de la catégorie :</strong><br /><em class="muted">facultatif</em>', 'required' => false))
+            ->add('categoriesName','text',array('label'=>'Category name'))
+            ->add('categoriesTitle','text',array('label' => 'Category title'))
+            ->add('categoriesSubTitle', 'text', array('label' => 'Category sub title', 'required' => false))
             ->add('parentId','entity', array(
                   'class' => 'foxp2backofficeBundle:Categories',
-                  'empty_value' => 'choisir ...',
+                  'empty_value' => 'Please select ...',
                   'property' => 'categoriesName',
                   'query_builder' => function(CategoriesRepository $er){
                             return $er->getCategoriesList();                              
                   },                  
                   'required' => false,
-                  'label' => '<strong>Catégorie parente :</strong>',
+                  'label' => 'Category parent',
                  
                  ))        
-            ->add('categoriesDescription', 'ckeditor',array('label' => '<strong>Description de la catégorie :</strong>'));
+            ->add('categoriesDescription', 'ckeditor',array('label' => 'Category description'));
                  
         $builder->addEventSubscriber(new CategoriesDateSubscriber());
         

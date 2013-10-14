@@ -8,7 +8,7 @@
                     <div id="header-container">
                         <a id="backbutton" class="win-backbutton" style="margin-right: 10px;" href="{{ path('categories_index') }}"></a>
                         <div class="dropdown pull-right">
-                            <h1 class="header-dropdown">{{ 'Création d\'une catégorie'|trans }}</h1>
+                            <h1 class="header-dropdown">{{ 'Create a category'|trans }}</h1>
                         </div>
                     </div>
                 </div>
@@ -21,12 +21,11 @@
 <div class="alert alert-danger span5">
 <button type="button" class="close" data-dismiss="alert"></button>   
     {% for message in flashbag_messages %}
-            <strong>{{ message|raw }}</strong>
+            <strong>{{ message|trans|raw }}</strong>
     {% endfor %}
 </div>
 {% endif %}       
-    <form style="margin-bottom:93px;" id="categories_create" action="{{ path('categories_create') }}" method="post" {{ form_enctype(new_form) }}>
-        {# commentaire : affichage des champs du formulaire #}     
+    <form style="margin-bottom:93px;" id="categories_create" action="{{ path('categories_create') }}" method="post" {{ form_enctype(new_form) }}>       
      {{ form_widget(new_form)}}           
     </form>
 
@@ -34,11 +33,11 @@
 <div id="app-bar" class="win-commandlayout win-ui-dark">
     <a class="win-command orange" href="{{ path('categories_index') }}">
         <span class="win-commandicon win-commandring icon-list icon-fox"></span>   
-        <span class="win-label orange">Liste des catégories</span>
+        <span class="win-label orange">{{ 'List of categories'|trans }}</span>
     </a>
     <a title="" id="button_submit" class="win-command white pull-right" href="#">
         <span class="win-commandicon win-commandring icon-plus"></span>   
-        <span class="win-label white">Créer</span>
+        <span class="win-label white">{{ 'Create'|trans }}</span>
     </a>
 </div>
 <script>
