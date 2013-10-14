@@ -1,0 +1,168 @@
+{# \Symfony\src\foxp2\backofficeBundle\Resources\views\Articles\index.html.twig #}
+{% extends "foxp2backofficeBundle:Common:layout_admin.html.twig" %}
+{% block apptopbar %}
+{% set flashbag_messages = app.session.flashbag.get('message') %}
+{% if flashbag_messages is not empty %}
+<div id="alerts-container">
+    <div class="toast fade in">
+        <button type="button" class="close" data-dismiss="alert" type="button"></button>
+        <div class="pull-left">
+            <img class="toast-object" alt="90x90" style="width: 90px; height: 90px;" src="{{ asset("bundles/foxp2projects/images/foxp2-90-90.png") }}" />
+        </div>
+        <div class="toast-body">
+            <h4 class="toast-heading">{{ 'Message of application'|trans }}</h4>
+            <p>
+    {% for message in flashbag_messages %}
+            {% if app.session.flashbag.has('result') %}
+            <strong>{{ message|trans|format(app.session.flashbag.get('keyword')[0],app.session.flashbag.get('result')[0]) }}</strong>
+            {% elseif app.session.flashbag.has('keyword') %}
+            <strong>{{ message|trans|format(app.session.flashbag.get('keyword')[0]) }}</strong>
+            {% else %}
+            <strong>{{ message|trans|raw }}</strong>
+            {% endif %}
+    {% endfor %}
+                </p>
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}
+{% block application -%}
+    <div id="nav-bar">
+        <div class="row">
+            <div class="span9">
+                <div id="header-container">
+                    <a id="backbutton" class="win-backbutton" style="margin-right: 10px;" href="{{ path('foxp2backoffice_homepage')}}"></a>
+                    <div class="dropdown pull-right">
+                        <h1 class="header-dropdown">{{ 'List of comments gist'|trans }}{% if keyword != '' %} : <small>{{ keyword }}</small>{% endif %}</h1>
+                    </div>
+                </div>
+            </div>
+                {% include "foxp2backofficeBundle:Secured:logout.html.twig" %}
+        </div>
+    </div>
+{% set flashbag_erreurs = app.session.flashbag.get('error') %}
+{% if flashbag_erreurs is not empty %}
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert"></button>
+    {% for message in flashbag_erreurs %}
+                    {% if app.session.flashbag.has('keyword') %}
+                    <strong>{{ message|trans|format(app.session.flashbag.get('keyword')[0]) }}</strong>
+                    {% else %}
+                    <strong>{{ message|trans|raw }}</strong>
+                    {% endif %}
+    {% endfor %}
+                </div>
+{% endif %}
+<div class="row-fluid">
+        <div class="clearfix"></div>
+                <table class="table table-bordered table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th style="width:5%">{{ 'Id'|trans }}</th>
+                            <th style="text-align: center;width:10%">{{ 'Id gist'|trans }}</th>
+                            <th style="text-align: center;width:20%">{{ 'Filename'|trans }}</th>
+                            <th style="text-align: center;width:65%">{{ 'Comments'|trans }}</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <td colspan="4" style="text-align: right;" class="muted">{% if nb_pages is not null %}{{ 'Display'|trans }} : {{ 'page'|trans }} {{ page }}/{{ nb_pages}}{% endif %} </td>
+                        </tr>
+                    </tfoot>
+                    <tbody class="listgistcomments">
+        {% for entity in entities %}
+                    <tr id="{{ entity.id }}" data-gistcomments="{{ entity.id }}">
+                        <td>{{ entity.id }}</td>
+                        <td>{{ entity.idGist }}</td>
+                        <td>{{ entity.filenameGist }}</td>
+                        <td>{{ entity.comments|raw }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="pagination">
+            <div class="pull-left">
+            <a data-toggle="modal" href="#keyboard" class="btn btn-info"><i class="icon-keyboard" style="vertical-align: middle;font-size: 16px;"></i><strong> {{ 'Keyboard controls'|trans }}</strong></a>
+            </div>
+{% include "foxp2backofficeBundle:Articles:keyboard.html.twig" %}
+{# pagination #}
+{% if nb_pages != null and counter > 0 %}
+                <div class="pagination-right">
+                <ul>
+                {% for p in range(1,nb_pages) %}
+                <li{% if p == page %} class="active"{% endif %}><a href="{{ path('articles_index', {'page':p})}}" title=""><span>{{ p }}</span></a></li>
+                {% endfor %}
+                </ul>
+                </div>
+{% endif %}
+                </div>
+</div>
+{% endblock %}
+{% block appbar %} 
+<!-- app bar -->
+<div id="app-bar" class="win-commandlayout win-ui-dark">
+    <a class="win-command orange" href="{{ path('gistcomments_index',{'page':1}) }}">
+        <span class="win-commandicon win-commandring icon-home icon-fox"></span>
+        <span class="win-label orange">{{ 'List of gist comments'|trans }}</span>
+    </a>
+    <a class="win-command white pull-right" href="{{ path('gistcomments_edit', { 'id': 0 }) }}">
+        <span class="win-commandicon win-commandring icon-pencil-2"></span>
+        <span class="win-label white">{{ 'Edit'|trans }}</span>
+    </a>
+    <a class="win-command white pull-right" href="{{ path('gistcomments_show', { 'id': 0 }) }}">
+        <span class="win-commandicon win-commandring icon-eye-3"></span>
+        <span class="win-label white">{{ 'See'|trans }}</span>
+    </a>
+</div>
+<script>
+    // global var
+    gistcommentsid = '';
+    // init
+    jQuery('#app-bar').animate({bottom: '-92px'},0);
+    // keyboard detection for actions
+    $('body').keypress(function(e){
+    if ($("#search").is(":focus")) {
+        // do not detect keyboard for search form.
+    }else{
+    switch(String.fromCharCode(e.which)){
+    case 'a':
+        document.location.href="{{ path('gist_index') }}";
+    break;
+    case 'e':
+        if (String.fromCharCode(e.which) === 'e' && gistcommentsid !== '')
+            {
+                href = "{{ path('gistcomments_edit', {'id':0}) }}";
+                document.location.href=href.replace(/id=+[0-9]+/,"id="+gistcommentsid);;
+            }
+    break;
+    case 'v':
+        if (String.fromCharCode(e.which) === 'v' && gistcommentsid !== '')
+            {
+                href = "{{ path('gistcomments_show', {'id':0}) }}";
+                document.location.href=href.replace(/id=+[0-9]+/,"id="+gistcommentsid);;
+            }
+    break;
+    }
+    }
+    });
+    // mouse left click
+    $('#application').mousedown(function(e) {
+        if (e.which === 1) {           
+           jQuery('#app-bar').animate({bottom: '-92px'},400);
+        }
+    });
+    $('.listgistcomments tr').click(function(){
+    gistcommentsid = $(this).data('gistcomments');    
+    $('.listgistcomments tr').removeClass('info');
+    $(this).addClass('info text-white');
+    jQuery('#app-bar').animate({'bottom': '+0px'},400);
+    $(".win-ui-dark a").each(function(){
+        var href = $(this).attr("href");
+        href = href.replace(/id=+[0-9]+/,"id="+gistcommentsid);
+        $(this).attr("href",href);});
+    });
+</script>
+{% endblock %}
+{% block footer %}
+{% endblock footer %}

@@ -1,0 +1,32 @@
+gistcomments_index:
+    pattern:  /{page}
+    defaults: { _controller: "foxp2backofficeBundle:Gistcomments:index", page: 1 }
+    requirements:
+        page: \d+
+
+gistcomments_show:
+    pattern:  /show/id={id}
+    defaults: { _controller: "foxp2backofficeBundle:Gistcomments:show" }
+
+gistcomments_new:
+    pattern:  /new/id={id}
+    defaults: { _controller: "foxp2backofficeBundle:Gistcomments:new" }
+    
+gistcomments_create:
+    pattern:  /create
+    defaults: { _controller: "foxp2backofficeBundle:Gistcomments:create" }
+    requirements: { _method: post }
+
+gistcomments_edit:
+    pattern:  /edit/id={id}
+    defaults: { _controller: "foxp2backofficeBundle:Gistcomments:edit" }
+
+gistcomments_update:
+    pattern:  /update/id={id}
+    defaults: { _controller: "foxp2backofficeBundle:Gistcomments:update" }
+    requirements: { _method: post|put }
+
+gistcomments_delete:
+    pattern:  /delete/id={id}
+    defaults: { _controller: "foxp2backofficeBundle:Gistcomments:delete" }
+    requirements: { _method: post|delete }

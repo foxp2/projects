@@ -1,0 +1,59 @@
+{# \Symfony\src\foxp2\projectsBundle\Resources\views\Gistcomments\edit.html.twig #}
+{% extends "foxp2backofficeBundle:Common:layout_admin.html.twig" %}
+{% form_theme edit_form  'foxp2backofficeBundle:Form:fields.html.twig' %}
+{% block application -%}
+{% set flashbag_messages = app.session.flashbag.get('message') %}
+{% if flashbag_messages is not empty %}        
+<div class="alert alert-danger span5">
+<button type="button" class="close" data-dismiss="alert"></button>   
+    {% for message in flashbag_messages %}
+            <strong>{{ message|trans|raw }}</strong>
+    {% endfor %}
+</div>
+{% endif %} 
+        <div id="nav-bar">
+            <div class="row">
+                <div class="span9">
+                    <div id="header-container">
+                        <a id="backbutton" class="win-backbutton" style="margin-right: 10px;" href="{{ path('gistcomments_index') }}"></a>
+                        <div class="dropdown pull-right">
+                            <h1 class="header-dropdown">{{ 'Comment a gist'|trans }}</h1>
+                        </div>
+                    </div>
+                </div>
+                {% include "foxp2backofficeBundle:Secured:logout.html.twig" %}
+            </div>
+        </div>
+<div class="row-fluid">   
+    {{ form(edit_form) }}
+</div>
+<!-- app bar -->
+<div id="app-bar" class="win-commandlayout win-ui-dark">
+    <a class="win-command orange" href="{{ path('gistcomments_index') }}">
+        <span class="win-commandicon win-commandring icon-list icon-fox"></span>   
+        <span class="win-label orange">{{ 'List of gist comments'|trans }}</span>
+    </a>
+    <a title="" id="button_submit" class="win-command white pull-right" href="#" onclick="$('#gistcomments_update').submit();">
+        <span class="win-commandicon win-commandring icon-plus"></span>   
+        <span class="win-label white">{{ 'Edit'|trans }}</span>
+    </a>
+</div>
+<script>   
+jQuery('#app-bar').animate({'bottom': '+0px'},400);
+</script>
+{% endblock %}
+{% block footer %}
+{% endblock %}
+
+
+    
+
+{#        <ul class="record_actions">
+    <li>
+        <a href="{{ path('gistcomments_index') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>#}
+
