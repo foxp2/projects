@@ -88,10 +88,12 @@ class ProfilController extends Controller {
         $response = null;
 
         $request = $this->getRequest();
+        
+        $token = $this->container->getParameter('githubtoken');
 
         if ($request->isXmlHttpRequest()) {
 
-            $response = new Response(json_encode(Utils::getLimit()));
+            $response = new Response(json_encode(Utils::getLimit($token)));
 
             $response->headers->set('Content-Type', 'application/json');
         }
