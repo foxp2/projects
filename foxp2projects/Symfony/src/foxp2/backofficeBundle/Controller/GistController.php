@@ -25,6 +25,8 @@ class GistController extends Controller{
         
         $client = $service->getClient();
         
+        $client->authenticate($this->container->getParameter('githubtoken'), null, $client::AUTH_URL_TOKEN);   
+        
         $userApi = $client->api('user');        
         
         $paginator  = new Github\ResultPager($client);
@@ -45,7 +47,9 @@ class GistController extends Controller{
 
         $service = $this->container->get('github_api');
 
-        $gists = $service->getClient();
+        $client = $service->getClient();
+        
+        $client->authenticate($this->container->getParameter('githubtoken'), null, $client::AUTH_URL_TOKEN);   
 
         $request = $this->getRequest();
 
@@ -53,7 +57,7 @@ class GistController extends Controller{
 
             $id = $request->request->get('id');
 
-            $gist = $gists->api('gist')->show($id);
+            $gist = $client->api('gist')->show($id);
 
             $cache = $this->container->get('kernel')->getCacheDir() . '/backoffice/gistcode/' . $gist['id'];
 

@@ -15,11 +15,14 @@ class DefaultController extends Controller {
         $categories_count = $em->getRepository('foxp2backofficeBundle:Categories')->getCategoriesCount();
 
         $articles_count = $em->getRepository('foxp2backofficeBundle:Articles')->getArticlesCount();
-
-        // todo : factoriser le code
+        
         $service = $this->container->get('github_api');
-        $gists = $service->getClient();
-        $listgist = sizeof($gists->api('users')->gists('foxp2'));
+        
+        $client = $service->getClient();        
+       
+        $client->authenticate($this->container->getParameter('githubtoken'), null, $client::AUTH_URL_TOKEN);      
+        
+        $listgist = sizeof($client->api('users')->gists('foxp2'));
 
         return $this->render('foxp2backofficeBundle:Default:index.html.twig', array('categories_count' => $categories_count,
                     'gist_count' => $listgist,

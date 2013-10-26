@@ -58,7 +58,7 @@
         <div class="alert alert-danger">
             <button type="button" class="close" data-dismiss="alert"></button> 
 {% for error in errors %}
-            <strong>{{ error.message }}</strong>
+            <strong>{{ error.message|raw }}</strong>
 {% endfor %}        
         </div>        
 {% endif %}

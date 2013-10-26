@@ -63,6 +63,10 @@
                 <source>Gist reference</source>
                 <target>Référence gist</target>
             </trans-unit>
+            <trans-unit id="16">
+                <source>Error : comments are required for</source>
+                <target>Erreur : Le commentaire est obligatoire pour le fichier</target>
+            </trans-unit>
             <!-- controller : Articles -->
             <trans-unit id="20">
                 <source>This article does not exist !</source>
@@ -186,7 +190,7 @@
             </trans-unit>
             <!-- Vue : Categories : new -->
             <trans-unit id="55">
-                <source>Creqte q cqtegory</source>
+                <source>Create a category</source>
                 <target>Créer une catégorie</target>
             </trans-unit>
             <!-- Vue : Categories : see -->
@@ -380,16 +384,16 @@
                 <target>Profil public</target>
             </trans-unit>
             <trans-unit id="226">
-                <source>Starred</source>
-                <target>Dépôts que je suis</target>
+                <source>Starred by</source>
+                <target>Dépôts suivis par</target>
             </trans-unit>
             <trans-unit id="227">
-                <source>Following</source>
-                <target>Codeurs que je suis</target>
+                <source>Following by</source>
+                <target>Codeurs suivis par</target>
             </trans-unit>
             <trans-unit id="228">
-                <source>Followers</source>
-                <target>Codeurs qui me suivent</target>
+                <source>Followers of</source>
+                <target>Codeurs suivants</target>
             </trans-unit>
             <trans-unit id="229">
                 <source>Detail of repo</source>
@@ -409,7 +413,7 @@
             </trans-unit>
             <trans-unit id="233">
                 <source>Click on a developer in the list below to get more against information</source>
-                <target>Cliquer sur un développeur dans la liste ci-contre pour obtenir des informations détaillées</target>
+                <target>Cliquer sur un développeur dans la liste ci-contre pour obtenir plus d'informations</target>
             </trans-unit>
             <trans-unit id="234">
                 <source>Status</source>
@@ -466,6 +470,30 @@
             <trans-unit id="247">
                 <source>Dates</source>
                 <target>Dates</target>
+            </trans-unit>
+            <trans-unit id="248">
+                <source>Search a profil</source>
+                <target>Rechercher un profil</target>
+            </trans-unit>
+            <trans-unit id="249">
+                <source>Profil detail</source>
+                <target>Détails d'un profil</target>
+            </trans-unit>
+            <trans-unit id="250">
+                <source>Detail of repo</source>
+                <target>Détail d'un dépôt</target>
+            </trans-unit>
+            <trans-unit id="251">
+                <source>Company</source>
+                <target>Entreprise</target>
+            </trans-unit>
+            <trans-unit id="252">
+                <source>This activity is not listed yet by this application</source>
+                <target>Cette activité n'est pas encore définie par cette application</target>
+            </trans-unit>
+            <trans-unit id="253">
+                <source>The %s first others results</source>
+                <target>Les %s premiers autres résultats</target>
             </trans-unit>
             <!-- traductions formulaires -->
             <!-- traductions communes -->
@@ -640,6 +668,10 @@
             <trans-unit id="2028">
                 <source>Action</source>
                 <target>Action</target>
+            </trans-unit>
+            <trans-unit id="2029">
+                <source>en</source>
+                <target>English</target>
             </trans-unit>
         </body>
     </file>

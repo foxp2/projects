@@ -2,16 +2,85 @@
 
 namespace foxp2\backofficeBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
 use foxp2\backofficeBundle\Lib\Utils;
 use Github;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Form\Extension\Core\Type\SearchType;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class ProfilController extends Controller {
 
-    public function indexAction() {
+    public function indexAction(Request $request) {
 
-        return $this->render('foxp2backofficeBundle:Profil:index.html.twig', array('profil_github_name' => $this->container->getParameter('user_github_api')));
+        $form_search = $this->createForm(new SearchType());
+
+        $request = $this->container->get('request');
+
+        $search = $request->request->get("search");
+
+        $keyword = strtolower($search);
+
+        $service = $this->container->get('github_api');
+
+        $client = $service->getClient();
+        
+        // clean up cache 
+        
+            $cache = $this->container->get('kernel')->getCacheDir() . '/githubapi';
+
+            $finder = new Finder();
+
+            $finder->files()->in($cache);
+
+            $finder->size('> 10K')->date('until 1 days ago')->getIterator();
+
+            foreach($finder as $file) {         
+
+               unlink($file);   
+
+            }
+
+        $client->authenticate($this->container->getParameter('githubtoken'), null, $client::AUTH_URL_TOKEN);
+
+        if ($request->getMethod() == 'POST' && !empty($keyword)) {
+
+            $user = $client->api('user')->find($keyword);
+
+            if (0 === sizeof($user['users'])) {
+                $user_exist = "0";
+                $result = null;
+                $this->get('session')->getFlashBag()->add('error', 'Research with %s did not return any results');
+                $this->get('session')->getFlashBag()->add('keyword', $keyword);
+            } else {
+                foreach ($user['users'] as $user) {                    
+                    $result [] = strtolower($user['login']);                    
+                }
+                if (in_array($keyword, $result)) {
+                    $user_exist = "1";                    
+                } else {
+                    $user_exist = "0";                    
+                    $this->get('session')->getFlashBag()->add('error', 'Research with %s did not return any results');
+                    $this->get('session')->getFlashBag()->add('keyword', $keyword);
+                }
+            }
+            return $this->render('foxp2backofficeBundle:Profil:index.html.twig', array(
+                        'profil_github_name' => $keyword,
+                        'keyword' => $keyword,
+                        'form_search' => $form_search->createView(),
+                        'user_exist' => $user_exist,
+                        'results' => $result,
+            ));
+        } else {
+
+            return $this->render('foxp2backofficeBundle:Profil:index.html.twig', array(
+                        'profil_github_name' => $this->container->getParameter('user_github_api'),
+                        'form_search' => $form_search->createView(),
+                        'keyword' => null,
+                        'user_exist' => "1",
+            ));
+        }
     }
 
     public function getlimitAction() {
@@ -40,6 +109,8 @@ class ProfilController extends Controller {
 
         $client = $service->getClient();
 
+        $client->authenticate($this->container->getParameter('githubtoken'), null, $client::AUTH_URL_TOKEN);
+
         $userApi = $client->api('user');
 
         $paginator = new Github\ResultPager($client);
@@ -48,17 +119,17 @@ class ProfilController extends Controller {
 
         $parameters = $request->request->get('id');
 
-        $profil = $paginator->fetch($userApi, 'show', array($parameters));
+        $profil = $paginator->fetchAll($userApi, 'show', array($parameters));
 
         if ($request->isXmlHttpRequest()) {
 
             $data = array(
                 'login' => $profil['login'],
                 'name' => array_key_exists('name', $profil) ? '<h3>' . $profil['name'] . '</h3>' : '',
-                'location' => array_key_exists('location', $profil) ? '<li><i class="icon-globe"></i> Location : ' . $profil['location'] . '</li>' : '<li><i class="icon-globe"></i> Location : N/C </li>',
+                'location' => array_key_exists('location', $profil) ? '<li><i class="icon-globe"></i> ' . $this->container->get('translator')->transChoice('Location',''). ' : ' . $profil['location'] . '</li>' : '<li><i class="icon-globe"></i> ' . $this->container->get('translator')->transChoice('Location','') . ' : N/C </li>',
                 'email' => array_key_exists('email', $profil) ? '<li><i class="icon-envelope"></i> Email : ' . $profil['email'] . '</li>' : '<li><i class="icon-envelope"></i> Email : N/C</li>',
-                'blog' => array_key_exists('blog', $profil) ? ( isset($profil['blog']) && (!empty($profil['blog'])) ? '<li><i class="github-untitled-92"></i> Blog : <a href="' . $profil['blog'] . '" target="_blank">' . $profil['blog'] . '</a></li>' : '') : '',
-                'company' => array_key_exists('company', $profil) ? '<li><i class="icon-archive"></i> Entreprise : ' . $profil['company'] . '</li>' : '<li><i class="icon-archive"></i> Entreprise : N/C</li>',
+                'blog' => array_key_exists('blog', $profil) ? ( isset($profil['blog']) && (!empty($profil['blog'])) ? '<li><i class="github-untitled-92"></i> Blog : <a class="text-center" href="' . $profil['blog'] . '" target="_blank">' . $this->container->get('translator')->transChoice('External link','') . '</a></li>' : '') : '',
+                'company' => array_key_exists('company', $profil) ? '<li><i class="icon-archive"></i> ' . $this->container->get('translator')->transChoice('Company','') . ' : ' . $profil['company'] . '</li>' : '<li><i class="icon-archive"></i> ' . $this->container->get('translator')->transChoice('Company','') . ' : N/C</li>',
                 'bio' => array_key_exists('bio', $profil) ? ( isset($profil['bio']) && (!empty($profil['bio'])) ? '<hr><div class="bio"><h3 class="text-left"><i class="icon-book-2"></i> Bio :</h3><br /><blockquote class="text-left">' . nl2br($profil['bio']) . '</blockquote></div>' : '') : '',
                 'avatar_url' => $profil['avatar_url'],
                 'public_repos' => $profil['public_repos'],
@@ -88,15 +159,17 @@ class ProfilController extends Controller {
 
         $client = $service->getClient();
 
+        $client->authenticate($this->container->getParameter('githubtoken'), null, $client::AUTH_URL_TOKEN);
+
         $activitiesApi = $client->api('user');
 
         $paginator = new Github\ResultPager($client);
 
-        $parameters = $this->container->getParameter('user_github_api');
-
-        $activities = $paginator->fetch($activitiesApi, 'publicEvents', array($parameters));
-
         $request = $this->getRequest();
+
+        $parameters = $request->request->get('id');
+
+        $activities = $paginator->fetchAll($activitiesApi, 'publicEvents', array($parameters));
 
         foreach ($activities as $value) {
             $data[] = array(
@@ -128,15 +201,17 @@ class ProfilController extends Controller {
 
         $client = $service->getClient();
 
+        $client->authenticate($this->container->getParameter('githubtoken'), null, $client::AUTH_URL_TOKEN);
+
         $foxactivitiesApi = $client->api('user');
 
         $paginator = new Github\ResultPager($client);
 
-        $parameters = $this->container->getParameter('user_github_api');
-
-        $activities = $paginator->fetch($foxactivitiesApi, 'publicEvents', array($parameters));
-
         $request = $this->getRequest();
+
+        $parameters = $request->request->get('name');
+
+        $activities = $paginator->fetchAll($foxactivitiesApi, 'publicEvents', array($parameters));
 
         if ($request->isXmlHttpRequest()) {
 
@@ -151,12 +226,12 @@ class ProfilController extends Controller {
                             foreach ($value['payload']['commits'] as $payload) {
 
                                 $data[] = array(
+                                    'type' => 'PushEvent',
                                     'repo' => $value['repo']['name'],
                                     'sha' => $payload['sha'],
                                     'author' => $payload['author']['name'],
                                     'email' => $payload['author']['email'],
-                                    'message' => nl2br($payload['message']),
-                                    'type' => 'PushEvent'
+                                    'message' => nl2br($payload['message'])
                                 );
                             }
                             break;
@@ -177,6 +252,9 @@ class ProfilController extends Controller {
                             );
                             break;
                         default:
+                            $data[] = array(
+                                'type' => 'Undefined'
+                            );
                             break;
                     }
                 }
@@ -191,6 +269,7 @@ class ProfilController extends Controller {
     }
 
     public function getajaxrepositoriesAction() {
+
         $response = null;
 
         $data = array();
@@ -199,15 +278,17 @@ class ProfilController extends Controller {
 
         $client = $service->getClient();
 
+        $client->authenticate($this->container->getParameter('githubtoken'), null, $client::AUTH_URL_TOKEN);
+
         $repositoriesApi = $client->api('user');
 
         $paginator = new Github\ResultPager($client);
 
-        $parameters = $this->container->getParameter('user_github_api');
+        $request = $this->getRequest();
+
+        $parameters = $request->request->get('id');
 
         $repositories = $paginator->fetchAll($repositoriesApi, 'repositories', array($parameters));
-
-        $request = $this->getRequest();
 
         if ($request->isXmlHttpRequest()) {
 
@@ -217,8 +298,8 @@ class ProfilController extends Controller {
                     'id' => $value['id'],
                     'name' => $value['name'],
                     'full_name' => $value['full_name'],
-                    'master_branch' => $value['master_branch'],
-                    'default_branch' => $value['default_branch'],
+                    'master_branch' => array_key_exists('master_branch',$value) ? $value['master_branch'] : '',
+                    'default_branch' => array_key_exists('default_branch',$value) ? $value['default_branch'] : '',
                     'owner' => $value['owner']['login'],
                     'avatar' => $value['owner']['avatar_url'],
                     'homepage' => ($value['homepage'] !== null) ? $value['homepage'] : '',
@@ -241,6 +322,7 @@ class ProfilController extends Controller {
     }
 
     public function getajaxwatchedAction() {
+
         $response = null;
 
         $data = array();
@@ -249,15 +331,17 @@ class ProfilController extends Controller {
 
         $client = $service->getClient();
 
+        $client->authenticate($this->container->getParameter('githubtoken'), null, $client::AUTH_URL_TOKEN);
+
         $userApi = $client->api('user');
 
         $paginator = new Github\ResultPager($client);
 
-        $parameters = $this->container->getParameter('user_github_api');
-
-        $watched = $paginator->fetchAll($userApi, 'watched', array($parameters));
-
         $request = $this->getRequest();
+
+        $parameters = $request->request->get('id');
+
+        $watched = $paginator->fetch($userApi, 'watched', array($parameters));
 
         if ($request->isXmlHttpRequest()) {
 
@@ -287,6 +371,7 @@ class ProfilController extends Controller {
     }
 
     public function getajaxfollowingAction() {
+
         $response = null;
 
         $data = array();
@@ -295,15 +380,17 @@ class ProfilController extends Controller {
 
         $client = $service->getClient();
 
+        $client->authenticate($this->container->getParameter('githubtoken'), null, $client::AUTH_URL_TOKEN);
+
         $userApi = $client->api('user');
 
         $paginator = new Github\ResultPager($client);
 
-        $parameters = $this->container->getParameter('user_github_api');
-
-        $following = $paginator->fetchAll($userApi, 'following', array($parameters));
-
         $request = $this->getRequest();
+
+        $parameters = $request->request->get('id');
+
+        $following = $paginator->fetch($userApi, 'following', array($parameters));
 
         if ($request->isXmlHttpRequest()) {
 
@@ -325,6 +412,7 @@ class ProfilController extends Controller {
     }
 
     public function getajaxfollowersAction() {
+
         $response = null;
 
         $data = array();
@@ -333,15 +421,25 @@ class ProfilController extends Controller {
 
         $client = $service->getClient();
 
+        $client->authenticate($this->container->getParameter('githubtoken'), null, $client::AUTH_URL_TOKEN);
+
         $userApi = $client->api('user');
 
         $paginator = new Github\ResultPager($client);
 
-        $parameters = $this->container->getParameter('user_github_api');
-
-        $followers = $paginator->fetchAll($userApi, 'followers', array($parameters));
-
         $request = $this->getRequest();
+
+        $parameters = $request->request->get('id');
+
+        $followers = $paginator->fetch($userApi, 'followers', array($parameters));
+
+//        if($paginator->hasNext()) {
+//
+//            $paginator->fetchNext();
+//
+//            $followers = $paginator->fetchNext();
+//
+//        }
 
         if ($request->isXmlHttpRequest()) {
 
@@ -363,6 +461,7 @@ class ProfilController extends Controller {
     }
 
     public function getgistsajaxAction() {
+
         $response = null;
 
         $data = array();
@@ -371,15 +470,17 @@ class ProfilController extends Controller {
 
         $client = $service->getClient();
 
+        $client->authenticate($this->container->getParameter('githubtoken'), null, $client::AUTH_URL_TOKEN);
+
         $gistsApi = $client->api('user');
 
         $paginator = new Github\ResultPager($client);
 
-        $parameters = $this->container->getParameter('user_github_api');
+        $request = $this->getRequest();
+
+        $parameters = $request->request->get('id');
 
         $gists = $paginator->fetchAll($gistsApi, 'gists', array($parameters));
-
-        $request = $this->getRequest();
 
         if ($request->isXmlHttpRequest()) {
 
@@ -409,6 +510,8 @@ class ProfilController extends Controller {
         $service = $this->container->get('github_api');
 
         $client = $service->getClient();
+
+        $client->authenticate($this->container->getParameter('githubtoken'), null, $client::AUTH_URL_TOKEN);
 
         $gistApi = $client->api('gists');
 

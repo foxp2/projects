@@ -2,7 +2,7 @@
 {% extends "foxp2backofficeBundle:Common:layout_admin.html.twig" %}
 {% block application -%}
         <div class="win-ui-dark progress hide" id="progressouter" style="background-image: url({{ asset("bundles/foxp2backoffice/images/bkg-4.png") }}"> 
-            <h3 class="text-info text-center"><strong>{{ 'loading data ...'|trans }}</strong></h3><br />
+            <h3 class="text-info text-center"><strong></strong></h3><br />
             <div class="bar" id="progress" style="max-height: 50px;"></div>
         </div>
         <div id="nav-bar">
@@ -19,9 +19,29 @@
             </div>
         </div>
 <div class="row-fluid">
+        <form id="profil_search" class="form-inline pull-right" action="{{ path('profil_index') }}" method="post" {{ form_enctype(form_search) }}>
+            <div class="btn-group" style="z-index:1">
+            {% if keyword != '' %}
+            <a class="btn" href="{{ path('profil_index') }}" title=""><i class="icon-refresh"></i></a>
+            {% endif %}
+            {% if results is defined and results|length > 1 %}
+                <input id="search" name="search" type="text" class="input-large" style="height:30px;" value="{{keyword}}">           
+                <select id="searchpulldown">
+                        <option value="" disabled>{{ 'The %s first others results'|trans|format(results|length) }} :</option>
+                {% for result in results %}
+                        <option value="{{ result }}" {% if profil_github_name == result %}selected="selected"{% endif %}>{{ result }}</option>
+                {% endfor %}
+                </select>
+            {% else %}
+            <input id="search" type="text" name="search" class="input-large" style="height:30px;" placeholder="{{ 'Search a profil'|trans }}" {% if keyword != '' %}value="{{ keyword }}"{% endif %}/>
+            {% endif %}
+            <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
+            </div>
+        </form>
+        {% if user_exist != false %}
         <div class="alert alert-block alert-danger">
             <button type="button" class="close" data-dismiss="alert"></button>
-            <h4>{{ 'Error'|trans }} !</h4>
+            <h4>{{ 'error'|trans }} !</h4>
             <p id="error"></p>
         </div>
         <div id="pivot" class="pivot slide text-center">
@@ -39,9 +59,9 @@
             <div class="row-fluid">
                 <div class="span9" id="leftprofil">
                         <ul id="profiltab" class="nav nav-tabs">
-                            <li class="active"><a href="#starred" data-toggle="tab"><h3 style="color:#377C89"><i class="github-untitled-42"></i>{{ 'Starred'|trans }}</h3></a></li>
-                            <li><a href="#following" data-toggle="tab"><h3 style="color:#377C89"><i class="github-untitled-28"></i> {{ 'Following'|trans }}</h3></a></li>
-                            <li><a href="#followers" data-toggle="tab"><h3 style="color:#377C89"><i class="github-untitled-24"></i> {{ 'Followers'|trans }}</h3></a></li>
+                            <li class="active"><a href="#starred" data-toggle="tab"><h3 style="color:#377C89"><i class="github-untitled-42"></i>{{ 'Starred by'|trans }} {{ profil_github_name}}</h3></a></li>
+                            <li><a href="#following" data-toggle="tab"><h3 style="color:#377C89"><i class="github-untitled-28"></i> {{ 'Following by'|trans }} {{ profil_github_name}}</h3></a></li>
+                            <li><a href="#followers" data-toggle="tab"><h3 style="color:#377C89"><i class="github-untitled-24"></i> {{ 'Followers of'|trans }} {{ profil_github_name}}</h3></a></li>
                         </ul>
                         <div id="myTabContent" class="tab-content">
                             <div class="tab-pane fade active in" id="starred" style="overflow-x:hidden;overflow-y:hidden">
@@ -56,7 +76,7 @@
                         </div>
                 </div>
             <div class="span3 text-left" id="rightprofil">
-                        <h3 class="text-center">{{ 'Details of repo'|trans }}</h3>
+                        <h3 class="text-center">{{ 'Detail of repo'|trans }}</h3>
                         <hr>
                         <div class="well well-kaki text-center" style="margin-top:30px;margin-left: -20px;">
                             <div id="rightprofildata"></div>
@@ -105,7 +125,7 @@
         <!-- gists -->
         <div id="pivot-item-4" class="pivot-item">
             <h2 class="text-left" style="color:#7B4F9D"><strong>{{ 'Publics gists'|trans }}</strong></h2><hr>
-            <div class="row-fluid">
+            <div class="row-fluid" id="gistresult">
                 <div class="span3">
                 <div class="listview list-layout text-left" id="gists-list" style="max-height:600px;"></div>
                 </div>
@@ -126,35 +146,133 @@
         </div>
         </div><!-- end pivot-items -->
         </div><!-- end pivot -->
+        {% else %}
+        {% set flashbag_erreurs = app.session.flashbag.get('error') %}
+        {% if flashbag_erreurs is not empty %}
+            <div class="alert alert-danger" style="margin-top:40px;">
+            <button type="button" class="close" data-dismiss="alert"></button>
+            {% for message in flashbag_erreurs %}
+                    {% if app.session.flashbag.has('keyword') %}
+                    <strong>{{ message|trans|format(app.session.flashbag.get('keyword')[0]) }}</strong>
+                    {% else %}
+                    <strong>{{ message|trans|raw }}</strong>
+                    {% endif %}
+            {% endfor %}
+            </div>
+        {% endif %}
+        {% endif %}
 </div>
 
-<div id="profil-footer" class="well well-profil-stat" style="margin-left: -20px;"></div>
-
+<div id="profil-footer" class="well well-profil-stat" style="margin-left: -20px;margin-top: 92px;"></div>
+{% endblock %}
+{% block appbar %}
+<!-- app bar -->
+<div id="app-bar" class="win-commandlayout win-ui-dark">
+    <a class="win-command white pull-right" href="#">
+        <span class="win-commandicon win-commandring github-untitled-24 icon-fox"></span>
+        <span class="win-label white">{{ 'View this profil'|trans }}</span>
+    </a>
+</div>
 <script>
 $('.alert').hide();
+jQuery('#app-bar').animate({bottom: '-92px'},0);
 activitystatus = false;
 repositorystatus = false;
 followingstatus = false;
 followersstatus = false;
 gistliststatus = false;
-getwatched();
+var keyword = null;
+profil = '{{profil_github_name}}';
+user_exist = '{{user_exist}}';
+if(user_exist === "0" ){
+    $('.alert').show();
+    getlimit();
+}else{
+    getwatched();
+}
+$('#app-bar a').click(function(){
+    $("#search" ).val(profil);
+    $('#profil_search').attr('action', '{{ path('profil_index') }}').unbind('submit').submit();  
+});
+$('#searchpulldown').change(function(){
+    var str = "";    
+    $("#search" ).val();
+    $( "select option:selected" ).each(function() {
+    str = $(this).text();
+    $("#search" ).val(str);
+    $('#profil_search').attr('action', '{{ path('profil_index') }}').unbind('submit').submit();    
+});    
+});
 $('#profiltab li a').click(function(){
-    $('.watched').removeClass('selected');$('.following').removeClass('selected'); $('.followers').removeClass('selected');
+    $('.watched').removeClass('selected');
+    $('.following').removeClass('selected'); 
+    $('.followers').removeClass('selected');
     switch($(this).attr('href')) {
         case "#starred" :
-            $('#starred-list').hide().fadeIn(1000);$('#rightprofildata').empty();;$('#rightprofilinfo').show(); $('#rightprofil h3:first').text('Détails sur le dépôt'); $('#rightprofil h3:last').text('{{ 'Click on a repository in the list below for more information'|trans }}');break;
+            jQuery('#app-bar').animate({bottom: '-92px'},400);
+            $('#starred-list').hide().fadeIn(1000);
+            $('#rightprofildata').empty(); 
+            $('#rightprofilinfo').show(); 
+            $('#rightprofil h3:first').text('{{ 'Detail of repo'|trans|escape('js') }}'); 
+            $('#rightprofil h3:last').text('{{ 'Click on a repository in the list below for more information'|trans|escape('js') }}');
+            break;
         case "#following":
-            (followingstatus === true) ? $('#following-list').hide().fadeIn(1000) : getfollowing();;$('#rightprofildata').empty(); $('#rightprofilinfo').show();$('#rightprofil h3:first').text('Je les suis ...'); $('#rightprofil h3:last').text('{{ 'Click on a developer in the list below to get more against information'|trans }}');break;
+            jQuery('#app-bar').animate({bottom: '-92px'},400);
+            cleanprofil();
+            if(followingstatus === true) {                
+                 $('#following-list').hide().fadeIn(1000);                 
+                 }else{ 
+                 getfollowing();                 
+            }
+             break;
         case "#followers":
-            (followersstatus === true) ? $('#followers-list').hide().fadeIn(1000) : getfollowers();;$('#rightprofildata').empty(); $('#rightprofilinfo').show();$('#rightprofil h3:first').text('Ils me suivent ...');$('#rightprofil h3:last').text('{{ 'Click on a developer in the list below to get more against information'|trans }}');break;
+            jQuery('#app-bar').animate({bottom: '-92px'},400);
+            cleanprofil();
+            if(followersstatus === true) {                
+                $('#followers-list').hide().fadeIn(1000);                
+            }else{ 
+                getfollowers();
+                
+            }
+            break;
     }
 });
+function cleanprofil() {
+$('#rightprofildata').empty(); 
+$('#rightprofilinfo').show();
+$('#rightprofil h3:first').text('{{ 'Profil detail'|trans|escape('js') }}');
+$('#rightprofil h3:last').text('{{ 'Click on a developer in the list below to get more against information'|trans|escape('js') }}');
+}
 $('.pivot-headers a').click(function(){
     switch($(this).attr('data-pivot-index')){
-        case "0": $('#starred-list').hide().fadeIn(1000);$('#rightprofil').hide().fadeIn(1000);break;
-        case "1": (activitystatus === true) ? $('#data-activities').hide().fadeIn(1000) : getactivities(); break;
-        case "2": (repositorystatus === true) ? $('#data-repositories').hide().fadeIn(1000) : getrepositories();break;
-        case "3": (gistliststatus === true) ? $('#gists-list').hide().fadeIn(1000) : getgists();break;
+        case "0": 
+            $('#starred-list').hide().fadeIn(1000);
+            $('#rightprofil').hide().fadeIn(1000);
+        break;
+        case "1": 
+            jQuery('#app-bar').animate({bottom: '-92px'},400); 
+            cleanprofil();   
+            $('.watched').removeClass('selected');
+            $('.following').removeClass('selected'); 
+            $('.followers').removeClass('selected'); 
+            (activitystatus === true) ? $('#data-activities').hide().fadeIn(1000) : getactivities(); 
+        break;
+        case "2": 
+            jQuery('#app-bar').animate({bottom: '-92px'},400);
+            cleanprofil();   
+            $('.watched').removeClass('selected');
+            $('.following').removeClass('selected'); 
+            $('.followers').removeClass('selected'); 
+            (repositorystatus === true) ? $('#data-repositories').hide().fadeIn(1000) : getrepositories();
+        break;
+        case "3": 
+            jQuery('#app-bar').animate({bottom: '-92px'},400);
+            cleanprofil();   
+            $('.watched').removeClass('selected');
+            $('.following').removeClass('selected'); 
+            $('.followers').removeClass('selected'); 
+            (gistliststatus === true) ? $('#gists-list').hide().fadeIn(1000) : getgists();
+        break;
     }
 });
 function getlimit() {
@@ -180,16 +298,26 @@ function getlimit() {
         }
     });
 }
-function getActivity(id) {    
+function getActivity(name,id) {    
+    $("#progressouter").removeClass("hide");
+    $('#progressouter h3').text('{{ 'loading data ...'|trans }}');
     $.ajax({
         type: 'POST',
         dataType: 'json',
-        url: '{{path('activity_ajax',{'id':0})}}',
+        url: '{{ path('activity_ajax',{name:'null','id':0})}}',        
+        data: 'name='+name+'&id='+id,
         timeout: 10000,
-        data: 'id=' + parseInt(id),        
-        success: function(response) {
+        success: function(response) {               
         $('#data-activityid').append('<hr><h2 class="text-left"><i class="icon-feed"></i> Actions :<strong></h2>');
-            for(var i=0; i<response.length;i++) {           
+            for(var i=0; i<response.length;i++) { 
+                if(response.length === 1 || response.length === 0){
+                    $("#progress").css('width','100%');
+                }else{
+                    $("#progress").css('width',(i*100/i)+'%'); 
+                }                   
+                setTimeout(function () {
+                    $('#progressouter h3').text(i*100/i+'%');
+                },100);
                 var obj = response[i];
                 if ( obj['type'] === 'PushEvent') {
                 $('#data-activityid').append('<ul class="nav nav-list text-left">\n\
@@ -210,21 +338,24 @@ function getActivity(id) {
                                               <li>{{ 'Description'|trans }} :</li><br />\n\
                                               <blockquote>'+obj['body']+'</blockquote></ul><hr><a class="btn" target="_blank" href="'+obj['link']+'">{{ 'See on Github'|trans }}</a>');
                 }
+                if ( obj['type'] === 'Undefined') {
+                $('#data-activityid').append('<ul class="nav nav-list text-left"><li>{{ 'This activity is not listed yet by this application'|trans|escape('js') }}</li></ul>');
+                }
             }
         },
         complete: function() {        
         getlimit();
         },
-        error: function(xhr, status) {
-            if ( xhr.statusText === 'timeout') {
+        error: function(x,t,m) {
+            if ( t === 'timeout') {
                 $('#error').empty();
                 $('#error').append('{{ 'The request failed because the remote server took too long to respond'|trans }}');
                 $('.alert').show();
                 getlimit();
             } else {
                $('#error').empty();
-               $('#error').append('<strong>'+xhr.status+'</strong> : '+xhr.statusText+'');
-               $('.alert').show();
+               $('#error').append('<strong>'+t+'</strong> : '+m+x+'');
+               $('.alert').removeClass('hide');
                getlimit();
             }
         }
@@ -232,6 +363,8 @@ function getActivity(id) {
 }
 function getdevprofil(name) {
     $("#progressouter").removeClass("hide");
+    $('#progressouter h3').text('{{ 'loading data ...'|trans }}');
+    profil = name;
     $.ajax({
         type: 'POST',
         dataType: 'json',
@@ -240,7 +373,10 @@ function getdevprofil(name) {
         data: 'id=' + name,
         success: function(response) {     
         for(var i=0;i<response['size'];i++) {
-          $("#progress").css('width',(i*100/i)+'%');             
+          $("#progress").css('width',(i*100/i)+'%');
+                setTimeout(function () {
+                    $('#progressouter h3').text(i*100/i+'%');
+                },100);
         }
           $('#rightprofildata').append('<h2 class="pull-left"><strong>'+response['login']+'</h2><img style="height:90px;width:90px;" class="pull-right img-polaroid" src="'+response['avatar_url']+'" alt="avatar">\n\
                                         <div class="clearfix"></div>'+response['name']+response['bio']+'<hr><h3 class="media-heading text-left"><i class="icon-clipboard"></i> {{ 'Details'|trans }} :</h3>\n\
@@ -258,6 +394,7 @@ function getdevprofil(name) {
         },
         complete: function() {        
         getlimit();
+        setTimeout(function () {jQuery('#app-bar').animate({'bottom': '+0px'},400);},1000);
         },
         error: function(x,t,m) {
             if ( t === 'timeout') {
@@ -276,14 +413,19 @@ function getdevprofil(name) {
 }
 function getactivities() {
     $("#progressouter").removeClass("hide");
+    $('#progressouter h3').text('{{ 'loading data ...'|trans }}');
     $.ajax({
         type: 'POST',
         dataType: 'json',
-        url: '{{ path('activities_ajax') }}',
+        url: '{{ path('activities_ajax', {'id': 0}) }}',
+        data: 'id=' + profil, 
         timeout: 20000,
         success: function(response) {
             for(var i=0;i<response.length;i++) {
                 $("#progress").css('width',(i*100/i)+'%');                
+                setTimeout(function () {
+                    $('#progressouter h3').text(i*100/i+'%');
+                },100);
                 var obj = response[i];
                 $('#data-activities').append('<div class="listview-item bg-color-orange activity" data-actid="'+obj['actid']+'" data-createdat="'+obj['created_at']+'" data-login="'+obj['login']+'" data-avatar="'+obj['avatar']+'" data-filescount="'+obj['filescount']+'">\n\
                                               <div class="pull-left" href="#"><h1 class="pull-left"><i class="github-untitled-52"></i></h1></div>\n\
@@ -314,14 +456,23 @@ function getactivities() {
 }
 function getrepositories() {
     $("#progressouter").removeClass("hide");
+    $('#progressouter h3').text('{{ 'loading data ...'|trans }}');
     $.ajax({
         type: 'POST',
         dataType: 'json',
-        url: '{{ path('repositories_ajax') }}',
+        url: '{{ path('repositories_ajax', {'id': 0}) }}',
+        data: 'id=' + profil,
         timeout: 10000,
         success: function(response) {
             for(var i=0;i<response.length; i++) {
-                $("#progress").css('width',(i*100/i)+'%');                
+                if(response.length === 1 || response.length === 0){
+                    $("#progress").css('width','100%');
+                }else{
+                    $("#progress").css('width',(i*100/i)+'%'); 
+                }               
+                setTimeout(function () {
+                    $('#progressouter h3').text(i*100/i+'%');
+                },100);
                 var obj = response[i];
                 $('#data-repositories').append('<div class="listview-item bg-color-blue repositories" data-id="'+obj['id']+'" data-name="'+obj['name']+'" data-fullname="'+obj['full_name']+'" data-masterbranch="'+obj['master_branch']+'" data-defaultbranch="'+obj['default_branch']+'" data-owner="'+obj['owner']+'" data-avatar="'+obj['avatar']+'" data-homepage="'+obj['homepage']+'" data-language="'+obj['language']+'" data-pushedat="'+obj['pushed_at']+'" data-createdat="'+obj['created_at']+'" data-updatedat="'+obj['updated_at']+'" data-watcherscount="'+obj['watchers_count']+'" data-forkscount="'+obj['forks_count']+'" data-openissuescount="'+obj['open_issues_count']+'">\n\
                                                 <div class="pull-left" href="#"><h1 class="pull-left"><i class="github-untitled-160"></i></h1></div>\n\
@@ -349,15 +500,20 @@ function getrepositories() {
 }
 function getwatched() {
     $("#progressouter").removeClass("hide");
+    $('#progressouter h3').text('{{ 'loading data ...'|trans }}');
     $.ajax({
         type: 'POST',
         dataType: 'json',
-        url: '{{ path('watched_ajax') }}',
-        timeout: 5000,       
+        url: '{{ path('watched_ajax', {'id': 0}) }}',
+        data: 'id=' + profil,           
+        timeout: 10000,       
         success: function(response) {            
             for(var i=0;i<response.length;i++) {                
-                $("#progress").css('width',(i*100/i)+'%');                 
-                var obj = response[i];
+                $("#progress").css('width',(i*100/i)+'%');  
+                setTimeout(function () {
+                    $('#progressouter h3').text(i*100/i+'%');
+                },100);
+                var obj = response[i];                
                 $('#starred-list').append('<div class="listview-item watched" data-name="'+obj['name']+'" data-fullname="'+obj['fullname']+'" data-owner="'+obj['owner']+'" data-createdat="'+obj['created_at']+'" data-updatedat="'+obj['updated_at']+'" data-pushedat="'+obj['pushed_at']+'" data-avatar='+obj['avatar']+' data-description="'+obj['description'] +'" data-langage="'+obj['language']+'" data-fork="'+obj['forks']+'" data-watchers="'+obj['watchers']+'" data-link="'+obj['html_url']+'" style="background-color:#377C89;">\n\
                                            <div class="pull-left" href="#">\n\
                                            <img class="listview-item-object" alt="avatar" src="'+obj['avatar']+'" style="height:90px;width:90px;" />\n\
@@ -384,18 +540,22 @@ function getwatched() {
             }
         }
     });
-
 }
 function getfollowing() {
-    $("#progressouter").removeClass("hide");    
+    $("#progressouter").removeClass("hide"); 
+    $('#progressouter h3').text('{{ 'loading data ...'|trans }}');    
     $.ajax({
         type: 'POST',
         dataType: 'json',
-        url: '{{ path('following_ajax') }}',
-        timeout: 5000,
+        url: '{{ path('following_ajax', {'id': 0}) }}',
+        data: 'id=' + profil,        
+        timeout: 10000,
         success: function(response) {
             for(var i=0;i<response.length;i++) {                
                 $("#progress").css('width',(i*100/i)+'%');                
+                setTimeout(function () {
+                    $('#progressouter h3').text(i*100/i+'%');
+                },100);
                 var obj = response[i];
                 $('#following-list').append('<div class="listview-item following" data-login="'+obj['login']+'" style="background-color:#377C89;">\n\
                                            <div class="pull-left" href="#">\n\
@@ -425,15 +585,20 @@ function getfollowing() {
     });
 }
 function getfollowers() {
-    $("#progressouter").removeClass("hide");    
+    $("#progressouter").removeClass("hide"); 
+    $('#progressouter h3').text('{{ 'loading data ...'|trans }}');    
     $.ajax({
         type: 'POST',
         dataType: 'json',
-        url: '{{ path('followers_ajax') }}',
+        url: '{{ path('followers_ajax', {'id': 0}) }}',
+        data: 'id=' + profil,       
         timeout: 5000,
         success: function(response) {
             for(var i=0;i<response.length;i++) {
                 $("#progress").css('width',(i*100/i)+'%');                
+                setTimeout(function () {
+                    $('#progressouter h3').text(i*100/i+'%');
+                },100);
                 var obj = response[i];
                 $('#followers-list').append('<div class="listview-item followers" data-login="'+obj['login']+'" style="background-color:#377C89;">\n\
                                            <div class="pull-left" href="#">\n\
@@ -464,14 +629,21 @@ function getfollowers() {
 }
 function getgists() {
     $("#progressouter").removeClass("hide");    
+    $('#progressouter h3').text('{{ 'loading data ...'|trans }}');
+    $('#gistdetail').hide();
     $.ajax({
         type: 'POST',
         dataType: 'json',
-        url: '{{ path('gists_ajax') }}',
+        url: '{{ path('gists_ajax', {'id': 0}) }}',
+        data: 'id=' + profil,
         timeout: 10000,
         success: function(response) {
             for(var i=0;i<response.length;i++) {
                 $("#progress").css('width',(i*100/i)+'%');                
+                setTimeout(function () {
+                    $('#progressouter h3').text(i*100/i+'%');
+                },100);
+                if(i>0)$('#gistdetail').show();
                 var obj = response[i];
                 $('#gists-list').append('<div id="'+obj['id']+'" class="listview-item gistcolor bg-color-purple">\n\
                                            <div class="pull-left" href="#">\n\
@@ -482,11 +654,11 @@ function getgists() {
                                            <h5 class="listview-item-subheading">'+obj['created_at']+'</h5>\n\
                                            </div></div>').css('background-color','transparent').hide().fadeIn(1000);            
             }
-            if ( response.length === 0 ) {$("#progress").css('width','100%');$('#gists-list').append('<div class="alert alert-info text-center"><strong>{{ 'No result for'|trans }} {{profil_github_name}}</strong></div>').hide().fadeIn(1000);}
+            if ( response.length === 0 ) {$('#gistresult').hide();$("#progress").css('width','100%');$('#gistresult').append('<div class="alert alert-warning text-center"><strong>{{ 'No result for'|trans }} {{profil_github_name}}</strong></div>').hide().fadeIn(1000);}
         },
         complete: function() {
         gistliststatus = true;        
-        getlimit();
+        getlimit();        
         },
         error: function(t,m) {
             if ( t === 'timeout') {
@@ -504,6 +676,7 @@ function getgists() {
 }
 function getGistInfo(gist) {
     $("#progressouter").removeClass("hide");    
+    $('#progressouter h3').text('{{ 'loading data ...'|trans }}');
     $.ajax({
         type: 'POST',
         dataType: 'json',
@@ -517,6 +690,9 @@ function getGistInfo(gist) {
                 }else{
                 $("#progress").css('width','100%');
                 }
+                setTimeout(function () {
+                    $('#progressouter h3').text(i*100/i+'%');
+                },100);
                 var obj = response[i];
                 for(var key in obj){
                    if(key === 'filename') {
@@ -545,11 +721,11 @@ function getGistInfo(gist) {
         }
     });
 }
-
 $(document).on("click", ".activity", function() {
     $('.activity').removeClass('selected');
     $(this).addClass('selected');
     $('#data-activityid').empty();
+    
     $('#data-activityid').append('<h2 class="text-left"><i class="icon-history"></i> Détails :</h2><hr>\n\
                                   <h2 class="pull-left"><i class="icon-user"></i>'+$(this).data('login')+'<br /><small class="muted">'+$(this).data('actid')+'</small></h2>\n\
                                   <img class="pull-right" src="'+$(this).data('avatar')+'" alt="avatar" style="height:60px;width:60px;"><div class="clearfix"></div><hr>\n\
@@ -558,7 +734,7 @@ $(document).on("click", ".activity", function() {
                                   <li><i class="icon-calendar-alt-stroke"></i> {{ 'Created at'|trans }} : '+$(this).data('createdat')+'</li>\n\
                                   <li><i class="icon-file"></i> {{ 'Number of files'|trans }} : '+$(this).data('filescount')+'</li>\n\
                                   </ul>').hide().slideDown('slow');    
-    getActivity($(this).data('actid'));
+    getActivity(profil,$(this).data('actid'));    
 });
 $(document).on("click", ".repositories", function() {
     $('.repositories').removeClass('selected');
@@ -611,14 +787,14 @@ $(document).on("click", ".following", function() {
     $('.following').removeClass('selected');
     $('#rightprofilinfo').hide();
     $('#rightprofildata').empty();
-    $(this).addClass('selected');
+    $(this).addClass('selected');    
     getdevprofil($(this).data('login'));
 });
 $(document).on("click", ".followers", function() {
     $('.followers').removeClass('selected');
     $('#rightprofilinfo').hide();
     $('#rightprofildata').empty();
-    $(this).addClass('selected');
+    $(this).addClass('selected');    
     getdevprofil($(this).data('login'));
 });
 $(document).on("click", ".gistcolor", function(e) {
@@ -639,7 +815,4 @@ if ($('#code'+id).children().hasClass('pre-scrollable-fox'))
     }
 });
 </script>
-{% endblock %}
-{% block footer %}
-
 {% endblock %}

@@ -8,28 +8,27 @@ profil_ajax:
     pattern:  /profil/id={id}
     defaults: { _controller: "foxp2backofficeBundle:Profil:getajaxprofil" }
 activities_ajax:
-    pattern:  /activities
+    pattern:  /activities/id={id}
     defaults: { _controller: "foxp2backofficeBundle:Profil:getajaxactivities" }
 activity_ajax:
-    pattern:  /activity/id={id}
+    pattern:  /activity/name={name}&id={id}
     defaults: { _controller: "foxp2backofficeBundle:Profil:getajaxactivity"}
     requirements:
-        _method:  POST
-        id: \d+
+        _method:  POST        
 repositories_ajax:
-    pattern:  /repositories
+    pattern:  /repositories/id={id}
     defaults: { _controller: "foxp2backofficeBundle:Profil:getajaxrepositories" }
 watched_ajax:
-    pattern:  /watched
+    pattern:  /watched/id={id}
     defaults: { _controller: "foxp2backofficeBundle:Profil:getajaxwatched" }
 following_ajax:
-    pattern:  /following
+    pattern:  /following/id={id}
     defaults: { _controller: "foxp2backofficeBundle:Profil:getajaxfollowing" }
 followers_ajax:
-    pattern:  /followers
+    pattern:  /followers/id={id}
     defaults: { _controller: "foxp2backofficeBundle:Profil:getajaxfollowers" }
 gists_ajax:
-    pattern:  /gists
+    pattern:  /gists/id={id}
     defaults: { _controller: "foxp2backofficeBundle:Profil:getgistsajax" }
 gist_ajax:
     pattern:  /gist/id={id}

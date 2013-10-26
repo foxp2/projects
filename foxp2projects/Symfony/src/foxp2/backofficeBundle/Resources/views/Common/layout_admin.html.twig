@@ -54,9 +54,12 @@
 
 {% block body %}
 <body style="background-image: url({{ asset("bundles/foxp2backoffice/images/bkg-4.png") }}">
-<div class="container-fluid">      
+
+<div class="container-fluid">       
+      
 {% block apptopbar %}
 {% endblock %}
+
 
 <div id="application">   
 {% block application %}
@@ -68,11 +71,6 @@
 {% endblock %}
 
 {% block footer %}
-<div class="navbar navbar-fixed-bottom fox-bottom btn-info">
-<span class="pull-left">FoxP2 Projects &copy; 2013, {% trans %}All Right Reserved{% endtrans %}</span>
-<span class="pull-right">{% trans %}Build with{% endtrans %} : <a class="text5" href="http://symfony.com/legacy" target="_blank">Symfony 2.3.3</a></span>
-<span class="pull-right">{% trans %}Styled with{% endtrans %} : <a class="text5" href="http://aozora.github.io/bootmetro/docs/docs-index.html" target="_blank">BootMetro </a></span>
-</div>
 {% endblock footer %}
 
 
