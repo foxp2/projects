@@ -182,6 +182,7 @@ followingstatus = false;
 followersstatus = false;
 gistliststatus = false;
 var keyword = null;
+profil_selectd = null;
 profil = '{{profil_github_name}}';
 user_exist = '{{user_exist}}';
 if(user_exist === "0" ){
@@ -191,7 +192,7 @@ if(user_exist === "0" ){
     getwatched();
 }
 $('#app-bar a').click(function(){
-    $("#search" ).val(profil);
+    $("#search" ).val(profil_selected);
     $('#profil_search').attr('action', '{{ path('profil_index') }}').unbind('submit').submit();  
 });
 $('#searchpulldown').change(function(){
@@ -364,7 +365,7 @@ function getActivity(name,id) {
 function getdevprofil(name) {
     $("#progressouter").removeClass("hide");
     $('#progressouter h3').text('{{ 'loading data ...'|trans }}');
-    profil = name;
+    profil_selected = name;
     $.ajax({
         type: 'POST',
         dataType: 'json',
