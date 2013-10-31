@@ -21,19 +21,21 @@
 <div class="row-fluid">
         <form id="profil_search" class="form-inline pull-right" action="{{ path('profil_index') }}" method="post" {{ form_enctype(form_search) }}>
             <div class="btn-group" style="z-index:1">
-            {% if keyword != '' %}
+            {% if keyword == false %}
             <a class="btn" href="{{ path('profil_index') }}" title=""><i class="icon-refresh"></i></a>
             {% endif %}
             {% if results is defined and results|length > 1 %}
-                <input id="search" name="search" type="text" class="input-large" style="height:30px;" value="{{keyword}}">           
+                <input id="search" name="search" type="text" autocomplete="off" autofocus list="matchresults" class="input-large"  style="height:30px;" value="{{keyword}}">
+                <datalist id="matchresults">                    
                 <select id="searchpulldown">
-                        <option value="" disabled>{{ 'The %s first others results'|trans|format(results|length) }} :</option>
+                    <option value="" disabled>{{ 'The %s first others results'|trans|format(results|length) }} :</option>
                 {% for result in results %}
-                        <option value="{{ result }}" {% if profil_github_name == result %}selected="selected"{% endif %}>{{ result }}</option>
+                    <option value="{{ result }}" {% if profil_github_name == result %}selected="selected"{% endif %}>{{ result }}</option>
                 {% endfor %}
                 </select>
+                </datalist>               
             {% else %}
-            <input id="search" type="text" name="search" class="input-large" style="height:30px;" placeholder="{{ 'Search a profil'|trans }}" {% if keyword != '' %}value="{{ keyword }}"{% endif %}/>
+            <input id="search" type="text" name="search" class="input-large" autocomplete="off" autofocus style="height:30px;" placeholder="{{ 'Search a profil'|trans }}" {% if keyword != '' %}value="{{ keyword }}"{% endif %}/>
             {% endif %}
             <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
             </div>
@@ -191,19 +193,74 @@ if(user_exist === "0" ){
 }else{
     getwatched();
 }
-$('#app-bar a').click(function(){
-    $("#search" ).val(profil_selected);
-    $('#profil_search').attr('action', '{{ path('profil_index') }}').unbind('submit').submit();  
-});
+// hack for old browser
+var placeholder = ("placeholder" in document.createElement("input"));
+if ( placeholder === false ) {    
+    var plhd = $("#search" ).val();
+    if(plhd === '') { 
+        $("#search" ).val('{{ 'Search a profil'|trans }}');    
+         $("#search" ).click(function(){       
+            if( $(this).val() === "{{'Search a profil'|trans }}" ) { 
+                $("#search" ).val('');
+            }
+        });
+    }
+}
 $('#searchpulldown').change(function(){
     var str = "";    
     $("#search" ).val();
     $( "select option:selected" ).each(function() {
     str = $(this).text();
-    $("#search" ).val(str);
+    $("#search").val(str);    
     $('#profil_search').attr('action', '{{ path('profil_index') }}').unbind('submit').submit();    
 });    
 });
+// end hack
+$('#app-bar a').click(function(){
+    $("#search" ).val(profil_selected);
+    $('#profil_search').attr('action', '{{ path('profil_index') }}').unbind('submit').submit();  
+});
+$.fn.setCursorPosition = function(pos) {
+  this.each(function(index, elem) {
+    if (elem.setSelectionRange) {
+      elem.setSelectionRange(pos, pos);
+    } else if (elem.createTextRange) {
+      var range = elem.createTextRange();
+      range.collapse(true);
+      range.moveEnd('character', pos);
+      range.moveStart('character', pos);
+      range.select();
+    }
+  });
+  return this;
+};
+var delay = (function(){
+  var timer = 0;
+  return function(callback, ms){
+    clearTimeout (timer);
+    timer = setTimeout(callback, ms);
+  };
+})();
+datalist = document.getElementById("matchresults");
+    if(datalist !== null){                             
+        $("#search").keyup(function(){ 
+            delay(function(){       
+            $('#matchresults option').each(function(){               
+                 $("#search").unbind('keyup');                 
+                 $('#profil_search').attr('action', '{{ path('profil_index') }}').unbind('submit').submit();  
+                 $("#search").setCursorPosition($("#search" ).val().length);        
+        });  
+        },1000);
+        });
+}
+$("#search").change(function(){ 
+    delay(function(){ 
+        $("#search").unbind('change');
+        $('#profil_search').attr('action', '{{ path('profil_index') }}').unbind('submit').submit(); 
+        $("#search").setCursorPosition($("#search" ).val().length);      
+        },1000);
+        });       
+$("#search").setCursorPosition($("#search" ).val().length);
 $('#profiltab li a').click(function(){
     $('.watched').removeClass('selected');
     $('.following').removeClass('selected'); 
